@@ -1,16 +1,21 @@
 package io.github.aouerfelli.subwatcher.ui
 
 import android.os.Bundle
+import androidx.fragment.app.commitNow
+import androidx.fragment.app.replace
 import dagger.android.support.DaggerAppCompatActivity
-import io.github.aouerfelli.subwatcher.databinding.MainActivityBinding
+import io.github.aouerfelli.subwatcher.R
+import io.github.aouerfelli.subwatcher.ui.main.MainFragment
 
 class MainActivity : DaggerAppCompatActivity() {
 
-    private lateinit var binding: MainActivityBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = MainActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.main_activity)
+        if (savedInstanceState != null) {
+            supportFragmentManager.commitNow {
+                replace<MainFragment>(R.id.container)
+            }
+        }
     }
 }
