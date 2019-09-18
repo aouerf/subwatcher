@@ -1,10 +1,10 @@
-package io.github.aouerfelli.subwatcher
+package io.github.aouerfelli.subwatcher.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import dagger.android.support.DaggerAppCompatActivity
 import io.github.aouerfelli.subwatcher.databinding.MainActivityBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: MainActivityBinding
 
