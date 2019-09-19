@@ -5,7 +5,6 @@ import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
 import io.github.aouerfelli.subwatcher.SubwatcherApplication
-import io.github.aouerfelli.subwatcher.ui.MainActivityModule
 import javax.inject.Singleton
 
 @Singleton

@@ -1,13 +1,13 @@
 package io.github.aouerfelli.subwatcher.ui
 
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.commitNow
 import androidx.fragment.app.replace
-import dagger.android.support.DaggerAppCompatActivity
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.ui.main.MainFragment
 
-class MainActivity : DaggerAppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
