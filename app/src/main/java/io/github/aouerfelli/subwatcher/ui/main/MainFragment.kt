@@ -10,6 +10,7 @@ import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 class MainFragment : DaggerFragment() {
 
     private lateinit var binding: MainFragmentBinding
+    private lateinit var subredditListAdapter: SubredditListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -18,5 +19,10 @@ class MainFragment : DaggerFragment() {
     ): View? {
         binding = MainFragmentBinding.inflate(layoutInflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        subredditListAdapter = SubredditListAdapter()
+        binding.subredditList.adapter = subredditListAdapter
     }
 }
