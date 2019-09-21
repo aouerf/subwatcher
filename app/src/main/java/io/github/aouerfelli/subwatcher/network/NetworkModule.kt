@@ -3,31 +3,36 @@ package io.github.aouerfelli.subwatcher.network
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.github.aouerfelli.subwatcher.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
+import timber.log.Timber
+import timber.log.debug
 import javax.inject.Singleton
 
 @Module
 object NetworkModule {
 
     private const val BASE_URL = "https://www.reddit.com"
+    private const val LOG_TAG = "OkHttp"
 
     @JvmStatic
     @Provides
     @Singleton
     fun provideOkHttpClient(): OkHttpClient {
-        val builder = OkHttpClient.Builder()
-        if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BASIC
+        val logTree = Timber.tagged(LOG_TAG)
+        val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
+            override fun log(message: String) {
+                logTree.debug { message }
             }
-            builder.addNetworkInterceptor(loggingInterceptor)
+        }).apply {
+            level = HttpLoggingInterceptor.Level.BASIC
         }
-        return builder.build()
+        return OkHttpClient.Builder()
+            .addNetworkInterceptor(loggingInterceptor)
+            .build()
     }
 
     @JvmStatic

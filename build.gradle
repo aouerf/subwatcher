@@ -13,6 +13,8 @@ buildscript {
         okhttp: "4.2.0",
         retrofit: "2.6.1",
         moshi: "1.8.0",
+
+        timber: "5.0.0-SNAPSHOT"
     ]
     repositories {
         google()
@@ -29,7 +31,7 @@ allprojects {
     repositories {
         google()
         jcenter()
-
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 
