@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.V27.Theme.Subwatcher" parent="Base.V23.Theme.Subwatcher">
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowLightNavigationBar">@bool/light_mode</item>
+        <item name="android:navigationBarColor">?android:colorBackground</item>
+        <item name="android:navigationBarDividerColor">@color/divider</item>
+    </style>
+
+    <style name="Theme.Subwatcher" parent="Base.V27.Theme.Subwatcher" />
+
+</resources>

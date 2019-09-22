@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.V29.Theme.Subwatcher" parent="Base.V27.Theme.Subwatcher">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Subwatcher" parent="Base.V29.Theme.Subwatcher" />
+
+</resources>

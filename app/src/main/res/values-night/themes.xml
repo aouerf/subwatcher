@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Base.Theme.Subwatcher" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/reddit_mint</item>
+        <item name="colorPrimaryVariant">@color/reddit_teal</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <item name="colorSecondary">@color/reddit_yellow</item>
+        <item name="colorSecondaryVariant">@color/reddit_mango</item>
+        <item name="colorOnSecondary">@android:color/black</item>
+    </style>
+
+</resources>

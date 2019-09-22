@@ -1,0 +1,18 @@
+<resources>
+
+    <style name="Base.Theme.Subwatcher" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/reddit_blue</item>
+        <item name="colorPrimaryVariant">@color/reddit_alien_blue</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+
+        <item name="colorSecondary">@color/reddit_orangered</item>
+        <item name="colorSecondaryVariant">@color/reddit_orange</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Theme.Subwatcher" parent="Base.Theme.Subwatcher" />
+
+</resources>
