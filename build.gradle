@@ -14,7 +14,7 @@ buildscript {
         dagger: "2.24",
 
         okhttp: "4.2.0",
-        retrofit: "2.6.1",
+        retrofit: "2.6.2",
         moshi: "1.8.0",
 
         coil: "0.7.0",
