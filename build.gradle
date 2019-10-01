@@ -11,6 +11,8 @@ buildscript {
 
         material: "1.1.0-alpha10",
 
+        lifecycle: "2.2.0-alpha05",
+
         dagger: "2.24",
 
         okhttp: "4.2.0",
