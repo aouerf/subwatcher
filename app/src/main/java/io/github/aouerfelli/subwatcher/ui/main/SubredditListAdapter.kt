@@ -8,26 +8,20 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
-import io.github.aouerfelli.subwatcher.network.AboutSubredditData
+import io.github.aouerfelli.subwatcher.repository.Subreddit
+import io.github.aouerfelli.subwatcher.util.toBitmap
 
-class SubredditListAdapter :
-    ListAdapter<AboutSubredditData, SubredditListAdapter.ViewHolder>(diffCallback) {
+class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
 
     companion object {
 
-        private val diffCallback = object : DiffUtil.ItemCallback<AboutSubredditData>() {
+        private val diffCallback = object : DiffUtil.ItemCallback<Subreddit>() {
 
-            override fun areItemsTheSame(
-                oldItem: AboutSubredditData,
-                newItem: AboutSubredditData
-            ): Boolean {
+            override fun areItemsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(
-                oldItem: AboutSubredditData,
-                newItem: AboutSubredditData
-            ): Boolean {
+            override fun areContentsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
                 return oldItem == newItem
             }
         }
@@ -47,9 +41,9 @@ class SubredditListAdapter :
     class ViewHolder(private val itemBinding: SubredditItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
 
-        fun bind(item: AboutSubredditData) {
-            itemBinding.name.text = item.displayName
-            itemBinding.icon.load(item.iconImageUrl) {
+        fun bind(item: Subreddit) {
+            itemBinding.name.text = item.name.value
+            itemBinding.icon.load(item.iconImage?.toBitmap()) {
                 crossfade(true)
                 transformations(CircleCropTransformation())
             }
