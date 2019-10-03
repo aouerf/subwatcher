@@ -1,6 +1,5 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,6 +8,7 @@ import coil.api.load
 import coil.transform.CircleCropTransformation
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
 import io.github.aouerfelli.subwatcher.repository.Subreddit
+import io.github.aouerfelli.subwatcher.util.layoutInflater
 import io.github.aouerfelli.subwatcher.util.toBitmap
 
 class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
@@ -28,8 +28,7 @@ class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHol
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val itemBinding = SubredditItemBinding.inflate(inflater, parent, false)
+        val itemBinding = SubredditItemBinding.inflate(parent.context.layoutInflater, parent, false)
         return ViewHolder(itemBinding)
     }
 

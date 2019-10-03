@@ -29,16 +29,15 @@ class SubredditRepository @Inject constructor(private val service: RedditService
     }
 
     suspend fun addSubreddit(subredditName: String): Subreddit {
-        val currentSubreddits = _subreddits.value
         val newSubredditName = SubredditName(subredditName)
 
-        val duplicateSubreddit = currentSubreddits.firstOrNull { it.name == newSubredditName }
+        val duplicateSubreddit = _subreddits.value.firstOrNull { it.name == newSubredditName }
         if (duplicateSubreddit != null) {
             return duplicateSubreddit
         }
 
         val newSubreddit = fetchSubreddit(newSubredditName)
-        _subreddits.send(currentSubreddits + newSubreddit)
+        _subreddits.send(_subreddits.value + newSubreddit)
         return newSubreddit
     }
 
