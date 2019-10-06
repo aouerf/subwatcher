@@ -4,16 +4,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
-class ScrollAwareFloatingActionButtonBehavior(context: Context, attrs: AttributeSet) :
-    FloatingActionButton.Behavior(context, attrs) {
+class ScrollAwareExtendedFloatingActionButtonBehavior(context: Context, attrs: AttributeSet) :
+    CoordinatorLayout.Behavior<ExtendedFloatingActionButton>(context, attrs) {
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
-        child: FloatingActionButton,
+        child: ExtendedFloatingActionButton,
         directTargetChild: View,
         target: View,
         axes: Int,
@@ -31,7 +29,7 @@ class ScrollAwareFloatingActionButtonBehavior(context: Context, attrs: Attribute
 
     override fun onNestedScroll(
         coordinatorLayout: CoordinatorLayout,
-        child: FloatingActionButton,
+        child: ExtendedFloatingActionButton,
         target: View,
         dxConsumed: Int,
         dyConsumed: Int,
@@ -52,14 +50,10 @@ class ScrollAwareFloatingActionButtonBehavior(context: Context, attrs: Attribute
             consumed
         )
 
-        if (dyConsumed > 0 && child.isVisible) {
-            child.hide(object : FloatingActionButton.OnVisibilityChangedListener() {
-                override fun onHidden(fab: FloatingActionButton) {
-                    fab.isInvisible = true
-                }
-            })
-        } else if (dyConsumed < 0 && !child.isVisible) {
-            child.show()
+        if (dyConsumed > 0 && child.isExtended) {
+            child.shrink()
+        } else if (dyConsumed < 0 && !child.isExtended) {
+            child.extend()
         }
     }
 }

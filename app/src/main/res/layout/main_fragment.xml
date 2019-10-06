@@ -25,14 +25,15 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_button"
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/add_subreddit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_add"
+        android:text="@string/add_subreddit_button_extended_label"
+        app:icon="@drawable/ic_add"
         app:layout_anchor="@id/subreddit_list"
-        app:layout_anchorGravity="bottom|end"
-        app:layout_behavior=".ui.view.behavior.ScrollAwareFloatingActionButtonBehavior" />
+        app:layout_anchorGravity="bottom|right|end"
+        app:layout_behavior=".ui.view.behavior.ScrollAwareExtendedFloatingActionButtonBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

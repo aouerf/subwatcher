@@ -41,7 +41,7 @@ class MainFragment : DaggerFragment() {
             viewModel.refresh()
         }
 
-        binding.addButton.setOnClickListener {
+        binding.addSubredditButton.setOnClickListener {
             viewModel.add("random")
         }
     }
