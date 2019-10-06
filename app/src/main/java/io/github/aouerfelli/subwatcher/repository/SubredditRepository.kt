@@ -1,12 +1,13 @@
 package io.github.aouerfelli.subwatcher.repository
 
+import androidx.core.net.toUri
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.SubredditEntityQueries
 import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.util.nullIfEmpty
-import io.github.aouerfelli.subwatcher.util.toEncodedImage
+import io.github.aouerfelli.subwatcher.util.toImageBlob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -28,7 +29,7 @@ class SubredditRepository @Inject constructor(
         return Subreddit.Impl(
             id = SubredditId(aboutSubreddit.id),
             name = SubredditName(aboutSubreddit.displayName),
-            iconImage = aboutSubreddit.iconImageUrl.nullIfEmpty()?.toEncodedImage()
+            iconImage = aboutSubreddit.iconImageUrl?.nullIfEmpty()?.toUri()?.toImageBlob()
         )
     }
 

@@ -12,5 +12,5 @@ data class AboutSubreddit(
 data class AboutSubredditData(
     @Json(name = "id") val id: String,
     @Json(name = "display_name") val displayName: String,
-    @Json(name = "icon_img") val iconImageUrl: String
+    @Json(name = "icon_img") val iconImageUrl: String?
 )

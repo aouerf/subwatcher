@@ -2,36 +2,25 @@ package io.github.aouerfelli.subwatcher.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Base64
+import android.net.Uri
 import androidx.core.graphics.drawable.toBitmap
 import coil.Coil
 import coil.api.get
 import java.io.ByteArrayOutputStream
 
-// De-inlined because of https://github.com/cashapp/sqldelight/issues/1285
-class EncodedImage(private val value: String) {
+// TODO: De-inlined because of https://github.com/cashapp/sqldelight/issues/1285
+class ImageBlob(val value: ByteArray)
 
-    companion object {
-        fun encode(imageByteArray: ByteArray): EncodedImage {
-            return EncodedImage(Base64.encodeToString(imageByteArray, Base64.DEFAULT))
-        }
-    }
-
-    fun decode(): ByteArray = Base64.decode(value, Base64.DEFAULT)
-}
-
-suspend fun String.toEncodedImage(): EncodedImage {
+suspend fun Uri.toImageBlob(): ImageBlob {
     val drawable = Coil.get(this)
     val bitmap = drawable.toBitmap()
     val bitmapByteArray = ByteArrayOutputStream(bitmap.byteCount).use { outputStream ->
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
         outputStream.toByteArray()
     }
-//    bitmap.recycle()
-    return EncodedImage.encode(bitmapByteArray)
+    return ImageBlob(bitmapByteArray)
 }
 
-fun EncodedImage.toBitmap(): Bitmap {
-    val decodedImage = decode()
-    return BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.size)
+fun ImageBlob.toBitmap(): Bitmap {
+    return BitmapFactory.decodeByteArray(value, 0, value.size)
 }

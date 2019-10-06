@@ -1,11 +1,11 @@
 import io.github.aouerfelli.subwatcher.repository.SubredditId;
 import io.github.aouerfelli.subwatcher.repository.SubredditName;
-import io.github.aouerfelli.subwatcher.util.EncodedImage;
+import io.github.aouerfelli.subwatcher.util.ImageBlob;
 
 CREATE TABLE subreddit(
     id TEXT AS SubredditId NOT NULL UNIQUE PRIMARY KEY,
     name TEXT AS SubredditName NOT NULL UNIQUE,
-    iconImage BLOB AS EncodedImage
+    iconImage BLOB AS ImageBlob
 );
 
 selectAll:
