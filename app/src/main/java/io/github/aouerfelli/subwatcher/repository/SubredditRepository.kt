@@ -1,27 +1,31 @@
 package io.github.aouerfelli.subwatcher.repository
 
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
+import io.github.aouerfelli.subwatcher.Subreddit
+import io.github.aouerfelli.subwatcher.SubredditEntityQueries
 import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.util.nullIfEmpty
 import io.github.aouerfelli.subwatcher.util.toEncodedImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SubredditRepository @Inject constructor(private val service: RedditService) {
+class SubredditRepository @Inject constructor(
+    private val service: RedditService,
+    private val databaseQueries: SubredditEntityQueries
+) {
 
-    private val _subreddits = ConflatedBroadcastChannel<Map<SubredditName, Subreddit>>(emptyMap())
-    val subreddits = _subreddits.asFlow().mapLatest { it.values.toList() }
+    val subreddits = databaseQueries.selectAll().asFlow().mapToList()
 
-    private suspend fun fetchSubreddit(subredditName: SubredditName): Subreddit {
+    private suspend fun fetchAndMapSubreddit(subredditName: SubredditName): Subreddit {
         val aboutSubreddit = service.getAboutSubreddit(subredditName.value).data
-        return Subreddit(
+        return Subreddit.Impl(
             id = SubredditId(aboutSubreddit.id),
             name = SubredditName(aboutSubreddit.displayName),
             iconImage = aboutSubreddit.iconImageUrl.nullIfEmpty()?.toEncodedImage()
@@ -29,24 +33,25 @@ class SubredditRepository @Inject constructor(private val service: RedditService
     }
 
     suspend fun addSubreddit(subredditName: String): Subreddit {
-        val newSubredditName = SubredditName(subredditName)
-
-        val duplicateSubreddit = _subreddits.value[newSubredditName]
-        if (duplicateSubreddit != null) {
-            return duplicateSubreddit
-        }
-
-        val newSubreddit = fetchSubreddit(newSubredditName)
-        _subreddits.send(_subreddits.value + (newSubreddit.name to newSubreddit))
+        val newSubreddit = fetchAndMapSubreddit(SubredditName(subredditName))
+        databaseQueries.insert(newSubreddit)
         return newSubreddit
     }
 
     suspend fun refreshSubreddits() {
+        // TODO: Wait for concurrent Flow (https://github.com/Kotlin/kotlinx.coroutines/issues/1147)
         coroutineScope {
-            val newSubreddits = _subreddits.value.values.map { subreddit ->
-                async(context = Dispatchers.IO) { fetchSubreddit(subreddit.name) }
-            }.awaitAll().associateBy { it.name }
-            _subreddits.send(newSubreddits)
+            val refreshedSubreddits = subreddits.first().map { subreddit ->
+                async(context = Dispatchers.IO) { fetchAndMapSubreddit(subreddit.name) }
+            }.awaitAll()
+
+            databaseQueries.transaction {
+                refreshedSubreddits.forEach { subreddit ->
+                    with(subreddit) {
+                        databaseQueries.update(id = id, name = name, iconImage = iconImage)
+                    }
+                }
+            }
         }
     }
 }

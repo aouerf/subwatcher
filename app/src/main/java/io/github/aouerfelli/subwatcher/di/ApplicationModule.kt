@@ -7,6 +7,7 @@ import io.github.aouerfelli.subwatcher.ui.main.MainModule
 @Module(
     includes = [
         NetworkModule::class,
+        DatabaseModule::class,
         ViewModelFactoryModule::class,
         MainModule::class
     ]

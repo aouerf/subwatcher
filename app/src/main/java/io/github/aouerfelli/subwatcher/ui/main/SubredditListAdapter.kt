@@ -1,13 +1,14 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
+import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
-import io.github.aouerfelli.subwatcher.repository.Subreddit
 import io.github.aouerfelli.subwatcher.util.layoutInflater
 import io.github.aouerfelli.subwatcher.util.toBitmap
 
@@ -21,6 +22,7 @@ class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHol
                 return oldItem.id == newItem.id
             }
 
+            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
                 return oldItem == newItem
             }

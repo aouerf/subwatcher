@@ -21,6 +21,8 @@ buildscript {
         retrofit: "2.6.2",
         moshi: "1.8.0",
 
+        sqldelight: "1.2.0",
+
         coil: "0.7.0",
 
         timber: "5.0.0-SNAPSHOT"
@@ -33,6 +35,7 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:3.6.0-alpha12"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
     }
 }
 

@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
+apply plugin: "com.squareup.sqldelight"
 
 android {
     compileSdkVersion 29
@@ -30,12 +31,14 @@ android {
             "-XXLanguage:+NewInference",
             "-XXLanguage:+InlineClasses",
             "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-            "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi",
             "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
         ]
     }
     viewBinding {
         enabled = true
+    }
+    packagingOptions {
+        pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 }
 
@@ -70,6 +73,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:${versions.retrofit}"
     implementation "com.squareup.moshi:moshi:${versions.moshi}"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}"
+
+    implementation "com.squareup.sqldelight:android-driver:${versions.sqldelight}"
+    implementation "com.squareup.sqldelight:coroutines-extensions-jvm:${versions.sqldelight}"
 
     implementation "io.coil-kt:coil:${versions.coil}"
 

@@ -8,14 +8,15 @@ import coil.Coil
 import coil.api.get
 import java.io.ByteArrayOutputStream
 
-inline class EncodedImage(private val value: String) {
-    
+// De-inlined because of https://github.com/cashapp/sqldelight/issues/1285
+class EncodedImage(private val value: String) {
+
     companion object {
         fun encode(imageByteArray: ByteArray): EncodedImage {
             return EncodedImage(Base64.encodeToString(imageByteArray, Base64.DEFAULT))
         }
     }
-    
+
     fun decode(): ByteArray = Base64.decode(value, Base64.DEFAULT)
 }
 
