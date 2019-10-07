@@ -1,15 +1,15 @@
 package io.github.aouerfelli.subwatcher.di
 
+import android.content.Context
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import dagger.Module
 import dagger.Provides
 import io.github.aouerfelli.subwatcher.Database
 import io.github.aouerfelli.subwatcher.Subreddit
-import io.github.aouerfelli.subwatcher.SubwatcherApplication
 import io.github.aouerfelli.subwatcher.repository.SubredditId
 import io.github.aouerfelli.subwatcher.repository.SubredditName
-import io.github.aouerfelli.subwatcher.util.EncodedImage
+import io.github.aouerfelli.subwatcher.util.ImageBlob
 import javax.inject.Singleton
 
 @Module
@@ -20,18 +20,7 @@ object DatabaseModule {
     @JvmStatic
     @Provides
     @Singleton
-    fun provideSqliteDriver(application: SubwatcherApplication): AndroidSqliteDriver {
-        return AndroidSqliteDriver(
-            schema = Database.Schema,
-            context = application,
-            name = DB_NAME
-        )
-    }
-
-    @JvmStatic
-    @Provides
-    @Singleton
-    fun provideDatabase(sqliteDriver: AndroidSqliteDriver): Database {
+    fun provideDatabase(context: Context): Database {
         val subredditAdapter = Subreddit.Adapter(
             idAdapter = object : ColumnAdapter<SubredditId, String> {
                 override fun decode(databaseValue: String) = SubredditId(databaseValue)
@@ -41,10 +30,16 @@ object DatabaseModule {
                 override fun decode(databaseValue: String) = SubredditName(databaseValue)
                 override fun encode(value: SubredditName) = value.value
             },
-            iconImageAdapter = object : ColumnAdapter<EncodedImage, ByteArray> {
-                override fun decode(databaseValue: ByteArray) = EncodedImage.encode(databaseValue)
-                override fun encode(value: EncodedImage) = value.decode()
+            iconImageAdapter = object : ColumnAdapter<ImageBlob, ByteArray> {
+                override fun decode(databaseValue: ByteArray) = ImageBlob(databaseValue)
+                override fun encode(value: ImageBlob) = value.value
             }
+        )
+
+        val sqliteDriver = AndroidSqliteDriver(
+            schema = Database.Schema,
+            context = context,
+            name = DB_NAME
         )
 
         return Database(sqliteDriver, subredditAdapter = subredditAdapter)
@@ -52,6 +47,5 @@ object DatabaseModule {
 
     @JvmStatic
     @Provides
-    @Singleton
     fun provideSubredditQueries(database: Database) = database.subredditEntityQueries
 }

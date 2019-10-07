@@ -1,15 +1,18 @@
 package io.github.aouerfelli.subwatcher.di
 
+import android.content.Context
 import dagger.Module
-import io.github.aouerfelli.subwatcher.network.NetworkModule
+import dagger.Provides
+import io.github.aouerfelli.subwatcher.SubwatcherApplication
 import io.github.aouerfelli.subwatcher.ui.main.MainModule
 
 @Module(
     includes = [
-        NetworkModule::class,
-        DatabaseModule::class,
-        ViewModelFactoryModule::class,
         MainModule::class
     ]
 )
-class ApplicationModule
+class ApplicationModule {
+
+    @Provides
+    fun provideContext(application: SubwatcherApplication): Context = application.applicationContext
+}
