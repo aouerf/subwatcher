@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerFragment
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.util.observe
+import io.github.aouerfelli.subwatcher.util.provideViewModel
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import javax.inject.Inject
 
@@ -19,9 +18,8 @@ class MainFragment : DaggerFragment() {
     private lateinit var subredditListAdapter: SubredditListAdapter
 
     @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel: MainViewModel by viewModels { viewModelFactory }
+    lateinit var mainViewModelFactory: MainViewModel.Factory
+    private val mainViewModel: MainViewModel by provideViewModel { mainViewModelFactory.create(it) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,17 +36,20 @@ class MainFragment : DaggerFragment() {
 
         binding.subredditsRefresh.setThemeColorScheme()
         binding.subredditsRefresh.setOnRefreshListener {
-            viewModel.refresh()
+            mainViewModel.refresh()
         }
 
         binding.addSubredditButton.setOnClickListener {
-            viewModel.add("random")
+            mainViewModel.add("random")
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewLifecycleOwner.observe(viewModel.subredditList, subredditListAdapter::submitList)
-        viewLifecycleOwner.observe(viewModel.isRefreshing, binding.subredditsRefresh::setRefreshing)
+        viewLifecycleOwner.observe(mainViewModel.subredditList, subredditListAdapter::submitList)
+        viewLifecycleOwner.observe(
+            mainViewModel.isRefreshing,
+            binding.subredditsRefresh::setRefreshing
+        )
     }
 }

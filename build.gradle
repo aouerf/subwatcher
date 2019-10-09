@@ -14,8 +14,10 @@ buildscript {
         material: "1.1.0-beta01",
 
         lifecycle: "2.2.0-beta01",
+        savedstate: "1.0.0-beta01",
 
         dagger: "2.24",
+        assistedinject: "0.5.0",
 
         okhttp: "4.2.1",
         retrofit: "2.6.2",

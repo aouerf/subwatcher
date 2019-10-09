@@ -1,11 +1,25 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor(private val repository: SubredditRepository) : ViewModel() {
+class MainViewModel @AssistedInject constructor(
+    private val repository: SubredditRepository,
+    @Assisted private val state: SavedStateHandle
+) : ViewModel() {
+
+    @AssistedInject.Factory
+    interface Factory {
+        fun create(state: SavedStateHandle): MainViewModel
+    }
 
     val subredditList = repository.subreddits.asLiveData(viewModelScope.coroutineContext)
 
