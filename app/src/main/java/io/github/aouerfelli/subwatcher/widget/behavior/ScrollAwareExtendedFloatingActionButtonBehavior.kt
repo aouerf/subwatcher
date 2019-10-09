@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.ui.view.behavior
+package io.github.aouerfelli.subwatcher.widget.behavior
 
 import android.content.Context
 import android.util.AttributeSet
