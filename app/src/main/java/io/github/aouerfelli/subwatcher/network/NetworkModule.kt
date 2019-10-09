@@ -1,6 +1,5 @@
 package io.github.aouerfelli.subwatcher.network
 
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -21,7 +20,7 @@ object NetworkModule {
     @JvmStatic
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideRedditService(): RedditService {
         val logTree = Timber.tagged(LOG_TAG)
         val loggingInterceptor = HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
@@ -30,34 +29,16 @@ object NetworkModule {
         }).apply {
             level = HttpLoggingInterceptor.Level.BASIC
         }
-        return OkHttpClient.Builder()
+        val okHttpClient = OkHttpClient.Builder()
             .addNetworkInterceptor(loggingInterceptor)
             .build()
-    }
 
-    @JvmStatic
-    @Provides
-    @Singleton
-    fun provideMoshi(): Moshi {
-        return Moshi.Builder()
-            .build()
-    }
-
-    @JvmStatic
-    @Provides
-    @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
-        return Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addConverterFactory(MoshiConverterFactory.create())
             .build()
-    }
 
-    @JvmStatic
-    @Provides
-    @Singleton
-    fun provideRedditService(retrofit: Retrofit): RedditService {
         return retrofit.create()
     }
 }
