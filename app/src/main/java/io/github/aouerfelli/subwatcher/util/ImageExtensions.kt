@@ -9,7 +9,16 @@ import coil.api.get
 import java.io.ByteArrayOutputStream
 
 // TODO: De-inlined because of https://github.com/cashapp/sqldelight/issues/1285
-class ImageBlob(val value: ByteArray)
+class ImageBlob(val value: ByteArray) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ImageBlob) return false
+        return value.contentEquals(other.value)
+    }
+
+    override fun hashCode() = value.contentHashCode()
+}
 
 suspend fun Uri.toImageBlob(): ImageBlob {
     val drawable = Coil.get(this)
