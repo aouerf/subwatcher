@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import dagger.android.support.DaggerFragment
+import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
+import io.github.aouerfelli.subwatcher.repository.State
+import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observe
 import io.github.aouerfelli.subwatcher.util.provideViewModel
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
@@ -19,7 +23,7 @@ class MainFragment : DaggerFragment() {
 
     @Inject
     lateinit var mainViewModelFactory: MainViewModel.Factory
-    private val mainViewModel: MainViewModel by provideViewModel { mainViewModelFactory.create(it) }
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,10 +50,18 @@ class MainFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        mainViewModel = provideViewModel(mainViewModelFactory::create)
         viewLifecycleOwner.observe(mainViewModel.subredditList, subredditListAdapter::submitList)
-        viewLifecycleOwner.observe(
-            mainViewModel.isRefreshing,
-            binding.subredditsRefresh::setRefreshing
-        )
+        viewLifecycleOwner.observe(mainViewModel.resultState) { state ->
+            binding.subredditsRefresh.isRefreshing = state == State.LOADING
+
+            @StringRes val errorStringRes = when (state) {
+                State.CONNECTION_ERROR -> R.string.no_connection
+                State.NETWORK_FAILURE -> R.string.network_failure
+                State.DATABASE_FAILURE -> R.string.database_failure
+                else -> null
+            }
+            errorStringRes?.let { binding.root.makeSnackbar(it) }
+        }
     }
 }

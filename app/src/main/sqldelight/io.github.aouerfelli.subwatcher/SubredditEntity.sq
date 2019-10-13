@@ -12,6 +12,12 @@ selectAll:
 SELECT *
 FROM subreddit;
 
+select:
+SELECT *
+FROM subreddit
+WHERE name = ?
+COLLATE NOCASE;
+
 insert:
 INSERT OR FAIL INTO subreddit(
     id, name, iconImage
@@ -22,4 +28,8 @@ VALUES ?;
 update:
 UPDATE subreddit
 SET name = ?, iconImage = ?
+WHERE id = ?;
+
+delete:
+DELETE FROM subreddit
 WHERE id = ?;

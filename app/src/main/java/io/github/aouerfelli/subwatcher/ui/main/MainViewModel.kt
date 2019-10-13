@@ -1,7 +1,5 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -23,14 +21,10 @@ class MainViewModel @AssistedInject constructor(
 
     val subredditList = repository.subreddits.asLiveData(viewModelScope.coroutineContext)
 
-    private val _isRefreshing = MutableLiveData(false)
-    val isRefreshing: LiveData<Boolean>
-        get() = _isRefreshing
+    val resultState = repository.states.asLiveData(viewModelScope.coroutineContext)
 
     fun refresh() = viewModelScope.launch {
-        _isRefreshing.value = true
         repository.refreshSubreddits()
-        _isRefreshing.value = false
     }
 
     fun add(subredditName: String) = viewModelScope.launch {

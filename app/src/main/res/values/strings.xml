@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Subwatcher</string>
 
+    <string name="no_connection">No connection</string>
+    <string name="network_failure">Failed to get the data from Reddit</string>
+    <string name="database_failure">Failed to save the data</string>
+
     <string name="add_subreddit_button_extended_label">Add subreddit</string>
 </resources>
