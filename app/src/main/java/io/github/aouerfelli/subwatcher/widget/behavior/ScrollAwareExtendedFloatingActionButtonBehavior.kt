@@ -2,12 +2,19 @@ package io.github.aouerfelli.subwatcher.widget.behavior
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class ScrollAwareExtendedFloatingActionButtonBehavior(context: Context, attrs: AttributeSet) :
     CoordinatorLayout.Behavior<ExtendedFloatingActionButton>(context, attrs) {
+
+    override fun onAttachedToLayoutParams(params: CoordinatorLayout.LayoutParams) {
+        if (params.dodgeInsetEdges == Gravity.NO_GRAVITY) {
+            params.dodgeInsetEdges = Gravity.BOTTOM
+        }
+    }
 
     override fun onStartNestedScroll(
         coordinatorLayout: CoordinatorLayout,
