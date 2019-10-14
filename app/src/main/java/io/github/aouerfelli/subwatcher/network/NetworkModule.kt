@@ -14,7 +14,7 @@ import javax.inject.Singleton
 @Module
 object NetworkModule {
 
-    private const val BASE_URL = "https://www.reddit.com"
+    const val BASE_URL = "https://www.reddit.com"
     private const val LOG_TAG = "OkHttp"
 
     @JvmStatic

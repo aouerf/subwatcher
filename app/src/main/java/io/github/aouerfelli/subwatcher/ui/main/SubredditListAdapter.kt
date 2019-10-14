@@ -1,6 +1,7 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -47,6 +48,10 @@ class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHol
             itemBinding.icon.load(item.iconImage?.toBitmap()) {
                 crossfade(true)
                 transformations(CircleCropTransformation())
+            }
+            itemBinding.root.setOnClickListener {
+                val intent = Intent(Intent.ACTION_VIEW, item.name.asUrl())
+                it.context.startActivity(intent)
             }
         }
     }
