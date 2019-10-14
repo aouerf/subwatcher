@@ -10,7 +10,8 @@ CREATE TABLE subreddit(
 
 selectAll:
 SELECT *
-FROM subreddit;
+FROM subreddit
+ORDER BY name ASC;
 
 select:
 SELECT *
