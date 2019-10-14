@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
+import io.github.aouerfelli.subwatcher.util.asEventLiveData
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
@@ -21,7 +22,7 @@ class MainViewModel @AssistedInject constructor(
 
     val subredditList = repository.subreddits.asLiveData(viewModelScope.coroutineContext)
 
-    val resultState = repository.states.asLiveData(viewModelScope.coroutineContext)
+    val resultState = repository.states.asEventLiveData(viewModelScope.coroutineContext)
 
     fun refresh() = viewModelScope.launch {
         repository.refreshSubreddits()

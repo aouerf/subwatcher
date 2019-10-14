@@ -11,6 +11,7 @@ import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.State
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observe
+import io.github.aouerfelli.subwatcher.util.observeNotNull
 import io.github.aouerfelli.subwatcher.util.provideViewModel
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import javax.inject.Inject
@@ -52,7 +53,7 @@ class MainFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = provideViewModel(mainViewModelFactory::create)
         viewLifecycleOwner.observe(mainViewModel.subredditList, subredditListAdapter::submitList)
-        viewLifecycleOwner.observe(mainViewModel.resultState) { state ->
+        viewLifecycleOwner.observeNotNull(mainViewModel.resultState) { state ->
             binding.subredditsRefresh.isRefreshing = state == State.LOADING
 
             @StringRes val errorStringRes = when (state) {
