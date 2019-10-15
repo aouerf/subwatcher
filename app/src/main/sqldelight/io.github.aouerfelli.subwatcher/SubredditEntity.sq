@@ -4,7 +4,7 @@ import io.github.aouerfelli.subwatcher.util.ImageBlob;
 
 CREATE TABLE subreddit(
     id TEXT AS SubredditId NOT NULL UNIQUE PRIMARY KEY,
-    name TEXT AS SubredditName NOT NULL UNIQUE,
+    name TEXT AS SubredditName NOT NULL UNIQUE COLLATE NOCASE,
     iconImage BLOB AS ImageBlob
 );
 
@@ -16,8 +16,7 @@ ORDER BY name ASC;
 select:
 SELECT *
 FROM subreddit
-WHERE name = ?
-COLLATE NOCASE;
+WHERE name = ?;
 
 insert:
 INSERT OR FAIL INTO subreddit(
