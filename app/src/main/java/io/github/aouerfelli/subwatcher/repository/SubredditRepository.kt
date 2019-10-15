@@ -18,6 +18,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -76,9 +77,27 @@ class SubredditRepository @Inject constructor(
             return null
         }
 
-        val databaseState = insertSubreddit(subreddit)
-        _states.offer(databaseState)
-        return if (databaseState == State.SUCCESS) subreddit else null
+        return addSubreddit(subreddit)
+    }
+
+    suspend fun addSubreddit(subreddit: Subreddit): Subreddit? {
+        _states.offer(State.LOADING)
+
+        return withContext(Dispatchers.IO) {
+            val databaseState = insertSubreddit(subreddit)
+            _states.offer(databaseState)
+            if (databaseState == State.SUCCESS) subreddit else null
+        }
+    }
+
+    suspend fun deleteSubreddit(subreddit: Subreddit): Subreddit? {
+        _states.offer(State.LOADING)
+
+        return withContext(Dispatchers.IO) {
+            database.delete(subreddit.id)
+            _states.offer(State.SUCCESS)
+            subreddit
+        }
     }
 
     private suspend fun refreshSubreddit(subreddit: Subreddit): Boolean {
