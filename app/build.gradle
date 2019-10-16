@@ -55,6 +55,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:${versions.constraintlayout}"
     implementation "androidx.recyclerview:recyclerview:${versions.recyclerview}"
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:${versions.swiperefreshlayout}"
+    implementation "androidx.browser:browser:${versions.browser}"
 
     implementation "com.google.android.material:material:${versions.material}"
 

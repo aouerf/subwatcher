@@ -1,8 +1,9 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.view.View
 import android.view.ViewGroup
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -36,23 +37,38 @@ class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHol
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
+        holder.item = getItem(position)
     }
 
     class ViewHolder(private val itemBinding: SubredditItemBinding) :
-        RecyclerView.ViewHolder(itemBinding.root) {
+        RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener {
 
-        fun bind(item: Subreddit) {
-            itemBinding.name.text = item.name.value
-            itemBinding.icon.load(item.iconImage?.toBitmap()) {
-                crossfade(true)
-                transformations(CircleCropTransformation())
+        companion object {
+            private val customTabsIntent = CustomTabsIntent.Builder()
+                .addDefaultShareMenuItem()
+                .enableUrlBarHiding()
+                .setShowTitle(true)
+                .build()
+        }
+
+        var item: Subreddit? = null
+            set(value) {
+                field = value
+                value ?: return
+                itemBinding.name.text = value.name.value
+                itemBinding.icon.load(value.iconImage?.toBitmap()) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                }
             }
-            itemBinding.root.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, item.name.asUrl())
-                it.context.startActivity(intent)
-            }
+
+        init {
+            itemBinding.root.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View) {
+            val item = item ?: return
+            customTabsIntent.launchUrl(v.context, item.name.asUrl())
         }
     }
 }
