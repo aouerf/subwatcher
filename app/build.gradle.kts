@@ -12,7 +12,6 @@ plugins {
 
 android {
     compileSdkVersion(29)
-    buildToolsVersion("29.0.2")
     defaultConfig {
         applicationId = "io.github.aouerfelli.subwatcher"
         minSdkVersion(21)
@@ -59,21 +58,22 @@ dependencies {
     implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions["coroutines"]}")
 
-    implementation("androidx.appcompat:appcompat:${versions["appcompat"]}")
-    implementation("androidx.activity:activity-ktx:${versions["activity"]}")
-    implementation("androidx.fragment:fragment-ktx:${versions["fragment"]}")
-    implementation("androidx.core:core-ktx:${versions["core"]}")
-    implementation("androidx.constraintlayout:constraintlayout:${versions["constraintlayout"]}")
-    implementation("androidx.recyclerview:recyclerview:${versions["recyclerview"]}")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:${versions["swiperefreshlayout"]}")
-    implementation("androidx.browser:browser:${versions["browser"]}")
+    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.activity:activity-ktx:1.1.0-beta01")
+    implementation("androidx.fragment:fragment-ktx:1.2.0-beta02")
+    implementation("androidx.core:core-ktx:1.2.0-beta01")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.recyclerview:recyclerview:1.1.0-beta05")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03")
+    implementation("androidx.browser:browser:1.2.0-alpha08")
 
-    implementation("com.google.android.material:material:${versions["material"]}")
+    implementation("com.google.android.material:material:1.1.0-beta01")
 
-    implementation("androidx.lifecycle:lifecycle-extensions:${versions["lifecycle"]}")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${versions["lifecycle"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${versions["lifecycle"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${versions["savedstate"]}")
+
+    implementation("io.coil-kt:coil:0.7.0")
 
     implementation("com.google.dagger:dagger:${versions["dagger"]}")
     kapt("com.google.dagger:dagger-compiler:${versions["dagger"]}")
@@ -91,8 +91,6 @@ dependencies {
 
     implementation("com.squareup.sqldelight:android-driver:${versions["sqldelight"]}")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${versions["sqldelight"]}")
-
-    implementation("io.coil-kt:coil:${versions["coil"]}")
 
     implementation("com.jakewharton.timber:timber-android:${versions["timber"]}")
 
