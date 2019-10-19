@@ -36,7 +36,7 @@ buildscript {
 
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.6.0-alpha12"
+        classpath "com.android.tools.build:gradle:3.6.0-beta01"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "com.squareup.sqldelight:gradle-plugin:${versions.sqldelight}"
     }
