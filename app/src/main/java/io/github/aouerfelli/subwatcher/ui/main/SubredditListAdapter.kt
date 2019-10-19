@@ -3,7 +3,6 @@ package io.github.aouerfelli.subwatcher.ui.main
 import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +10,7 @@ import coil.api.load
 import coil.transform.CircleCropTransformation
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
+import io.github.aouerfelli.subwatcher.util.launch
 import io.github.aouerfelli.subwatcher.util.layoutInflater
 import io.github.aouerfelli.subwatcher.util.toBitmap
 
@@ -43,14 +43,6 @@ class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHol
     class ViewHolder(private val itemBinding: SubredditItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root), View.OnClickListener {
 
-        companion object {
-            private val customTabsIntent = CustomTabsIntent.Builder()
-                .addDefaultShareMenuItem()
-                .enableUrlBarHiding()
-                .setShowTitle(true)
-                .build()
-        }
-
         var item: Subreddit? = null
             set(value) {
                 field = value
@@ -67,8 +59,7 @@ class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHol
         }
 
         override fun onClick(v: View) {
-            val item = item ?: return
-            customTabsIntent.launchUrl(v.context, item.name.asUrl())
+            item?.name?.asUrl()?.launch(v.context)
         }
     }
 }

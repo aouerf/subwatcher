@@ -2,12 +2,16 @@
     <string name="app_name">Subwatcher</string>
 
     <string name="no_connection">No connection</string>
-    <string name="network_failure">Failed to get the data from Reddit</string>
-    <string name="database_failure">Failed to save the data</string>
+    <string name="server_unreachable">Could not reach Reddit</string>
+
+    <string name="action_undo">Undo</string>
+    <string name="action_view">View</string>
 
     <string name="add_subreddit_button_extended_label">Add subreddit</string>
 
-    <string name="action_undo">Undo</string>
+    <string name="added_subreddit">r/%s was added</string>
+    <string name="added_subreddit_exists">r/%s is already added</string>
+    <string name="added_subreddit_does_not_exist">r/%s does not exist</string>
 
-    <string name="deleted_subreddit">Subreddit %s was deleted</string>
+    <string name="deleted_subreddit">r/%s was removed</string>
 </resources>

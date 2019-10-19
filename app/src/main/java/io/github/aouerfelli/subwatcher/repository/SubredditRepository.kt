@@ -7,18 +7,15 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.SubredditEntityQueries
 import io.github.aouerfelli.subwatcher.network.AboutSubreddit
-import io.github.aouerfelli.subwatcher.network.NetworkResponse
 import io.github.aouerfelli.subwatcher.network.RedditService
+import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
 import io.github.aouerfelli.subwatcher.util.nullIfEmpty
 import io.github.aouerfelli.subwatcher.util.toImageBlob
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,10 +25,20 @@ class SubredditRepository @Inject constructor(
     private val database: SubredditEntityQueries
 ) {
 
-    val subreddits = database.selectAll().asFlow().mapToList()
+    val subreddits = database.selectAll().asFlow().mapToList(Dispatchers.IO)
 
-    private val _states = ConflatedBroadcastChannel<State>()
-    val states = _states.asFlow()
+    private inline fun <T : Any, U : Any> Response<T>.mapToResult(
+        transform: (T) -> U
+    ): Result<U> {
+        return when (this) {
+            is Response.Success -> Result.success(transform(body))
+            is Response.Failure -> when (this) {
+                is Response.Failure.Fetch -> Result.networkError()
+                Response.Failure.Parse -> Result.networkFailure()
+            }
+            Response.Error -> Result.connectionError()
+        }
+    }
 
     private suspend fun AboutSubreddit.mapSubreddit(): Subreddit {
         return with(data) {
@@ -43,93 +50,81 @@ class SubredditRepository @Inject constructor(
         }
     }
 
-    private suspend fun fetchSubreddit(name: SubredditName): Pair<State, Subreddit?> {
-        return when (val response = service.fetch { getAboutSubreddit(name.value) }) {
-            is NetworkResponse.Success -> State.SUCCESS to response.body.mapSubreddit()
-            is NetworkResponse.Failure -> State.NETWORK_FAILURE to null
-            NetworkResponse.Error -> State.CONNECTION_ERROR to null
-        }
+    private suspend fun fetchSubreddit(name: SubredditName): Result<Subreddit> {
+        val response = service.fetch { getAboutSubreddit(name.value) }
+        return response.mapToResult { it.mapSubreddit() }
     }
 
-    private fun insertSubreddit(subreddit: Subreddit): State {
+    @Suppress("RedundantSuspendModifier")
+    private suspend fun insertSubreddit(subreddit: Subreddit): Result<Subreddit> {
         return try {
             database.insert(subreddit)
-            State.SUCCESS
+            Result.success(subreddit)
         } catch (e: SQLiteConstraintException) {
-            State.DATABASE_FAILURE
+            Result.databaseFailure()
         }
     }
 
-    suspend fun addSubreddit(subredditName: String): Subreddit? {
-        _states.offer(State.LOADING)
-
+    suspend fun addSubreddit(subredditName: String): Result<Subreddit> {
         val name = SubredditName(subredditName)
 
         val existingSubreddit = database.select(name).executeAsOneOrNull()
         if (existingSubreddit != null) {
-            _states.offer(State.SUCCESS)
-            return existingSubreddit
+            return Result.success(existingSubreddit)
         }
 
-        val (networkState, subreddit) = fetchSubreddit(name)
-        if (subreddit == null) {
-            _states.offer(networkState)
-            return null
+        val fetchResult = fetchSubreddit(name)
+        if (fetchResult !is Result.Success) {
+            return fetchResult
         }
 
-        return addSubreddit(subreddit)
+        return addSubreddit(fetchResult.data)
     }
 
-    suspend fun addSubreddit(subreddit: Subreddit): Subreddit? {
-        _states.offer(State.LOADING)
-
-        return withContext(Dispatchers.IO) {
-            val databaseState = insertSubreddit(subreddit)
-            _states.offer(databaseState)
-            if (databaseState == State.SUCCESS) subreddit else null
-        }
+    suspend fun addSubreddit(subreddit: Subreddit): Result<Subreddit> {
+        return insertSubreddit(subreddit)
     }
 
-    suspend fun deleteSubreddit(subreddit: Subreddit): Subreddit? {
-        _states.offer(State.LOADING)
+    @Suppress("RedundantSuspendModifier")
+    suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
+        database.delete(subreddit.id)
+        return Result.success(subreddit)
+    }
 
-        return withContext(Dispatchers.IO) {
-            database.delete(subreddit.id)
-            _states.offer(State.SUCCESS)
-            subreddit
+    @Suppress("RedundantSuspendModifier")
+    private suspend fun updateSubreddit(subreddit: Subreddit) {
+        with(subreddit) {
+            database.update(id = id, name = name, iconImage = iconImage)
         }
     }
 
-    private suspend fun refreshSubreddit(subreddit: Subreddit): Boolean {
-        when (val response = service.fetch { getAboutSubreddit(subreddit.name.value) }) {
-            is NetworkResponse.Success -> {
-                with(response.body.mapSubreddit()) {
-                    database.update(id = id, name = name, iconImage = iconImage)
+    private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
+        val response = service.fetch { getAboutSubreddit(subreddit.name.value) }
+        return response.mapToResult { body -> body.mapSubreddit().also { updateSubreddit(it) } }
+    }
+
+    suspend fun refreshSubreddits(): Result<Nothing> {
+        fun checkResult(finalResult: Result<Nothing>, result: Result<*>): Result<Nothing> {
+            if (finalResult != Result.connectionError()) {
+                if (result == Result.connectionError()) {
+                    return Result.connectionError()
+                } else if (result == Result.Error.NetworkError) {
+                    return Result.networkError()
                 }
             }
-            is NetworkResponse.Failure -> {
-                database.delete(subreddit.id)
-            }
-            NetworkResponse.Error -> {
-                return false
-            }
+            return finalResult
         }
-        return true
-    }
 
-    suspend fun refreshSubreddits() {
-        coroutineScope {
-            _states.offer(State.LOADING)
-
-            var noInternet = false
+        return coroutineScope {
+            var finalResult: Result<Nothing> = Result.success()
             val subreddits = database.selectAll().executeAsList()
             // TODO: Wait for concurrent Flow (https://github.com/Kotlin/kotlinx.coroutines/issues/1147)
             subreddits.map { subreddit ->
-                async(Dispatchers.IO) { noInternet = !refreshSubreddit(subreddit) }
+                async {
+                    refreshSubreddit(subreddit).also { finalResult = checkResult(finalResult, it) }
+                }
             }.awaitAll()
-
-            val finalState = if (noInternet) State.CONNECTION_ERROR else State.SUCCESS
-            _states.offer(finalState)
+            finalResult
         }
     }
 }

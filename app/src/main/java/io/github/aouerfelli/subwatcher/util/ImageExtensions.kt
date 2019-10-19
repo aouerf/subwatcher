@@ -12,9 +12,7 @@ import java.io.ByteArrayOutputStream
 class ImageBlob(val value: ByteArray) {
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ImageBlob) return false
-        return value.contentEquals(other.value)
+        return (this === other) || (other is ImageBlob &&  value.contentEquals(other.value))
     }
 
     override fun hashCode() = value.contentHashCode()

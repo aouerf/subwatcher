@@ -12,15 +12,15 @@ interface RedditService {
     suspend fun getAboutSubreddit(@Path("subreddit") subreddit: String): AboutSubreddit
 }
 
-suspend fun <T : Any> RedditService.fetch(request: suspend RedditService.() -> T): NetworkResponse<T> {
+suspend fun <T : Any> RedditService.fetch(request: suspend RedditService.() -> T): Response<T> {
     return try {
         val response = request()
-        NetworkResponse.Success(response)
+        Response.Success(response)
     } catch (e: HttpException) {
-        NetworkResponse.Failure.Fetch(e.code())
+        Response.Failure.Fetch(e.code())
     } catch (e: JsonDataException) {
-        NetworkResponse.Failure.Parse
+        Response.Failure.Parse
     } catch (e: IOException) {
-        NetworkResponse.Error
+        Response.Error
     }
 }
