@@ -1,12 +1,12 @@
+import io.github.aouerfelli.subwatcher.Dependencies
+import io.github.aouerfelli.subwatcher.Kotlin
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
-val versions: Map<String, String> by rootProject.extra
-
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
+    kotlin(io.github.aouerfelli.subwatcher.Kotlin.android)
+    kotlin(io.github.aouerfelli.subwatcher.Kotlin.kapt)
     id("com.squareup.sqldelight")
 }
 
@@ -55,44 +55,44 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(kotlin("stdlib-jdk8", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions["coroutines"]}")
+    implementation(kotlin(Kotlin.stdlib, KotlinCompilerVersion.VERSION))
+    implementation(Dependencies.KotlinX.coroutines)
 
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.activity:activity-ktx:1.1.0-beta01")
-    implementation("androidx.fragment:fragment-ktx:1.2.0-beta02")
-    implementation("androidx.core:core-ktx:1.2.0-beta01")
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.recyclerview:recyclerview:1.1.0-beta05")
-    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03")
-    implementation("androidx.browser:browser:1.2.0-alpha08")
+    implementation(Dependencies.AndroidX.appcompat)
+    implementation(Dependencies.AndroidX.activity)
+    implementation(Dependencies.AndroidX.fragment)
+    implementation(Dependencies.AndroidX.core)
+    implementation(Dependencies.AndroidX.constraintLayout)
+    implementation(Dependencies.AndroidX.recyclerView)
+    implementation(Dependencies.AndroidX.swipeRefreshLayout)
+    implementation(Dependencies.AndroidX.browser)
 
-    implementation("com.google.android.material:material:1.1.0-beta01")
+    implementation(Dependencies.material)
 
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${versions["lifecycle"]}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${versions["lifecycle"]}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${versions["savedstate"]}")
+    implementation(Dependencies.AndroidX.Lifecycle.liveData)
+    implementation(Dependencies.AndroidX.Lifecycle.viewModel)
+    implementation(Dependencies.AndroidX.Lifecycle.viewModelSavedState)
 
-    implementation("io.coil-kt:coil:0.7.0")
+    implementation(Dependencies.coil)
 
-    implementation("com.google.dagger:dagger:${versions["dagger"]}")
-    kapt("com.google.dagger:dagger-compiler:${versions["dagger"]}")
-    implementation("com.google.dagger:dagger-android-support:${versions["dagger"]}")
-    kapt("com.google.dagger:dagger-android-processor:${versions["dagger"]}")
-    compileOnly("com.squareup.inject:assisted-inject-annotations-dagger2:${versions["assistedinject"]}")
-    kapt("com.squareup.inject:assisted-inject-processor-dagger2:${versions["assistedinject"]}")
+    implementation(Dependencies.Dagger.runtime)
+    kapt(Dependencies.Dagger.compiler)
+    implementation(Dependencies.Dagger.androidRuntime)
+    kapt(Dependencies.Dagger.androidCompiler)
+    compileOnly(Dependencies.Dagger.AssistedInject.runtime)
+    kapt(Dependencies.Dagger.AssistedInject.compiler)
 
-    implementation("com.squareup.okhttp3:okhttp:${versions["okhttp"]}")
-    implementation("com.squareup.okhttp3:logging-interceptor:${versions["okhttp"]}")
-    implementation("com.squareup.retrofit2:retrofit:${versions["retrofit"]}")
-    implementation("com.squareup.retrofit2:converter-moshi:${versions["retrofit"]}")
-    implementation("com.squareup.moshi:moshi:${versions["moshi"]}")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:${versions["moshi"]}")
+    implementation(Dependencies.OkHttp.client)
+    implementation(Dependencies.OkHttp.loggingInterceptor)
+    implementation(Dependencies.Retrofit.client)
+    implementation(Dependencies.Retrofit.moshiConverter)
+    implementation(Dependencies.Moshi.runtime)
+    kapt(Dependencies.Moshi.compiler)
 
-    implementation("com.squareup.sqldelight:android-driver:${versions["sqldelight"]}")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:${versions["sqldelight"]}")
+    implementation(Dependencies.SqlDelight.android)
+    implementation(Dependencies.SqlDelight.coroutines)
 
-    implementation("com.jakewharton.timber:timber-android:${versions["timber"]}")
+    implementation(Dependencies.timber)
 
     testImplementation("junit:junit:4.12")
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
