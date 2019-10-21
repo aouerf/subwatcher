@@ -1,13 +1,16 @@
 import io.github.aouerfelli.subwatcher.Dependencies
 import io.github.aouerfelli.subwatcher.Kotlin
+/* TODO: Blocked by https://github.com/gradle/gradle/issues/9270
+import io.github.aouerfelli.subwatcher.GradlePlugins
+*/
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 plugins {
-    id("com.android.application")
+    id(io.github.aouerfelli.subwatcher.GradlePlugins.Android.id)
     kotlin(io.github.aouerfelli.subwatcher.Kotlin.android)
     kotlin(io.github.aouerfelli.subwatcher.Kotlin.kapt)
-    id("com.squareup.sqldelight")
+    id(io.github.aouerfelli.subwatcher.GradlePlugins.SqlDelight.id)
 }
 
 android {
