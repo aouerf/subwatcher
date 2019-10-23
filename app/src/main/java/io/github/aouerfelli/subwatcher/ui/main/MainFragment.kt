@@ -19,9 +19,9 @@ import io.github.aouerfelli.subwatcher.util.onSwipe
 import io.github.aouerfelli.subwatcher.util.provideViewModel
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
+import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
-import javax.inject.Inject
 
 class MainFragment : DaggerFragment() {
 
