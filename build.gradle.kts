@@ -7,6 +7,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven("https://dl.bintray.com/kotlin/kotlin-eap")
         maven("https://plugins.gradle.org/m2/")
     }
 
@@ -24,6 +25,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven("https://dl.bintray.com/kotlin/kotlin-eap")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
