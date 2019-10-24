@@ -2,7 +2,7 @@ package io.github.aouerfelli.subwatcher
 
 object Dependencies {
 
-    const val material = "com.google.android.material:material:1.1.0-beta01"
+    const val material = "com.google.android.material:material:1.2.0-alpha01"
 
     const val coil = "io.coil-kt:coil:0.8.0"
 
