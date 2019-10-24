@@ -15,7 +15,7 @@ object Dependencies {
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.1.0"
         const val activity = "androidx.activity:activity-ktx:1.1.0-beta01"
-        const val fragment = "androidx.fragment:fragment-ktx:1.2.0-beta02"
+        const val fragment = "androidx.fragment:fragment-ktx:1.2.0-rc01"
         const val core = "androidx.core:core-ktx:1.2.0-beta01"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta3"
         const val recyclerView = "androidx.recyclerview:recyclerview:1.1.0-beta05"
