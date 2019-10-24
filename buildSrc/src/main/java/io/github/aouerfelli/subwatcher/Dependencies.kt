@@ -34,7 +34,7 @@ object Dependencies {
     }
 
     object Dagger {
-        private const val version = "2.24"
+        private const val version = "2.25.2"
 
         const val runtime = "com.google.dagger:dagger:$version"
         const val compiler = "com.google.dagger:dagger-compiler:$version"

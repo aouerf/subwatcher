@@ -17,7 +17,6 @@ object DatabaseModule {
 
     private const val DB_NAME = "subwatcher.db"
 
-    @JvmStatic
     @Provides
     @Singleton
     fun provideDatabase(context: Context): Database {
@@ -45,7 +44,6 @@ object DatabaseModule {
         return Database(sqliteDriver, subredditAdapter = subredditAdapter)
     }
 
-    @JvmStatic
     @Provides
     fun provideSubredditQueries(database: Database) = database.subredditEntityQueries
 }
