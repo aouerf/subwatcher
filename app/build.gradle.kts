@@ -31,6 +31,13 @@ android {
             )
         }
     }
+    lintOptions {
+        isCheckReleaseBuilds = false
+        textReport = true
+        htmlReport = false
+        xmlReport = false
+        isExplainIssues = false
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
