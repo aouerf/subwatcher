@@ -3,7 +3,7 @@ package io.github.aouerfelli.subwatcher
 object GradlePlugins {
 
     object Android {
-        const val classpath = "com.android.tools.build:gradle:3.6.0-beta01"
+        const val classpath = "com.android.tools.build:gradle:4.0.0-alpha01"
         const val id = "com.android.application"
     }
 
