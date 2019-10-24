@@ -73,6 +73,7 @@ dependencies {
     implementation(Dependencies.AndroidX.fragment)
     implementation(Dependencies.AndroidX.core)
     implementation(Dependencies.AndroidX.constraintLayout)
+    implementation(Dependencies.AndroidX.coordinatorLayout)
     implementation(Dependencies.AndroidX.recyclerView)
     implementation(Dependencies.AndroidX.swipeRefreshLayout)
     implementation(Dependencies.AndroidX.browser)

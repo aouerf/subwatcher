@@ -14,22 +14,23 @@ object Dependencies {
 
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.1.0"
-        const val activity = "androidx.activity:activity-ktx:1.1.0-beta01"
+        const val activity = "androidx.activity:activity-ktx:1.1.0-rc01"
         const val fragment = "androidx.fragment:fragment-ktx:1.2.0-rc01"
         const val core = "androidx.core:core-ktx:1.2.0-beta01"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta3"
-        const val recyclerView = "androidx.recyclerview:recyclerview:1.1.0-beta05"
+        const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0-rc01"
+        const val recyclerView = "androidx.recyclerview:recyclerview:1.1.0-rc01"
         const val swipeRefreshLayout =
             "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03"
-        const val browser = "androidx.browser:browser:1.2.0-alpha08"
+        const val browser = "androidx.browser:browser:1.2.0-alpha09"
 
         object Lifecycle {
-            private const val version = "2.2.0-beta01"
+            private const val version = "2.2.0-rc01"
 
             const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
             const val viewModelSavedState =
-                "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-beta01"
+                "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-rc01"
         }
     }
 
