@@ -2,8 +2,6 @@ package io.github.aouerfelli.subwatcher
 
 object Dependencies {
 
-    const val androidGradlePlugin = "com.android.tools.build:gradle:3.6.0-beta01"
-
     const val material = "com.google.android.material:material:1.1.0-beta01"
 
     const val coil = "io.coil-kt:coil:0.7.0"
@@ -21,7 +19,8 @@ object Dependencies {
         const val core = "androidx.core:core-ktx:1.2.0-beta01"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:1.1.3"
         const val recyclerView = "androidx.recyclerview:recyclerview:1.1.0-beta05"
-        const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03"
+        const val swipeRefreshLayout =
+            "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03"
         const val browser = "androidx.browser:browser:1.2.0-alpha08"
 
         object Lifecycle {
@@ -29,7 +28,8 @@ object Dependencies {
 
             const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
             const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
-            const val viewModelSavedState = "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-beta01"
+            const val viewModelSavedState =
+                "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-beta01"
         }
     }
 
@@ -71,9 +71,8 @@ object Dependencies {
     }
 
     object SqlDelight {
-        private const val version = "1.2.0"
+        private const val version = Versions.sqlDelight
 
-        const val gradlePlugin = "com.squareup.sqldelight:gradle-plugin:$version"
         const val android = "com.squareup.sqldelight:android-driver:$version"
         const val coroutines = "com.squareup.sqldelight:coroutines-extensions-jvm:$version"
     }

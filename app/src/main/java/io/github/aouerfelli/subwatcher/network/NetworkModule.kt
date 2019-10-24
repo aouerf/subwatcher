@@ -2,6 +2,7 @@ package io.github.aouerfelli.subwatcher.network
 
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -9,7 +10,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
 import timber.log.debug
-import javax.inject.Singleton
 
 @Module
 object NetworkModule {
