@@ -39,7 +39,8 @@ android {
         isExplainIssues = false
     }
     compileOptions {
-        setCoreLibraryDesugaringEnabled(true)
+        // TODO: Blocked by https://issuetracker.google.com/issues/143230247
+        // setCoreLibraryDesugaringEnabled(true)
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
