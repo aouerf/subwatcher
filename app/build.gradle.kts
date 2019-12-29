@@ -39,6 +39,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+
+        coreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -53,6 +55,9 @@ android {
     }
     buildFeatures {
         viewBinding = true
+    }
+    packagingOptions {
+        pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
     }
 }
 
