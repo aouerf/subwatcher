@@ -3,7 +3,6 @@ import io.github.aouerfelli.subwatcher.GradlePlugins
 */
 import io.github.aouerfelli.subwatcher.Dependencies
 import io.github.aouerfelli.subwatcher.Kotlin
-import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
 plugins {
     id(io.github.aouerfelli.subwatcher.GradlePlugins.Android.id)
@@ -60,7 +59,7 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(kotlin(Kotlin.stdlib, KotlinCompilerVersion.VERSION))
+    implementation(kotlin(Kotlin.stdlib))
     implementation(Dependencies.KotlinX.coroutines)
 
     implementation(Dependencies.AndroidX.appcompat)

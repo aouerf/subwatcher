@@ -11,16 +11,16 @@ buildscript {
     }
 
     dependencies {
-        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.Android.classpath)
+        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.Android.dependency)
         classpath(kotlin(io.github.aouerfelli.subwatcher.Kotlin.gradlePlugin, io.github.aouerfelli.subwatcher.Kotlin.version))
-        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.classpath)
-        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.SqlDelight.classpath)
-        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.classpath)
+        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.dependency)
+        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.SqlDelight.dependency)
+        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.dependency)
     }
 }
 
-apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.id)
 apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
+apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.id)
 
 allprojects {
     repositories {

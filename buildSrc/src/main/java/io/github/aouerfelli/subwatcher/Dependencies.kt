@@ -2,79 +2,74 @@ package io.github.aouerfelli.subwatcher
 
 object Dependencies {
 
-    const val material = "com.google.android.material:material:1.2.0-alpha03"
+    const val material = "com.google.android.material:material:${Versions.material}"
 
-    const val coil = "io.coil-kt:coil:0.8.0"
+    const val coil = "io.coil-kt:coil:${Versions.coil}"
 
-    const val timber = "com.jakewharton.timber:timber-android:5.0.0-SNAPSHOT"
+    const val timber = "com.jakewharton.timber:timber-android:${Versions.timber}"
 
     object KotlinX {
-        const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3"
+        const val coroutines =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.2.0-alpha01"
-        const val activity = "androidx.activity:activity-ktx:1.1.0-rc03"
-        const val fragment = "androidx.fragment:fragment-ktx:1.2.0-rc04"
-        const val core = "androidx.core:core-ktx:1.2.0-rc01"
-        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta4"
-        const val coordinatorLayout = "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
-        const val recyclerView = "androidx.recyclerview:recyclerview:1.2.0-alpha01"
+        const val appcompat = "androidx.appcompat:appcompat:${Versions.AndroidX.appcompat}"
+        const val activity = "androidx.activity:activity-ktx:${Versions.AndroidX.activity}"
+        const val fragment = "androidx.fragment:fragment-ktx:${Versions.AndroidX.fragment}"
+        const val core = "androidx.core:core-ktx:${Versions.AndroidX.core}"
+        const val constraintLayout =
+            "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.constraintLayout}"
+        const val coordinatorLayout =
+            "androidx.coordinatorlayout:coordinatorlayout:${Versions.AndroidX.coordinatorLayout}"
+        const val recyclerView =
+            "androidx.recyclerview:recyclerview:${Versions.AndroidX.recyclerView}"
         const val swipeRefreshLayout =
-            "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha03"
-        const val browser = "androidx.browser:browser:1.2.0"
+            "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.AndroidX.swipeRefreshLayout}"
+        const val browser = "androidx.browser:browser:${Versions.AndroidX.browser}"
 
         object Lifecycle {
-            private const val version = "2.2.0-rc03"
-
-            const val liveData = "androidx.lifecycle:lifecycle-livedata-ktx:$version"
-            const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+            const val liveData =
+                "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.lifecycle}"
+            const val viewModel =
+                "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}"
             const val viewModelSavedState =
-                "androidx.lifecycle:lifecycle-viewmodel-savedstate:1.0.0-rc03"
+                "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.AndroidX.viewModelSavedState}"
         }
     }
 
     object Dagger {
-        private const val version = "2.25.4"
-
-        const val runtime = "com.google.dagger:dagger:$version"
-        const val compiler = "com.google.dagger:dagger-compiler:$version"
-        const val androidRuntime = "com.google.dagger:dagger-android-support:$version"
-        const val androidCompiler = "com.google.dagger:dagger-android-processor:$version"
+        const val runtime = "com.google.dagger:dagger:${Versions.dagger}"
+        const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
+        const val androidRuntime = "com.google.dagger:dagger-android-support:${Versions.dagger}"
+        const val androidCompiler = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
 
         object AssistedInject {
-            private const val version = "0.5.2"
-
-            const val runtime = "com.squareup.inject:assisted-inject-annotations-dagger2:$version"
-            const val compiler = "com.squareup.inject:assisted-inject-processor-dagger2:$version"
+            const val runtime =
+                "com.squareup.inject:assisted-inject-annotations-dagger2:${Versions.assistedInject}"
+            const val compiler =
+                "com.squareup.inject:assisted-inject-processor-dagger2:${Versions.assistedInject}"
         }
     }
 
     object OkHttp {
-        private const val version = "4.2.2"
-
-        const val client = "com.squareup.okhttp3:okhttp:$version"
-        const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
+        const val client = "com.squareup.okhttp3:okhttp:${Versions.okHttp}"
+        const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:${Versions.okHttp}"
     }
 
     object Retrofit {
-        private const val version = "2.7.0"
-
-        const val client = "com.squareup.retrofit2:retrofit:$version"
-        const val moshiConverter = "com.squareup.retrofit2:converter-moshi:$version"
+        const val client = "com.squareup.retrofit2:retrofit:${Versions.retrofit}"
+        const val moshiConverter = "com.squareup.retrofit2:converter-moshi:${Versions.retrofit}"
     }
 
     object Moshi {
-        private const val version = "1.9.2"
-
-        const val runtime = "com.squareup.moshi:moshi:$version"
-        const val compiler = "com.squareup.moshi:moshi-kotlin-codegen:$version"
+        const val runtime = "com.squareup.moshi:moshi:${Versions.moshi}"
+        const val compiler = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
     }
 
     object SqlDelight {
-        private const val version = Versions.sqlDelight
-
-        const val android = "com.squareup.sqldelight:android-driver:$version"
-        const val coroutines = "com.squareup.sqldelight:coroutines-extensions-jvm:$version"
+        const val android = "com.squareup.sqldelight:android-driver:${Versions.sqlDelight}"
+        const val coroutines =
+            "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqlDelight}"
     }
 }
