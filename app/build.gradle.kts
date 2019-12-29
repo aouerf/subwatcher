@@ -1,10 +1,9 @@
-import io.github.aouerfelli.subwatcher.Dependencies
-import io.github.aouerfelli.subwatcher.Kotlin
 /* TODO: Blocked by https://github.com/gradle/gradle/issues/9270
 import io.github.aouerfelli.subwatcher.GradlePlugins
 */
+import io.github.aouerfelli.subwatcher.Dependencies
+import io.github.aouerfelli.subwatcher.Kotlin
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 plugins {
     id(io.github.aouerfelli.subwatcher.GradlePlugins.Android.id)
@@ -39,13 +38,10 @@ android {
         isExplainIssues = false
     }
     compileOptions {
-        // TODO: Blocked by https://issuetracker.google.com/issues/143230247
-        // setCoreLibraryDesugaringEnabled(true)
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        this as KotlinJvmOptions
         jvmTarget = "1.8"
         @Suppress("SuspiciousCollectionReassignment")
         freeCompilerArgs += listOf(
@@ -56,11 +52,8 @@ android {
             "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
         )
     }
-    viewBinding {
-        isEnabled = true
-    }
-    packagingOptions {
-        pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
+    buildFeatures {
+        viewBinding = true
     }
 }
 
