@@ -7,8 +7,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        maven("https://dl.bintray.com/kotlin/kotlin-eap")
-        maven("https://plugins.gradle.org/m2/")
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -16,16 +15,17 @@ buildscript {
         classpath(kotlin(io.github.aouerfelli.subwatcher.Kotlin.gradlePlugin, io.github.aouerfelli.subwatcher.Kotlin.version))
         classpath(io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.classpath)
         classpath(io.github.aouerfelli.subwatcher.GradlePlugins.SqlDelight.classpath)
+        classpath(io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.classpath)
     }
 }
 
-allprojects {
-    apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
+apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.id)
+apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
 
+allprojects {
     repositories {
         google()
         jcenter()
-        maven("https://dl.bintray.com/kotlin/kotlin-eap")
         maven("https://oss.sonatype.org/content/repositories/snapshots")
     }
 }

@@ -12,6 +12,11 @@ object GradlePlugins {
         const val id = "org.jlleitschuh.gradle.ktlint"
     }
 
+    object GradleVersions {
+        const val classpath = "com.github.ben-manes:gradle-versions-plugin:0.27.0"
+        const val id = "com.github.ben-manes.versions"
+    }
+
     object SqlDelight {
         const val classpath = "com.squareup.sqldelight:gradle-plugin:${Versions.sqlDelight}"
         const val id = "com.squareup.sqldelight"
