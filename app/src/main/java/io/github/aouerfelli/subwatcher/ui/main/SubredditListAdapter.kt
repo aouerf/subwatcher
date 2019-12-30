@@ -17,9 +17,7 @@ import io.github.aouerfelli.subwatcher.util.toBitmap
 class SubredditListAdapter : ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
 
     companion object {
-
         private val diffCallback = object : DiffUtil.ItemCallback<Subreddit>() {
-
             override fun areItemsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
                 return oldItem.id == newItem.id
             }

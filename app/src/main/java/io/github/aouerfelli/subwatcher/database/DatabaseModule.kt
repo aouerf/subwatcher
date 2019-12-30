@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.di
+package io.github.aouerfelli.subwatcher.database
 
 import android.content.Context
 import com.squareup.sqldelight.ColumnAdapter
