@@ -32,6 +32,6 @@ internal object Versions {
     const val okHttp = "4.2.2"
     const val retrofit = "2.7.0"
     const val moshi = "1.9.2"
-    const val coil = "0.9.0"
+    const val coil = "0.9.1"
     const val timber = "5.0.0-SNAPSHOT"
 }
