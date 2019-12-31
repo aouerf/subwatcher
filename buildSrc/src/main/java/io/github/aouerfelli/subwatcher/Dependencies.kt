@@ -4,7 +4,7 @@ object Dependencies {
 
     const val material = "com.google.android.material:material:${Versions.material}"
 
-    const val coil = "io.coil-kt:coil:${Versions.coil}"
+    const val coil = "io.coil-kt:coil-base:${Versions.coil}"
 
     const val timber = "com.jakewharton.timber:timber-android:${Versions.timber}"
 

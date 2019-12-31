@@ -3,6 +3,7 @@ package io.github.aouerfelli.subwatcher.ui.main
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
+import coil.ImageLoader
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
@@ -18,9 +19,9 @@ import io.github.aouerfelli.subwatcher.util.observeNotNull
 import io.github.aouerfelli.subwatcher.util.onSwipe
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
-import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
+import javax.inject.Inject
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
@@ -31,10 +32,12 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     override val viewModelCreator: ViewModelCreator<MainViewModel> = { viewModelFactory.create(it) }
     override val viewModelClass = MainViewModel::class
 
+    @Inject
+    lateinit var imageLoader: ImageLoader
     private lateinit var subredditListAdapter: SubredditListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        subredditListAdapter = SubredditListAdapter()
+        subredditListAdapter = SubredditListAdapter(imageLoader)
         binding.subredditList.adapter = subredditListAdapter
         binding.subredditList.onSwipe { viewHolder, _ ->
             val position = viewHolder.adapterPosition

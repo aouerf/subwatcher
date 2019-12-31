@@ -2,6 +2,7 @@ package io.github.aouerfelli.subwatcher.repository
 
 import android.database.sqlite.SQLiteConstraintException
 import androidx.core.net.toUri
+import coil.ImageLoader
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.aouerfelli.subwatcher.Subreddit
@@ -12,17 +13,18 @@ import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
 import io.github.aouerfelli.subwatcher.util.nullIfEmpty
 import io.github.aouerfelli.subwatcher.util.toImageBlob
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class SubredditRepository @Inject constructor(
     private val service: RedditService,
-    private val database: SubredditEntityQueries
+    private val database: SubredditEntityQueries,
+    private val imageLoader: ImageLoader
 ) {
 
     val subreddits = database.selectAll().asFlow().mapToList(Dispatchers.IO)
@@ -45,7 +47,7 @@ class SubredditRepository @Inject constructor(
             Subreddit.Impl(
                 id = SubredditId(id),
                 name = SubredditName(displayName),
-                iconImage = iconImageUrl?.nullIfEmpty()?.toUri()?.toImageBlob()
+                iconImage = iconImageUrl?.nullIfEmpty()?.toUri()?.toImageBlob(imageLoader)
             )
         }
     }
