@@ -1,46 +1,37 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
-import dagger.android.support.DaggerFragment
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
+import io.github.aouerfelli.subwatcher.ui.BaseFragment
+import io.github.aouerfelli.subwatcher.ui.ViewInflater
+import io.github.aouerfelli.subwatcher.ui.ViewModelCreator
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
 import io.github.aouerfelli.subwatcher.util.launch
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observe
 import io.github.aouerfelli.subwatcher.util.observeNotNull
 import io.github.aouerfelli.subwatcher.util.onSwipe
-import io.github.aouerfelli.subwatcher.util.provideViewModel
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
 import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
 
-class MainFragment : DaggerFragment() {
+class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
-    private lateinit var binding: MainFragmentBinding
-
-    private lateinit var subredditListAdapter: SubredditListAdapter
+    override val viewInflater: ViewInflater<MainFragmentBinding> = MainFragmentBinding::inflate
 
     @Inject
-    lateinit var mainViewModelFactory: MainViewModel.Factory
-    private lateinit var mainViewModel: MainViewModel
+    lateinit var viewModelFactory: MainViewModel.Factory
+    override val viewModelCreator: ViewModelCreator<MainViewModel> = { viewModelFactory.create(it) }
+    override val viewModelClass = MainViewModel::class
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = MainFragmentBinding.inflate(layoutInflater, container, false)
-        return binding.root
-    }
+    private lateinit var subredditListAdapter: SubredditListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         subredditListAdapter = SubredditListAdapter()
@@ -48,28 +39,24 @@ class MainFragment : DaggerFragment() {
         binding.subredditList.onSwipe { viewHolder, _ ->
             val position = viewHolder.adapterPosition
             val item = subredditListAdapter.currentList[position]
-            mainViewModel.delete(item)
+            viewModel.delete(item)
         }
 
         binding.subredditsRefresh.setThemeColorScheme()
         binding.subredditsRefresh.setOnRefreshListener {
-            mainViewModel.refresh()
+            viewModel.refresh()
         }
 
         binding.addSubredditButton.setOnClickListener {
-            mainViewModel.add("random")
+            viewModel.add("random")
         }
-    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        mainViewModel = provideViewModel(mainViewModelFactory::create)
         with(viewLifecycleOwner) {
-            observe(mainViewModel.subredditList, subredditListAdapter::submitList)
-            observe(mainViewModel.isLoading, binding.subredditsRefresh::setRefreshing)
-            observeNotNull(mainViewModel.refreshedSubreddits, ::onSubredditsRefreshed)
-            observeNotNull(mainViewModel.addedSubreddit, ::onSubredditAdded)
-            observeNotNull(mainViewModel.deletedSubreddit, ::onSubredditDeleted)
+            observe(viewModel.subredditList, subredditListAdapter::submitList)
+            observe(viewModel.isLoading, binding.subredditsRefresh::setRefreshing)
+            observeNotNull(viewModel.refreshedSubreddits, ::onSubredditsRefreshed)
+            observeNotNull(viewModel.addedSubreddit, ::onSubredditAdded)
+            observeNotNull(viewModel.deletedSubreddit, ::onSubredditDeleted)
         }
     }
 
@@ -126,7 +113,7 @@ class MainFragment : DaggerFragment() {
                 R.string.action_undo.toAndroidString(),
                 length = SnackbarLength.LONG
             ) {
-                mainViewModel.add(subreddit)
+                viewModel.add(subreddit)
             }
         }
 
