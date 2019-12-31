@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.StringRes
 import coil.ImageLoader
+import io.github.aouerfelli.subwatcher.BuildConfig
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
+import io.github.aouerfelli.subwatcher.repository.SubredditName
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.ui.ViewInflater
 import io.github.aouerfelli.subwatcher.ui.ViewModelCreator
@@ -50,8 +52,11 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
             viewModel.refresh()
         }
 
-        binding.addSubredditButton.setOnClickListener {
-            viewModel.add("random")
+        binding.addSubredditButton.setOnLongClickListener {
+            if (BuildConfig.DEBUG) {
+                viewModel.add(SubredditName.random.value)
+                true
+            } else false
         }
 
         with(viewLifecycleOwner) {

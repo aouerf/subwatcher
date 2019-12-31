@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import io.github.aouerfelli.subwatcher.repository.SubredditName
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import okhttp3.Cache
@@ -20,7 +21,7 @@ import timber.log.debug
 @Module
 object NetworkModule {
 
-    const val BASE_URL = "https://www.reddit.com"
+    private const val BASE_URL = SubredditName.baseUrl
     private const val LOG_TAG = "OkHttp"
 
     @Retention(AnnotationRetention.BINARY)
