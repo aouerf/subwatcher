@@ -30,7 +30,7 @@ internal object Versions {
     const val dagger = "2.25.4"
     const val assistedInject = "0.5.2"
     const val okHttp = "4.3.0"
-    const val retrofit = "2.7.0"
+    const val retrofit = "2.7.1"
     const val moshi = "1.9.2"
     const val coil = "0.9.1"
     const val timber = "5.0.0-SNAPSHOT"
