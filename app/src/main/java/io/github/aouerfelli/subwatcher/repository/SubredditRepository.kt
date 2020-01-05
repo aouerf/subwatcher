@@ -13,12 +13,12 @@ import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
 import io.github.aouerfelli.subwatcher.util.nullIfEmpty
 import io.github.aouerfelli.subwatcher.util.toImageBlob
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class SubredditRepository @Inject constructor(

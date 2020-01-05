@@ -19,10 +19,11 @@ buildscript {
     }
 }
 
-apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
 apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.GradleVersions.id)
 
 allprojects {
+    apply(plugin = io.github.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
+
     repositories {
         google()
         jcenter()
