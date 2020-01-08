@@ -35,6 +35,8 @@ object Dependencies {
                 "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}"
             const val viewModelSavedState =
                 "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.AndroidX.viewModelSavedState}"
+            const val process =
+                "androidx.lifecycle:lifecycle-process:${Versions.AndroidX.lifecycle}"
         }
     }
 
