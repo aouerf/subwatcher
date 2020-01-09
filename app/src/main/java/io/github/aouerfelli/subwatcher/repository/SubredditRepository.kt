@@ -19,15 +19,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 
 @Singleton
 class SubredditRepository @Inject constructor(
-    private val service: RedditService,
-    private val database: SubredditEntityQueries,
+    private val api: RedditService,
+    private val db: SubredditEntityQueries,
     private val imageLoader: ImageLoader
 ) {
 
-    val subreddits = database.selectAll().asFlow().mapToList(Dispatchers.IO)
+    private val ioDispatcher = Dispatchers.IO
+
+    val subreddits = db.selectAll().asFlow().mapToList(ioDispatcher)
 
     private inline fun <T : Any, U : Any> Response<T>.mapToResult(
         transform: (T) -> U
@@ -53,24 +56,27 @@ class SubredditRepository @Inject constructor(
     }
 
     private suspend fun fetchSubreddit(name: SubredditName): Result<Subreddit> {
-        val response = service.fetch { getAboutSubreddit(name.value) }
+        val response = api.fetch { getAboutSubreddit(name.value) }
         return response.mapToResult { it.mapSubreddit() }
     }
 
-    @Suppress("RedundantSuspendModifier")
     private suspend fun insertSubreddit(subreddit: Subreddit): Result<Subreddit> {
-        return try {
-            database.insert(subreddit)
-            Result.success(subreddit)
-        } catch (e: SQLiteConstraintException) {
-            Result.databaseFailure()
+        return withContext(ioDispatcher) {
+            try {
+                db.insert(subreddit)
+                Result.success(subreddit)
+            } catch (e: SQLiteConstraintException) {
+                Result.databaseFailure()
+            }
         }
     }
 
     suspend fun addSubreddit(subredditName: String): Result<Subreddit> {
         val name = SubredditName(subredditName)
 
-        val existingSubreddit = database.select(name).executeAsOneOrNull()
+        val existingSubreddit = withContext(ioDispatcher) {
+            db.select(name).executeAsOneOrNull()
+        }
         if (existingSubreddit != null) {
             return Result.success(existingSubreddit)
         }
@@ -87,21 +93,23 @@ class SubredditRepository @Inject constructor(
         return insertSubreddit(subreddit)
     }
 
-    @Suppress("RedundantSuspendModifier")
     suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
-        database.delete(subreddit.id)
-        return Result.success(subreddit)
+        return withContext(ioDispatcher) {
+            db.delete(subreddit.id)
+            Result.success(subreddit)
+        }
     }
 
-    @Suppress("RedundantSuspendModifier")
     private suspend fun updateSubreddit(subreddit: Subreddit) {
-        with(subreddit) {
-            database.update(id = id, name = name, iconImage = iconImage)
+        return withContext(ioDispatcher) {
+            with(subreddit) {
+                db.update(id = id, name = name, iconImage = iconImage)
+            }
         }
     }
 
     private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
-        val response = service.fetch { getAboutSubreddit(subreddit.name.value) }
+        val response = api.fetch { getAboutSubreddit(subreddit.name.value) }
         return response.mapToResult { body -> body.mapSubreddit().also { updateSubreddit(it) } }
     }
 
@@ -119,7 +127,9 @@ class SubredditRepository @Inject constructor(
 
         return coroutineScope {
             var finalResult: Result<Nothing> = Result.success()
-            val subreddits = database.selectAll().executeAsList()
+            val subreddits = withContext(ioDispatcher) {
+                db.selectAll().executeAsList()
+            }
             // TODO: Wait for concurrent Flow (https://github.com/Kotlin/kotlinx.coroutines/issues/1147)
             subreddits.map { subreddit ->
                 async {

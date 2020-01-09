@@ -12,11 +12,9 @@ import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.util.asEventLiveData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainViewModel @AssistedInject constructor(
     private val repository: SubredditRepository,
@@ -48,7 +46,7 @@ class MainViewModel @AssistedInject constructor(
 
     private inline fun load(crossinline load: suspend () -> Unit) = viewModelScope.launch {
         _isLoading.value = true
-        withContext(Dispatchers.IO) { load() }
+        load()
         _isLoading.value = false
     }
 
