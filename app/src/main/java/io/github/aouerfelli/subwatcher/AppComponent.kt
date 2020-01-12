@@ -12,20 +12,20 @@ import javax.inject.Singleton
 
 @Singleton
 @Component(
-    modules = [
-        AndroidInjectionModule::class,
-        AssistedInjectModule::class,
-        NetworkModule::class,
-        DatabaseModule::class,
-        ApplicationModule::class
-    ]
+  modules = [
+    AndroidInjectionModule::class,
+    AssistedInjectModule::class,
+    NetworkModule::class,
+    DatabaseModule::class,
+    ApplicationModule::class
+  ]
 )
 interface AppComponent : AndroidInjector<SubwatcherApplication> {
 
-    @Component.Factory
-    interface Factory {
-        fun create(@BindsInstance application: SubwatcherApplication): AppComponent
-    }
+  @Component.Factory
+  interface Factory {
+    fun create(@BindsInstance application: SubwatcherApplication): AppComponent
+  }
 }
 
 @AssistedModule

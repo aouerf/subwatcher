@@ -15,35 +15,35 @@ import javax.inject.Singleton
 @Module
 object DatabaseModule {
 
-    private const val DB_NAME = "subwatcher.db"
+  private const val DB_NAME = "subwatcher.db"
 
-    @Provides
-    @Singleton
-    fun provideDatabase(context: Context): Database {
-        val subredditAdapter = Subreddit.Adapter(
-            idAdapter = object : ColumnAdapter<SubredditId, String> {
-                override fun decode(databaseValue: String) = SubredditId(databaseValue)
-                override fun encode(value: SubredditId) = value.value
-            },
-            nameAdapter = object : ColumnAdapter<SubredditName, String> {
-                override fun decode(databaseValue: String) = SubredditName(databaseValue)
-                override fun encode(value: SubredditName) = value.value
-            },
-            iconImageAdapter = object : ColumnAdapter<ImageBlob, ByteArray> {
-                override fun decode(databaseValue: ByteArray) = ImageBlob(databaseValue)
-                override fun encode(value: ImageBlob) = value.value
-            }
-        )
+  @Provides
+  @Singleton
+  fun provideDatabase(context: Context): Database {
+    val subredditAdapter = Subreddit.Adapter(
+      idAdapter = object : ColumnAdapter<SubredditId, String> {
+        override fun decode(databaseValue: String) = SubredditId(databaseValue)
+        override fun encode(value: SubredditId) = value.value
+      },
+      nameAdapter = object : ColumnAdapter<SubredditName, String> {
+        override fun decode(databaseValue: String) = SubredditName(databaseValue)
+        override fun encode(value: SubredditName) = value.value
+      },
+      iconImageAdapter = object : ColumnAdapter<ImageBlob, ByteArray> {
+        override fun decode(databaseValue: ByteArray) = ImageBlob(databaseValue)
+        override fun encode(value: ImageBlob) = value.value
+      }
+    )
 
-        val sqliteDriver = AndroidSqliteDriver(
-            schema = Database.Schema,
-            context = context,
-            name = DB_NAME
-        )
+    val sqliteDriver = AndroidSqliteDriver(
+      schema = Database.Schema,
+      context = context,
+      name = DB_NAME
+    )
 
-        return Database(sqliteDriver, subredditAdapter = subredditAdapter)
-    }
+    return Database(sqliteDriver, subredditAdapter = subredditAdapter)
+  }
 
-    @Provides
-    fun provideSubredditQueries(database: Database) = database.subredditEntityQueries
+  @Provides
+  fun provideSubredditQueries(database: Database) = database.subredditEntityQueries
 }

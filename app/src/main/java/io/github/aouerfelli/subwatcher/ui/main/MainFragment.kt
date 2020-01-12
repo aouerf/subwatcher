@@ -27,107 +27,107 @@ import timber.log.warn
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
-    override val viewInflater: ViewInflater<MainFragmentBinding> = MainFragmentBinding::inflate
+  override val viewInflater: ViewInflater<MainFragmentBinding> = MainFragmentBinding::inflate
 
-    @Inject
-    lateinit var viewModelFactory: MainViewModel.Factory
-    override val viewModelCreator: ViewModelCreator<MainViewModel> = { viewModelFactory.create(it) }
-    override val viewModelClass = MainViewModel::class
+  @Inject
+  lateinit var viewModelFactory: MainViewModel.Factory
+  override val viewModelCreator: ViewModelCreator<MainViewModel> = { viewModelFactory.create(it) }
+  override val viewModelClass = MainViewModel::class
 
-    @Inject
-    lateinit var imageLoader: ImageLoader
-    private lateinit var subredditListAdapter: SubredditListAdapter
+  @Inject
+  lateinit var imageLoader: ImageLoader
+  private lateinit var subredditListAdapter: SubredditListAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        subredditListAdapter = SubredditListAdapter(imageLoader)
-        binding.subredditList.adapter = subredditListAdapter
-        binding.subredditList.onSwipe { viewHolder, _ ->
-            val position = viewHolder.adapterPosition
-            val item = subredditListAdapter.currentList[position]
-            viewModel.delete(item)
-        }
-
-        binding.subredditsRefresh.setThemeColorScheme()
-        binding.subredditsRefresh.setOnRefreshListener {
-            viewModel.refresh()
-        }
-
-        binding.addSubredditButton.setOnLongClickListener {
-            if (BuildConfig.DEBUG) {
-                viewModel.add(SubredditName.random.value)
-                true
-            } else false
-        }
-
-        with(viewLifecycleOwner) {
-            observe(viewModel.subredditList, subredditListAdapter::submitList)
-            observe(viewModel.isLoading, binding.subredditsRefresh::setRefreshing)
-            observeNotNull(viewModel.refreshedSubreddits, ::onSubredditsRefreshed)
-            observeNotNull(viewModel.addedSubreddit, ::onSubredditAdded)
-            observeNotNull(viewModel.deletedSubreddit, ::onSubredditDeleted)
-        }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    subredditListAdapter = SubredditListAdapter(imageLoader)
+    binding.subredditList.adapter = subredditListAdapter
+    binding.subredditList.onSwipe { viewHolder, _ ->
+      val position = viewHolder.adapterPosition
+      val item = subredditListAdapter.currentList[position]
+      viewModel.delete(item)
     }
 
-    private fun onError(result: Result.Error) {
-        @StringRes val stringRes = when (result) {
-            Result.Error.ConnectionError -> R.string.no_connection
-            Result.Error.NetworkError -> R.string.server_unreachable
-        }
-        binding.root.makeSnackbar(stringRes.toAndroidString())
+    binding.subredditsRefresh.setThemeColorScheme()
+    binding.subredditsRefresh.setOnRefreshListener {
+      viewModel.refresh()
     }
 
-    private fun onSubredditsRefreshed(result: Result<Nothing>) {
-        when (result) {
-            is Result.Success.Empty -> Unit
-            is Result.Error -> onError(result)
-            else -> Timber.warn { "Refreshed subreddits result $result is not handled." }
-        }
+    binding.addSubredditButton.setOnLongClickListener {
+      if (BuildConfig.DEBUG) {
+        viewModel.add(SubredditName.random.value)
+        true
+      } else false
     }
 
-    private fun onSubredditAdded(nameAndResult: Pair<String, Result<Subreddit>>) {
-        val (name, result) = nameAndResult
+    with(viewLifecycleOwner) {
+      observe(viewModel.subredditList, subredditListAdapter::submitList)
+      observe(viewModel.isLoading, binding.subredditsRefresh::setRefreshing)
+      observeNotNull(viewModel.refreshedSubreddits, ::onSubredditsRefreshed)
+      observeNotNull(viewModel.addedSubreddit, ::onSubredditAdded)
+      observeNotNull(viewModel.deletedSubreddit, ::onSubredditDeleted)
+    }
+  }
 
-        fun onSuccess(subreddit: Subreddit) {
-            binding.root.makeSnackbar(
-                getString(R.string.added_subreddit, subreddit.name.value).toAndroidString(),
-                R.string.action_view.toAndroidString(),
-                length = SnackbarLength.LONG
-            ) {
-                context?.let(subreddit.name.asUrl()::launch)
-            }
-        }
+  private fun onError(result: Result.Error) {
+    @StringRes val stringRes = when (result) {
+      Result.Error.ConnectionError -> R.string.no_connection
+      Result.Error.NetworkError -> R.string.server_unreachable
+    }
+    binding.root.makeSnackbar(stringRes.toAndroidString())
+  }
 
-        fun onFailure(failure: Result.Failure) {
-            @StringRes val stringRes = when (failure) {
-                Result.Failure.NetworkFailure -> R.string.added_subreddit_does_not_exist
-                Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
-            }
-            val string = getString(stringRes, name).toAndroidString()
-            binding.root.makeSnackbar(string)
-        }
+  private fun onSubredditsRefreshed(result: Result<Nothing>) {
+    when (result) {
+      is Result.Success.Empty -> Unit
+      is Result.Error -> onError(result)
+      else -> Timber.warn { "Refreshed subreddits result $result is not handled." }
+    }
+  }
 
-        when (result) {
-            is Result.Success -> onSuccess(result.data)
-            is Result.Failure -> onFailure(result)
-            is Result.Error -> onError(result)
-            else -> Timber.warn { "Add subreddit result $result is not handled." }
-        }
+  private fun onSubredditAdded(nameAndResult: Pair<String, Result<Subreddit>>) {
+    val (name, result) = nameAndResult
+
+    fun onSuccess(subreddit: Subreddit) {
+      binding.root.makeSnackbar(
+        getString(R.string.added_subreddit, subreddit.name.value).toAndroidString(),
+        R.string.action_view.toAndroidString(),
+        length = SnackbarLength.LONG
+      ) {
+        context?.let(subreddit.name.asUrl()::launch)
+      }
     }
 
-    private fun onSubredditDeleted(result: Result<Subreddit>) {
-        fun onSuccess(subreddit: Subreddit) {
-            binding.root.makeSnackbar(
-                getString(R.string.deleted_subreddit, subreddit.name.value).toAndroidString(),
-                R.string.action_undo.toAndroidString(),
-                length = SnackbarLength.LONG
-            ) {
-                viewModel.add(subreddit)
-            }
-        }
-
-        when (result) {
-            is Result.Success -> onSuccess(result.data)
-            else -> Timber.warn { "Delete subreddit result $result is not handled." }
-        }
+    fun onFailure(failure: Result.Failure) {
+      @StringRes val stringRes = when (failure) {
+        Result.Failure.NetworkFailure -> R.string.added_subreddit_does_not_exist
+        Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
+      }
+      val string = getString(stringRes, name).toAndroidString()
+      binding.root.makeSnackbar(string)
     }
+
+    when (result) {
+      is Result.Success -> onSuccess(result.data)
+      is Result.Failure -> onFailure(result)
+      is Result.Error -> onError(result)
+      else -> Timber.warn { "Add subreddit result $result is not handled." }
+    }
+  }
+
+  private fun onSubredditDeleted(result: Result<Subreddit>) {
+    fun onSuccess(subreddit: Subreddit) {
+      binding.root.makeSnackbar(
+        getString(R.string.deleted_subreddit, subreddit.name.value).toAndroidString(),
+        R.string.action_undo.toAndroidString(),
+        length = SnackbarLength.LONG
+      ) {
+        viewModel.add(subreddit)
+      }
+    }
+
+    when (result) {
+      is Result.Success -> onSuccess(result.data)
+      else -> Timber.warn { "Delete subreddit result $result is not handled." }
+    }
+  }
 }

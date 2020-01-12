@@ -10,10 +10,10 @@ import javax.inject.Singleton
 @Module(includes = [MainModule::class])
 object ApplicationModule {
 
-    @Provides
-    fun provideContext(application: SubwatcherApplication): Context = application
+  @Provides
+  fun provideContext(application: SubwatcherApplication): Context = application
 
-    @Provides
-    @Singleton
-    fun provideImageLoader(context: Context): ImageLoader = ImageLoader(context)
+  @Provides
+  @Singleton
+  fun provideImageLoader(context: Context): ImageLoader = ImageLoader(context)
 }

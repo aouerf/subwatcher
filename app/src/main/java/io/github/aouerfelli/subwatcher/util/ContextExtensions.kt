@@ -9,10 +9,10 @@ import androidx.annotation.ColorInt
 import androidx.core.content.res.use
 
 inline val Context.layoutInflater: LayoutInflater
-    get() = LayoutInflater.from(this)
+  get() = LayoutInflater.from(this)
 
 @SuppressLint("Recycle")
 @ColorInt
 fun Context.getThemeColor(@AttrRes attrResId: Int, @ColorInt defaultValue: Int = Color.BLACK): Int {
-    return obtainStyledAttributes(null, intArrayOf(attrResId)).use { it.getColor(0, defaultValue) }
+  return obtainStyledAttributes(null, intArrayOf(attrResId)).use { it.getColor(0, defaultValue) }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="reddit_orangered">#FF4500</color>
-    <color name="reddit_orange">#FF8717</color>
-    <color name="reddit_yellow">#FFCA00</color>
-    <color name="reddit_mango">#FFB000</color>
-    <color name="reddit_mint">#0DD3BB</color>
-    <color name="reddit_teal">#00A6A5</color>
-    <color name="reddit_blue">#24A0ED</color>
-    <color name="reddit_alien_blue">#0079D3</color>
+  <color name="reddit_orangered">#FF4500</color>
+  <color name="reddit_orange">#FF8717</color>
+  <color name="reddit_yellow">#FFCA00</color>
+  <color name="reddit_mango">#FFB000</color>
+  <color name="reddit_mint">#0DD3BB</color>
+  <color name="reddit_teal">#00A6A5</color>
+  <color name="reddit_blue">#24A0ED</color>
+  <color name="reddit_alien_blue">#0079D3</color>
 </resources>

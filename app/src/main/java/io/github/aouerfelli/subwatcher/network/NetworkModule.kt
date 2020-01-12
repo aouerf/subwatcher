@@ -21,51 +21,51 @@ import timber.log.debug
 @Module
 object NetworkModule {
 
-    private const val BASE_URL = SubredditName.baseUrl
-    private const val LOG_TAG = "OkHttp"
+  private const val BASE_URL = SubredditName.baseUrl
+  private const val LOG_TAG = "OkHttp"
 
-    @Retention(AnnotationRetention.BINARY)
-    @Qualifier
-    private annotation class InternalApi
+  @Retention(AnnotationRetention.BINARY)
+  @Qualifier
+  private annotation class InternalApi
 
-    @Provides
-    @InternalApi
-    fun provideCache(context: Context): Cache {
-        val cacheSize = 10L * 1024 * 1024 // 10 MiB
-        return Cache(context.cacheDir, cacheSize)
+  @Provides
+  @InternalApi
+  fun provideCache(context: Context): Cache {
+    val cacheSize = 10L * 1024 * 1024 // 10 MiB
+    return Cache(context.cacheDir, cacheSize)
+  }
+
+  @Provides
+  @InternalApi
+  @Singleton
+  fun provideOkHttpClient(@InternalApi cache: Cache): OkHttpClient {
+    val logTree = Timber.tagged(LOG_TAG)
+    val logger = object : HttpLoggingInterceptor.Logger {
+      override fun log(message: String) {
+        logTree.debug { message }
+      }
     }
-
-    @Provides
-    @InternalApi
-    @Singleton
-    fun provideOkHttpClient(@InternalApi cache: Cache): OkHttpClient {
-        val logTree = Timber.tagged(LOG_TAG)
-        val logger = object : HttpLoggingInterceptor.Logger {
-            override fun log(message: String) {
-                logTree.debug { message }
-            }
-        }
-        val loggingInterceptor = HttpLoggingInterceptor(logger).apply {
-            level = HttpLoggingInterceptor.Level.BASIC
-        }
-        return OkHttpClient.Builder()
-            .cache(cache)
-            .addNetworkInterceptor(loggingInterceptor)
-            .build()
+    val loggingInterceptor = HttpLoggingInterceptor(logger).apply {
+      level = HttpLoggingInterceptor.Level.BASIC
     }
+    return OkHttpClient.Builder()
+      .cache(cache)
+      .addNetworkInterceptor(loggingInterceptor)
+      .build()
+  }
 
-    @Provides
-    @Singleton
-    fun provideRedditService(@InternalApi okHttpClient: Lazy<OkHttpClient>): RedditService {
-        val callFactory = object : Call.Factory {
-            override fun newCall(request: Request) = okHttpClient.get().newCall(request)
-        }
-        val retrofit = Retrofit.Builder()
-            .callFactory(callFactory)
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .build()
-
-        return retrofit.create()
+  @Provides
+  @Singleton
+  fun provideRedditService(@InternalApi okHttpClient: Lazy<OkHttpClient>): RedditService {
+    val callFactory = object : Call.Factory {
+      override fun newCall(request: Request) = okHttpClient.get().newCall(request)
     }
+    val retrofit = Retrofit.Builder()
+      .callFactory(callFactory)
+      .baseUrl(BASE_URL)
+      .addConverterFactory(MoshiConverterFactory.create())
+      .build()
+
+    return retrofit.create()
+  }
 }

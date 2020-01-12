@@ -1,11 +1,11 @@
 package io.github.aouerfelli.subwatcher
 
 object Kotlin {
-    const val version = Versions.kotlin
+  const val version = Versions.kotlin
 
-    const val gradlePlugin = "gradle-plugin"
-    const val android = "android"
-    const val kapt = "kapt"
+  const val gradlePlugin = "gradle-plugin"
+  const val android = "android"
+  const val kapt = "kapt"
 
-    const val stdlib = "stdlib-jdk8"
+  const val stdlib = "stdlib-jdk8"
 }
