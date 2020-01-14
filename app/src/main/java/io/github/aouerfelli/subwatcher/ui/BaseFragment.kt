@@ -21,8 +21,9 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
   protected val supportActivity: AppCompatActivity?
     get() = activity as? AppCompatActivity
 
-  protected lateinit var binding: B
-    private set
+  private var _binding: B? = null
+  protected val binding: B
+    get() = checkNotNull(_binding) { "This was called before onCreateView()." }
 
   protected lateinit var viewModel: M
     private set
@@ -54,7 +55,12 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    binding = viewInflater(inflater, container, false)
+    _binding = viewInflater(inflater, container, false)
     return binding.root
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 }
