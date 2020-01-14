@@ -1,8 +1,11 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.lifecycle.SavedStateHandle
 import coil.ImageLoader
 import io.github.aouerfelli.subwatcher.BuildConfig
 import io.github.aouerfelli.subwatcher.R
@@ -10,9 +13,8 @@ import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.SubredditName
+import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
-import io.github.aouerfelli.subwatcher.ui.ViewInflater
-import io.github.aouerfelli.subwatcher.ui.ViewModelCreator
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
 import io.github.aouerfelli.subwatcher.util.launch
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
@@ -21,22 +23,27 @@ import io.github.aouerfelli.subwatcher.util.observeNotNull
 import io.github.aouerfelli.subwatcher.util.onSwipe
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
-import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
+import javax.inject.Inject
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
-  override val viewInflater: ViewInflater<MainFragmentBinding> = MainFragmentBinding::inflate
-
   @Inject
   lateinit var viewModelFactory: MainViewModel.Factory
-  override val viewModelCreator: ViewModelCreator<MainViewModel> = { viewModelFactory.create(it) }
   override val viewModelClass = MainViewModel::class
 
   @Inject
   lateinit var imageLoader: ImageLoader
   private lateinit var subredditListAdapter: SubredditListAdapter
+
+  override fun inflateView(
+    inflater: LayoutInflater,
+    root: ViewGroup?,
+    attachToRoot: Boolean
+  ): MainFragmentBinding = MainFragmentBinding.inflate(inflater, root, attachToRoot)
+
+  override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     subredditListAdapter = SubredditListAdapter(imageLoader)

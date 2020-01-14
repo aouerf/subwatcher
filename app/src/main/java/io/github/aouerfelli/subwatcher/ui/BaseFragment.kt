@@ -13,9 +13,6 @@ import androidx.viewbinding.ViewBinding
 import dagger.android.support.DaggerFragment
 import kotlin.reflect.KClass
 
-typealias ViewInflater<VB> = (LayoutInflater, ViewGroup?, Boolean) -> VB
-typealias ViewModelCreator<VM> = (SavedStateHandle) -> VM
-
 abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
 
   protected val supportActivity: AppCompatActivity?
@@ -28,11 +25,15 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
   protected lateinit var viewModel: M
     private set
 
-  protected abstract val viewInflater: ViewInflater<B>
-
   protected abstract val viewModelClass: KClass<M>
 
-  protected abstract val viewModelCreator: ViewModelCreator<M>
+  protected abstract fun inflateView(
+    inflater: LayoutInflater,
+    root: ViewGroup?,
+    attachToRoot: Boolean
+  ): B
+
+  protected abstract fun createViewModel(handle: SavedStateHandle): M
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
         handle: SavedStateHandle
       ): T {
         @Suppress("UNCHECKED_CAST")
-        return viewModelCreator(handle) as T
+        return createViewModel(handle) as T
       }
     }
     viewModel = ViewModelProvider(this, viewModelFactory)[viewModelClass.java]
@@ -55,7 +56,7 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    _binding = viewInflater(inflater, container, false)
+    _binding = inflateView(inflater, container, false)
     return binding.root
   }
 
