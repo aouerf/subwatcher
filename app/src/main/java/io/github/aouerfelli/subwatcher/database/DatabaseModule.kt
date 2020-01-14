@@ -7,9 +7,9 @@ import dagger.Module
 import dagger.Provides
 import io.github.aouerfelli.subwatcher.Database
 import io.github.aouerfelli.subwatcher.Subreddit
+import io.github.aouerfelli.subwatcher.repository.SubredditIcon
 import io.github.aouerfelli.subwatcher.repository.SubredditId
 import io.github.aouerfelli.subwatcher.repository.SubredditName
-import io.github.aouerfelli.subwatcher.util.ImageBlob
 import javax.inject.Singleton
 
 @Module
@@ -29,9 +29,9 @@ object DatabaseModule {
         override fun decode(databaseValue: String) = SubredditName(databaseValue)
         override fun encode(value: SubredditName) = value.name
       },
-      iconImageAdapter = object : ColumnAdapter<ImageBlob, ByteArray> {
-        override fun decode(databaseValue: ByteArray) = ImageBlob(databaseValue)
-        override fun encode(value: ImageBlob) = value.value
+      iconImageAdapter = object : ColumnAdapter<SubredditIcon, ByteArray> {
+        override fun decode(databaseValue: ByteArray) = SubredditIcon(databaseValue)
+        override fun encode(value: SubredditIcon) = value.image
       }
     )
 

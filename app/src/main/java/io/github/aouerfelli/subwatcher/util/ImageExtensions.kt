@@ -13,13 +13,13 @@ import coil.request.RequestDisposable
 import java.io.ByteArrayOutputStream
 
 // TODO: De-inlined because of https://github.com/cashapp/sqldelight/issues/1203#issuecomment-487438538
-class ImageBlob(val value: ByteArray) {
+class ImageBlob(val image: ByteArray) {
 
   override fun equals(other: Any?): Boolean {
-    return (this === other) || (other is ImageBlob && value.contentEquals(other.value))
+    return (this === other) || (other is ImageBlob && image.contentEquals(other.image))
   }
 
-  override fun hashCode() = value.contentHashCode()
+  override fun hashCode() = image.contentHashCode()
 }
 
 suspend fun Uri.toImageBlob(imageLoader: ImageLoader): ImageBlob {
@@ -34,7 +34,7 @@ suspend fun Uri.toImageBlob(imageLoader: ImageLoader): ImageBlob {
 }
 
 fun ImageBlob.toBitmap(): Bitmap {
-  return BitmapFactory.decodeByteArray(value, 0, value.size)
+  return BitmapFactory.decodeByteArray(image, 0, image.size)
 }
 
 inline fun ImageView.load(
