@@ -12,7 +12,6 @@ import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
-import io.github.aouerfelli.subwatcher.repository.SubredditName
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
@@ -23,9 +22,9 @@ import io.github.aouerfelli.subwatcher.util.observeNotNull
 import io.github.aouerfelli.subwatcher.util.onSwipe
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
+import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
-import javax.inject.Inject
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
@@ -61,7 +60,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
     binding.addSubredditButton.setOnLongClickListener {
       if (BuildConfig.DEBUG) {
-        viewModel.add(SubredditName.random.value)
+        viewModel.add("random")
         true
       } else false
     }
@@ -96,7 +95,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
     fun onSuccess(subreddit: Subreddit) {
       binding.root.makeSnackbar(
-        getString(R.string.added_subreddit, subreddit.name.value).toAndroidString(),
+        getString(R.string.added_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_view.toAndroidString(),
         length = SnackbarLength.LONG
       ) {
@@ -124,7 +123,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   private fun onSubredditDeleted(result: Result<Subreddit>) {
     fun onSuccess(subreddit: Subreddit) {
       binding.root.makeSnackbar(
-        getString(R.string.deleted_subreddit, subreddit.name.value).toAndroidString(),
+        getString(R.string.deleted_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_undo.toAndroidString(),
         length = SnackbarLength.LONG
       ) {

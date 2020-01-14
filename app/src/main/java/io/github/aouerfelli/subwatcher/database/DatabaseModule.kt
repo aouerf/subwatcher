@@ -23,11 +23,11 @@ object DatabaseModule {
     val subredditAdapter = Subreddit.Adapter(
       idAdapter = object : ColumnAdapter<SubredditId, String> {
         override fun decode(databaseValue: String) = SubredditId(databaseValue)
-        override fun encode(value: SubredditId) = value.value
+        override fun encode(value: SubredditId) = value.id
       },
       nameAdapter = object : ColumnAdapter<SubredditName, String> {
         override fun decode(databaseValue: String) = SubredditName(databaseValue)
-        override fun encode(value: SubredditName) = value.value
+        override fun encode(value: SubredditName) = value.name
       },
       iconImageAdapter = object : ColumnAdapter<ImageBlob, ByteArray> {
         override fun decode(databaseValue: ByteArray) = ImageBlob(databaseValue)

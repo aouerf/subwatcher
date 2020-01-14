@@ -10,6 +10,7 @@ import coil.ImageLoader
 import coil.transform.CircleCropTransformation
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
+import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.util.launch
 import io.github.aouerfelli.subwatcher.util.layoutInflater
 import io.github.aouerfelli.subwatcher.util.load
@@ -47,7 +48,7 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
       set(value) {
         field = value
         value ?: return
-        itemBinding.name.text = value.name.value
+        itemBinding.name.text = value.name.name
         itemBinding.icon.load(value.iconImage?.toBitmap(), imageLoader) {
           crossfade(true)
           transformations(CircleCropTransformation())

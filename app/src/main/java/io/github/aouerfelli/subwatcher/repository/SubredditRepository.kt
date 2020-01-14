@@ -56,7 +56,7 @@ class SubredditRepository @Inject constructor(
   }
 
   private suspend fun fetchSubreddit(name: SubredditName): Result<Subreddit> {
-    val response = api.fetch { getAboutSubreddit(name.value) }
+    val response = api.fetch { getAboutSubreddit(name.name) }
     return response.mapToResult { it.mapSubreddit() }
   }
 
@@ -109,7 +109,7 @@ class SubredditRepository @Inject constructor(
   }
 
   private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    val response = api.fetch { getAboutSubreddit(subreddit.name.value) }
+    val response = api.fetch { getAboutSubreddit(subreddit.name.name) }
     return response.mapToResult { body -> body.mapSubreddit().also { updateSubreddit(it) } }
   }
 
