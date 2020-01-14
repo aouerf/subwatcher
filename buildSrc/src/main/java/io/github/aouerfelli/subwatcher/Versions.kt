@@ -20,7 +20,7 @@ internal object Versions {
     const val coordinatorLayout = "1.1.0"
     const val recyclerView = "1.2.0-alpha01"
     const val swipeRefreshLayout = "1.1.0-alpha03"
-    const val browser = "1.2.0"
+    const val browser = "1.3.0-alpha01"
 
     const val lifecycle = "2.2.0-rc03"
     const val viewModelSavedState = "1.0.0-rc03"
