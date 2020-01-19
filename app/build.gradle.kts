@@ -78,6 +78,7 @@ dependencies {
   implementation(Dependencies.AndroidX.browser)
 
   implementation(Dependencies.material)
+  implementation(Dependencies.insetter)
 
   implementation(Dependencies.AndroidX.Lifecycle.liveData)
   implementation(Dependencies.AndroidX.Lifecycle.viewModel)
