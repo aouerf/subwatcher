@@ -21,11 +21,12 @@ enum class SnackbarLength(val flag: Int) {
   LONG(Snackbar.LENGTH_LONG)
 }
 
+// TODO: Theme snackbar
 inline fun View.makeSnackbar(
   text: AndroidString,
   actionText: AndroidString? = null,
   length: SnackbarLength = SnackbarLength.SHORT,
-  show: Boolean = true,
+  show: Boolean = false,
   crossinline action: () -> Unit = {}
 ): Snackbar {
   val textString = text.getString(context)

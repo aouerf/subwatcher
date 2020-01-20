@@ -9,6 +9,7 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
 import coil.ImageLoader
+import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.github.aouerfelli.subwatcher.BuildConfig
 import io.github.aouerfelli.subwatcher.R
@@ -38,6 +39,15 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   @Inject
   lateinit var imageLoader: ImageLoader
   private lateinit var subredditListAdapter: SubredditListAdapter
+
+  private var snackbar: Snackbar? = null
+    set(value) {
+      field = value
+      if (value != null) {
+        value.anchorView = binding?.addSubredditButton
+        value.show()
+      }
+    }
 
   override fun inflateView(
     inflater: LayoutInflater,
@@ -100,7 +110,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       Result.Error.ConnectionError -> R.string.no_connection
       Result.Error.NetworkError -> R.string.server_unreachable
     }
-    binding?.root?.makeSnackbar(stringRes.toAndroidString())
+    snackbar = binding?.root?.makeSnackbar(stringRes.toAndroidString())
   }
 
   private fun onSubredditsRefreshed(result: Result<Nothing>) {
@@ -115,7 +125,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     val (name, result) = nameAndResult
 
     fun onSuccess(subreddit: Subreddit) {
-      binding?.root?.makeSnackbar(
+      snackbar = binding?.root?.makeSnackbar(
         getString(R.string.added_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_view.toAndroidString(),
         length = SnackbarLength.LONG
@@ -130,7 +140,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
       }
       val string = getString(stringRes, name).toAndroidString()
-      binding?.root?.makeSnackbar(string)
+      snackbar = binding?.root?.makeSnackbar(string)
     }
 
     when (result) {
@@ -143,7 +153,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
   private fun onSubredditDeleted(result: Result<Subreddit>) {
     fun onSuccess(subreddit: Subreddit) {
-      binding?.root?.makeSnackbar(
+      snackbar = binding?.root?.makeSnackbar(
         getString(R.string.deleted_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_undo.toAndroidString(),
         length = SnackbarLength.LONG
