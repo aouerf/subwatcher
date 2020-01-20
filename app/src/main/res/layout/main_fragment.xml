@@ -18,6 +18,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:orientation="vertical"
+        android:paddingVertical="8dp"
         app:fastScrollEnabled="true"
         app:fastScrollHorizontalThumbDrawable="@drawable/fast_scroll_thumb"
         app:fastScrollHorizontalTrackDrawable="@drawable/fast_scroll_track"
