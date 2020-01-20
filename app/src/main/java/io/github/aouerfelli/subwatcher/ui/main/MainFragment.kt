@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
 import coil.ImageLoader
+import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.github.aouerfelli.subwatcher.BuildConfig
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
@@ -51,6 +55,14 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       val item = subredditListAdapter.currentList[position]
       viewModel.delete(item)
     }
+    binding.subredditList.doOnApplyWindowInsets { view, insets, initialState ->
+      view.updatePadding(
+        left = insets.systemWindowInsetLeft + initialState.paddings.left,
+        top = insets.systemWindowInsetTop + initialState.paddings.top,
+        right = insets.systemWindowInsetRight + initialState.paddings.right,
+        bottom = insets.systemWindowInsetBottom + initialState.paddings.bottom
+      )
+    }
 
     binding.subredditsRefresh.setThemeColorScheme()
     binding.subredditsRefresh.setOnRefreshListener {
@@ -62,6 +74,16 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         viewModel.add("random")
         true
       } else false
+    }
+    binding.addSubredditButton.doOnApplyWindowInsets { view, insets, initialState ->
+      view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        updateMargins(
+          left = insets.systemWindowInsetLeft + initialState.margins.left,
+          top = insets.systemWindowInsetTop + initialState.margins.top,
+          right = insets.systemWindowInsetRight + initialState.margins.right,
+          bottom = insets.systemWindowInsetBottom + initialState.margins.bottom
+        )
+      }
     }
 
     with(viewLifecycleOwner) {
