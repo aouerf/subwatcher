@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import dagger.android.support.DaggerFragment
+import dev.chrisbanes.insetter.setEdgeToEdgeSystemUiFlags
 import kotlin.reflect.KClass
 
 abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
@@ -66,7 +67,9 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    onBindingCreated(requireBinding(), savedInstanceState)
+    val binding = requireBinding()
+    binding.root.setEdgeToEdgeSystemUiFlags(true)
+    onBindingCreated(binding, savedInstanceState)
   }
 
   override fun onDestroyView() {
