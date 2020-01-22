@@ -8,4 +8,7 @@
   <color name="reddit_teal">#00A6A5</color>
   <color name="reddit_blue">#24A0ED</color>
   <color name="reddit_alien_blue">#0079D3</color>
+
+  <color name="translucent_white">#B3FFFFFF</color> <!-- 70% white -->
+  <color name="translucent_black">#33000000</color> <!-- 20% black -->
 </resources>

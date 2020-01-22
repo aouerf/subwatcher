@@ -12,6 +12,7 @@ internal object Versions {
   const val androidDesugarJdkLibs = "1.0.4"
 
   const val material = "1.2.0-alpha04"
+  const val insetter = "0.2.0"
 
   object AndroidX {
     const val appcompat = "1.2.0-alpha01"

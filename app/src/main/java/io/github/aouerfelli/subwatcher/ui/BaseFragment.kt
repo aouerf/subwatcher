@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import dagger.android.support.DaggerFragment
+import dev.chrisbanes.insetter.setEdgeToEdgeSystemUiFlags
 import kotlin.reflect.KClass
 
 abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
@@ -18,9 +19,8 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
   protected val supportActivity: AppCompatActivity?
     get() = activity as? AppCompatActivity
 
-  private var _binding: B? = null
-  protected val binding: B
-    get() = checkNotNull(_binding) { "This was called before onCreateView()." }
+  protected var binding: B? = null
+    private set
 
   protected lateinit var viewModel: M
     private set
@@ -34,6 +34,12 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
   ): B
 
   protected abstract fun createViewModel(handle: SavedStateHandle): M
+
+  protected abstract fun onBindingCreated(binding: B, savedInstanceState: Bundle?)
+
+  protected fun requireBinding(): B {
+    return checkNotNull(binding) { "This was called before onCreateView()." }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -56,12 +62,18 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    _binding = inflateView(inflater, container, false)
-    return binding.root
+    return inflateView(inflater, container, false).also { binding = it }.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    val binding = requireBinding()
+    binding.root.setEdgeToEdgeSystemUiFlags(true)
+    onBindingCreated(binding, savedInstanceState)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    _binding = null
+    binding = null
   }
 }

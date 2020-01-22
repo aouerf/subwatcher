@@ -5,7 +5,6 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ui.main.MainFragment">
 
   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -19,6 +18,7 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:orientation="vertical"
+        android:paddingVertical="8dp"
         app:fastScrollEnabled="true"
         app:fastScrollHorizontalThumbDrawable="@drawable/fast_scroll_thumb"
         app:fastScrollHorizontalTrackDrawable="@drawable/fast_scroll_track"
@@ -37,7 +37,7 @@
       android:text="@string/add_subreddit_button_extended_label"
       app:icon="@drawable/ic_add"
       app:layout_anchor="@id/subreddit_list"
-      app:layout_anchorGravity="bottom|right|end"
+      app:layout_anchorGravity="bottom|end"
       app:layout_behavior=".widget.behavior.ScrollAwareExtendedFloatingActionButtonBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

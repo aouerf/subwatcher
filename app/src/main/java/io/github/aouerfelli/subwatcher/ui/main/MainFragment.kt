@@ -2,11 +2,14 @@ package io.github.aouerfelli.subwatcher.ui.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
 import coil.ImageLoader
+import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.github.aouerfelli.subwatcher.BuildConfig
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
@@ -44,13 +47,21 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
   override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+  override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
     subredditListAdapter = SubredditListAdapter(imageLoader)
     binding.subredditList.adapter = subredditListAdapter
     binding.subredditList.onSwipe { viewHolder, _ ->
       val position = viewHolder.adapterPosition
       val item = subredditListAdapter.currentList[position]
       viewModel.delete(item)
+    }
+    binding.subredditList.doOnApplyWindowInsets { view, insets, initialState ->
+      view.updatePadding(
+        left = insets.systemWindowInsetLeft + initialState.paddings.left,
+        top = insets.systemWindowInsetTop + initialState.paddings.top,
+        right = insets.systemWindowInsetRight + initialState.paddings.right,
+        bottom = insets.systemWindowInsetBottom + initialState.paddings.bottom
+      )
     }
 
     binding.subredditsRefresh.setThemeColorScheme()
@@ -63,6 +74,16 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         viewModel.add("random")
         true
       } else false
+    }
+    binding.addSubredditButton.doOnApplyWindowInsets { view, insets, initialState ->
+      view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        updateMargins(
+          left = insets.systemWindowInsetLeft + initialState.margins.left,
+          top = insets.systemWindowInsetTop + initialState.margins.top,
+          right = insets.systemWindowInsetRight + initialState.margins.right,
+          bottom = insets.systemWindowInsetBottom + initialState.margins.bottom
+        )
+      }
     }
 
     with(viewLifecycleOwner) {
@@ -79,7 +100,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       Result.Error.ConnectionError -> R.string.no_connection
       Result.Error.NetworkError -> R.string.server_unreachable
     }
-    binding.root.makeSnackbar(stringRes.toAndroidString())
+    binding?.root?.makeSnackbar(stringRes.toAndroidString())
   }
 
   private fun onSubredditsRefreshed(result: Result<Nothing>) {
@@ -94,7 +115,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     val (name, result) = nameAndResult
 
     fun onSuccess(subreddit: Subreddit) {
-      binding.root.makeSnackbar(
+      binding?.root?.makeSnackbar(
         getString(R.string.added_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_view.toAndroidString(),
         length = SnackbarLength.LONG
@@ -109,7 +130,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
       }
       val string = getString(stringRes, name).toAndroidString()
-      binding.root.makeSnackbar(string)
+      binding?.root?.makeSnackbar(string)
     }
 
     when (result) {
@@ -122,7 +143,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
   private fun onSubredditDeleted(result: Result<Subreddit>) {
     fun onSuccess(subreddit: Subreddit) {
-      binding.root.makeSnackbar(
+      binding?.root?.makeSnackbar(
         getString(R.string.deleted_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_undo.toAndroidString(),
         length = SnackbarLength.LONG
