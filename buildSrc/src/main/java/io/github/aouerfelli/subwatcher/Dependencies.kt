@@ -10,6 +10,9 @@ object Dependencies {
 
   const val timber = "com.jakewharton.timber:timber-android:${Versions.timber}"
 
+  const val androidDesugarJdkLibs =
+    "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
+
   object KotlinX {
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
   }
