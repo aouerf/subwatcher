@@ -1,6 +1,8 @@
 package io.github.aouerfelli.subwatcher.util
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
@@ -33,12 +35,6 @@ open class ReactiveEvent<T> protected constructor(
   fun clear() {
     value = null
   }
-
-  inline fun observeOn(scope: CoroutineScope, crossinline action: suspend (T) -> Unit) {
-    flow
-      .onEach { if (it != null) action(it) }
-      .launchIn(scope)
-  }
 }
 
 class MutableReactiveEvent<T> private constructor(
@@ -51,9 +47,35 @@ class MutableReactiveEvent<T> private constructor(
 
   constructor(key: String, handle: SavedStateHandle) : this(handle[key], key, handle)
 
+  companion object {
+    operator fun <T> invoke(
+      value: T,
+      key: String,
+      handle: SavedStateHandle
+    ): MutableReactiveEvent<T> {
+      handle[key] = value
+      return MutableReactiveEvent(key, handle)
+    }
+  }
+
   override var value: T?
     get() = super.value
     public set(value) {
       super.value = value
     }
+}
+
+fun <T> MutableReactiveEvent<T>.asImmutable(): ReactiveEvent<T> = this
+
+inline fun <T> ReactiveEvent<T>.observeOn(
+  scope: CoroutineScope,
+  crossinline action: (T) -> Unit
+) {
+  flow
+    .onEach { if (it != null) action(it) }
+    .launchIn(scope)
+}
+
+inline fun <T> ReactiveEvent<T>.observeOn(owner: LifecycleOwner, crossinline action: (T) -> Unit) {
+  observeOn(owner.lifecycleScope, action)
 }

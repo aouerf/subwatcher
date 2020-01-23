@@ -8,6 +8,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
@@ -21,11 +22,12 @@ import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
 import io.github.aouerfelli.subwatcher.util.launch
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
-import io.github.aouerfelli.subwatcher.util.observe
-import io.github.aouerfelli.subwatcher.util.observeNotNull
+import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.onSwipe
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
@@ -83,7 +85,9 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       if (BuildConfig.DEBUG) {
         viewModel.add("random")
         true
-      } else false
+      } else {
+        false
+      }
     }
     binding.addSubredditButton.doOnApplyWindowInsets { view, insets, initialState ->
       view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -96,13 +100,13 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       }
     }
 
-    with(viewLifecycleOwner) {
-      observe(viewModel.subredditList, subredditListAdapter::submitList)
-      observe(viewModel.isLoading, binding.subredditsRefresh::setRefreshing)
-      observeNotNull(viewModel.refreshedSubreddits, ::onSubredditsRefreshed)
-      observeNotNull(viewModel.addedSubreddit, ::onSubredditAdded)
-      observeNotNull(viewModel.deletedSubreddit, ::onSubredditDeleted)
-    }
+    viewModel.subredditList
+      .onEach(subredditListAdapter::submitList)
+      .launchIn(viewLifecycleOwner.lifecycleScope)
+    viewModel.isLoading.observeOn(viewLifecycleOwner, binding.subredditsRefresh::setRefreshing)
+    viewModel.refreshedSubreddits.observeOn(viewLifecycleOwner, ::onSubredditsRefreshed)
+    viewModel.addedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditAdded)
+    viewModel.deletedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditDeleted)
   }
 
   private fun onError(result: Result.Error) {
