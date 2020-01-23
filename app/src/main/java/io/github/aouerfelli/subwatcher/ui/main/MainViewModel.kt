@@ -10,6 +10,8 @@ import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.util.MutableReactiveEvent
 import io.github.aouerfelli.subwatcher.util.asImmutable
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
@@ -19,15 +21,16 @@ class MainViewModel @AssistedInject constructor(
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(state: SavedStateHandle): MainViewModel
+    fun create(handle: SavedStateHandle): MainViewModel
   }
 
   val subredditList = repository.subreddits
 
-  private val _isLoading = MutableReactiveEvent(false, "loading", handle)
-  val isLoading get() = _isLoading.asImmutable()
+  private val _isLoading = ConflatedBroadcastChannel(false)
+  val isLoading = _isLoading.asFlow()
 
-  private val _addedSubreddit = MutableReactiveEvent<Pair<String, Result<Subreddit>>>("added", handle)
+  private val _addedSubreddit =
+    MutableReactiveEvent<Pair<String, Result<Subreddit>>>("added", handle)
   val addedSubreddit = _addedSubreddit.asImmutable()
 
   private val _deletedSubreddit = MutableReactiveEvent<Result<Subreddit>>("deleted", handle)
@@ -37,9 +40,9 @@ class MainViewModel @AssistedInject constructor(
   val refreshedSubreddits = _refreshedSubreddits.asImmutable()
 
   private inline fun load(crossinline load: suspend () -> Unit) = viewModelScope.launch {
-    _isLoading.value = true
+    _isLoading.offer(true)
     load()
-    _isLoading.value = false
+    _isLoading.offer(false)
   }
 
   fun refresh() {
