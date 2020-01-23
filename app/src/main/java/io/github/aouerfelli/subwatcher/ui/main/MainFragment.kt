@@ -101,7 +101,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     }
 
     viewModel.subredditList
-      .onEach(subredditListAdapter::submitList)
+      .onEach { subredditListAdapter.submitList(it) }
       .launchIn(viewLifecycleOwner.lifecycleScope)
     viewModel.isLoading.observeOn(viewLifecycleOwner, binding.subredditsRefresh::setRefreshing)
     viewModel.refreshedSubreddits.observeOn(viewLifecycleOwner, ::onSubredditsRefreshed)
