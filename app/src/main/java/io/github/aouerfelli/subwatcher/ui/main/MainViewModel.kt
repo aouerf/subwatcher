@@ -29,14 +29,13 @@ class MainViewModel @AssistedInject constructor(
   private val _isLoading = ConflatedBroadcastChannel(false)
   val isLoading = _isLoading.asFlow()
 
-  private val _addedSubreddit =
-    MutableReactiveEvent<Pair<String, Result<Subreddit>>>("added", handle)
+  private val _addedSubreddit = MutableReactiveEvent<Pair<String, Result<Subreddit>>>()
   val addedSubreddit = _addedSubreddit.asImmutable()
 
-  private val _deletedSubreddit = MutableReactiveEvent<Result<Subreddit>>("deleted", handle)
+  private val _deletedSubreddit = MutableReactiveEvent<Result<Subreddit>>()
   val deletedSubreddit = _deletedSubreddit.asImmutable()
 
-  private val _refreshedSubreddits = MutableReactiveEvent<Result<Nothing>>("refreshed", handle)
+  private val _refreshedSubreddits = MutableReactiveEvent<Result<Nothing>>()
   val refreshedSubreddits = _refreshedSubreddits.asImmutable()
 
   private inline fun load(crossinline load: suspend () -> Unit) = viewModelScope.launch {
