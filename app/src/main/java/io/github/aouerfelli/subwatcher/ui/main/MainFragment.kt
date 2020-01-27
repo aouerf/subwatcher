@@ -10,6 +10,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.github.aouerfelli.subwatcher.BuildConfig
@@ -43,13 +44,30 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   private lateinit var subredditListAdapter: SubredditListAdapter
 
   private var snackbar: Snackbar? = null
-    set(value) {
-      field = value
-      if (value != null) {
-        value.anchorView = binding?.addSubredditButton
-        value.show()
+  private var snackbarDismissCallback: Snackbar.Callback? = null
+
+  private inline fun setSnackbar(value: Snackbar?, crossinline onFinish: () -> Unit = { }) {
+    val validDismissEvent = BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE
+    snackbarDismissCallback?.onDismissed(snackbar, validDismissEvent)
+
+    value ?: return
+
+    snackbarDismissCallback = object : Snackbar.Callback() {
+      override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+        transientBottomBar ?: return
+        if (event != DISMISS_EVENT_MANUAL && event != DISMISS_EVENT_CONSECUTIVE) {
+          onFinish()
+        }
+        snackbar = null
+        snackbarDismissCallback = null
       }
     }
+    snackbar = value.apply {
+      addCallback(snackbarDismissCallback)
+      anchorView = binding?.addSubredditButton
+      show()
+    }
+  }
 
   override fun inflateView(
     inflater: LayoutInflater,
@@ -111,18 +129,19 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     viewModel.deletedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditDeleted)
   }
 
-  private fun onError(result: Result.Error) {
+  private inline fun onError(result: Result.Error, crossinline onHandled: () -> Unit) {
     @StringRes val stringRes = when (result) {
       Result.Error.ConnectionError -> R.string.no_connection
       Result.Error.NetworkError -> R.string.server_unreachable
     }
-    snackbar = binding?.root?.makeSnackbar(stringRes.toAndroidString())
+    val snackbar = binding?.root?.makeSnackbar(stringRes.toAndroidString())
+    setSnackbar(snackbar, onHandled)
   }
 
   private fun onSubredditsRefreshed(result: Result<Nothing>) {
     when (result) {
       is Result.Success.Empty -> Unit
-      is Result.Error -> onError(result)
+      is Result.Error -> onError(result, viewModel.refreshedSubreddits::clear)
       else -> Timber.warn { "Refreshed subreddits result $result is not handled." }
     }
   }
@@ -131,13 +150,14 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     val (name, result) = nameAndResult
 
     fun onSuccess(subreddit: Subreddit) {
-      snackbar = binding?.root?.makeSnackbar(
+      val snackbar = binding?.root?.makeSnackbar(
         getString(R.string.added_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_view.toAndroidString(),
         length = SnackbarLength.LONG
       ) {
         context?.let(subreddit.name.asUrl()::launch)
       }
+      setSnackbar(snackbar, viewModel.addedSubreddit::clear)
     }
 
     fun onFailure(failure: Result.Failure) {
@@ -146,26 +166,28 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
       }
       val string = getString(stringRes, name).toAndroidString()
-      snackbar = binding?.root?.makeSnackbar(string)
+      val snackbar = binding?.root?.makeSnackbar(string)
+      setSnackbar(snackbar, viewModel.addedSubreddit::clear)
     }
 
     when (result) {
       is Result.Success -> onSuccess(result.data)
       is Result.Failure -> onFailure(result)
-      is Result.Error -> onError(result)
+      is Result.Error -> onError(result, viewModel.addedSubreddit::clear)
       else -> Timber.warn { "Add subreddit result $result is not handled." }
     }
   }
 
   private fun onSubredditDeleted(result: Result<Subreddit>) {
     fun onSuccess(subreddit: Subreddit) {
-      snackbar = binding?.root?.makeSnackbar(
+      val snackbar = binding?.root?.makeSnackbar(
         getString(R.string.deleted_subreddit, subreddit.name.name).toAndroidString(),
         R.string.action_undo.toAndroidString(),
         length = SnackbarLength.LONG
       ) {
         viewModel.add(subreddit)
       }
+      setSnackbar(snackbar, viewModel.deletedSubreddit::clear)
     }
 
     when (result) {
