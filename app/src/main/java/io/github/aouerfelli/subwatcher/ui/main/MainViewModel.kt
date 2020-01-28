@@ -1,72 +1,70 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
-import io.github.aouerfelli.subwatcher.util.asEventLiveData
+import io.github.aouerfelli.subwatcher.util.MutableReactiveEvent
+import io.github.aouerfelli.subwatcher.util.asImmutable
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
   private val repository: SubredditRepository,
-  @Assisted private val state: SavedStateHandle
+  @Assisted private val handle: SavedStateHandle
 ) : ViewModel() {
 
   @AssistedInject.Factory
   interface Factory {
-    fun create(state: SavedStateHandle): MainViewModel
+    fun create(handle: SavedStateHandle): MainViewModel
   }
 
-  private val coroutineContext
-    get() = viewModelScope.coroutineContext
+  val subredditList = repository.subreddits
 
-  val subredditList = repository.subreddits.asLiveData(coroutineContext)
+  private val _isLoading = ConflatedBroadcastChannel(false)
+  val isLoading = _isLoading.asFlow()
 
-  private val _isLoading = MutableLiveData(false)
-  val isLoading: LiveData<Boolean>
-    get() = _isLoading
+  private val _addedSubreddit = MutableReactiveEvent<Pair<String, Result<Subreddit>>>()
+  val addedSubreddit = _addedSubreddit.asImmutable()
 
-  private val _addedSubreddit = ConflatedBroadcastChannel<Pair<String, Result<Subreddit>>>()
-  val addedSubreddit = _addedSubreddit.asFlow().asEventLiveData(coroutineContext)
+  private val _deletedSubreddit = MutableReactiveEvent<Result<Subreddit>>()
+  val deletedSubreddit = _deletedSubreddit.asImmutable()
 
-  private val _deletedSubreddit = ConflatedBroadcastChannel<Result<Subreddit>>()
-  val deletedSubreddit = _deletedSubreddit.asFlow().asEventLiveData(coroutineContext)
-
-  private val _refreshedSubreddits = ConflatedBroadcastChannel<Result<Nothing>>()
-  val refreshedSubreddits = _refreshedSubreddits.asFlow().asEventLiveData(coroutineContext)
+  private val _refreshedSubreddits = MutableReactiveEvent<Result<Nothing>>()
+  val refreshedSubreddits = _refreshedSubreddits.asImmutable()
 
   private inline fun load(crossinline load: suspend () -> Unit) = viewModelScope.launch {
-    _isLoading.value = true
+    _isLoading.offer(true)
     load()
-    _isLoading.value = false
+    _isLoading.offer(false)
   }
 
   fun refresh() {
-    load { repository.refreshSubreddits().also(_refreshedSubreddits::offer) }
+    load {
+      _refreshedSubreddits.value = repository.refreshSubreddits()
+    }
   }
 
   fun add(subredditName: String) {
     load {
-      repository.addSubreddit(subredditName).also {
-        _addedSubreddit.offer(subredditName to it)
-      }
+      _addedSubreddit.value = subredditName to repository.addSubreddit(subredditName)
     }
   }
 
   fun add(subreddit: Subreddit) {
-    load { repository.addSubreddit(subreddit) }
+    load {
+      repository.addSubreddit(subreddit)
+    }
   }
 
   fun delete(subreddit: Subreddit) {
-    load { repository.deleteSubreddit(subreddit).also(_deletedSubreddit::offer) }
+    load {
+      _deletedSubreddit.value = repository.deleteSubreddit(subreddit)
+    }
   }
 }

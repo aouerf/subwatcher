@@ -81,7 +81,6 @@ dependencies {
   implementation(Dependencies.material)
   implementation(Dependencies.insetter)
 
-  implementation(Dependencies.AndroidX.Lifecycle.liveData)
   implementation(Dependencies.AndroidX.Lifecycle.viewModel)
   implementation(Dependencies.AndroidX.Lifecycle.viewModelSavedState)
 
