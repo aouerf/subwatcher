@@ -10,8 +10,6 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.github.aouerfelli.subwatcher.BuildConfig
 import io.github.aouerfelli.subwatcher.R
@@ -20,6 +18,7 @@ import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
+import io.github.aouerfelli.subwatcher.util.EventSnackbar
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
 import io.github.aouerfelli.subwatcher.util.launch
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
@@ -43,37 +42,15 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   lateinit var imageLoader: ImageLoader
   private lateinit var subredditListAdapter: SubredditListAdapter
 
-  private var snackbar: Snackbar? = null
-  private var snackbarDismissCallback: Snackbar.Callback? = null
-
-  private inline fun setSnackbar(value: Snackbar?, crossinline onFinish: () -> Unit = { }) {
-    val validDismissEvent = BaseTransientBottomBar.BaseCallback.DISMISS_EVENT_SWIPE
-    snackbarDismissCallback?.onDismissed(snackbar, validDismissEvent)
-
-    value ?: return
-
-    snackbarDismissCallback = object : Snackbar.Callback() {
-      override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-        transientBottomBar ?: return
-        if (event != DISMISS_EVENT_MANUAL && event != DISMISS_EVENT_CONSECUTIVE) {
-          onFinish()
-        }
-        snackbar = null
-        snackbarDismissCallback = null
-      }
-    }
-    snackbar = value.apply {
-      addCallback(snackbarDismissCallback)
-      anchorView = binding?.addSubredditButton
-      show()
-    }
-  }
+  private val eventSnackbar = EventSnackbar()
 
   override fun inflateView(
     inflater: LayoutInflater,
     root: ViewGroup?,
     attachToRoot: Boolean
-  ): MainFragmentBinding = MainFragmentBinding.inflate(inflater, root, attachToRoot)
+  ): MainFragmentBinding {
+    return MainFragmentBinding.inflate(inflater, root, attachToRoot)
+  }
 
   override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
 
@@ -135,7 +112,8 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       Result.Error.NetworkError -> R.string.server_unreachable
     }
     val snackbar = binding?.root?.makeSnackbar(stringRes.toAndroidString())
-    setSnackbar(snackbar, onHandled)
+      ?.setAnchorView(binding?.addSubredditButton)
+    eventSnackbar.set(snackbar) { onHandled() }
   }
 
   private fun onSubredditsRefreshed(result: Result<Nothing>) {
@@ -156,8 +134,8 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         length = SnackbarLength.LONG
       ) {
         context?.let(subreddit.name.asUrl()::launch)
-      }
-      setSnackbar(snackbar, viewModel.addedSubreddit::clear)
+      }?.setAnchorView(binding?.addSubredditButton)
+      eventSnackbar.set(snackbar, viewModel.addedSubreddit::clear)
     }
 
     fun onFailure(failure: Result.Failure) {
@@ -166,8 +144,8 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
       }
       val string = getString(stringRes, name).toAndroidString()
-      val snackbar = binding?.root?.makeSnackbar(string)
-      setSnackbar(snackbar, viewModel.addedSubreddit::clear)
+      val snackbar = binding?.root?.makeSnackbar(string)?.setAnchorView(binding?.addSubredditButton)
+      eventSnackbar.set(snackbar, viewModel.addedSubreddit::clear)
     }
 
     when (result) {
@@ -186,8 +164,8 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         length = SnackbarLength.LONG
       ) {
         viewModel.add(subreddit)
-      }
-      setSnackbar(snackbar, viewModel.deletedSubreddit::clear)
+      }?.setAnchorView(binding?.addSubredditButton)
+      eventSnackbar.set(snackbar, viewModel.deletedSubreddit::clear)
     }
 
     when (result) {

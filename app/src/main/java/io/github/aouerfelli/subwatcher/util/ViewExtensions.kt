@@ -1,10 +1,8 @@
 package io.github.aouerfelli.subwatcher.util
 
-import android.view.View
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.google.android.material.snackbar.Snackbar
 import io.github.aouerfelli.subwatcher.R
 
 // TODO: Custom view
@@ -13,32 +11,6 @@ fun SwipeRefreshLayout.setThemeColorScheme() {
   val backgroundColor = context.getThemeColor(R.attr.colorBackgroundFloating)
   setColorSchemeColors(foregroundColor)
   setProgressBackgroundColorSchemeColor(backgroundColor)
-}
-
-enum class SnackbarLength(val flag: Int) {
-  INDEFINITE(Snackbar.LENGTH_INDEFINITE),
-  SHORT(Snackbar.LENGTH_SHORT),
-  LONG(Snackbar.LENGTH_LONG)
-}
-
-// TODO: Theme snackbar
-inline fun View.makeSnackbar(
-  text: AndroidString,
-  actionText: AndroidString? = null,
-  length: SnackbarLength = SnackbarLength.SHORT,
-  show: Boolean = false,
-  crossinline action: () -> Unit = {}
-): Snackbar {
-  val textString = text.getString(context)
-  val actionTextString = actionText?.getString(context)
-  return Snackbar.make(this, textString, length.flag).apply {
-    if (actionTextString != null) {
-      setAction(actionTextString) { action() }
-    }
-    if (show) {
-      show()
-    }
-  }
 }
 
 enum class Direction(val flag: Int) {
