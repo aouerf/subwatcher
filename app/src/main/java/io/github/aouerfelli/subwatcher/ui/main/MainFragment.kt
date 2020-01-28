@@ -26,9 +26,9 @@ import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.onSwipe
 import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
 
