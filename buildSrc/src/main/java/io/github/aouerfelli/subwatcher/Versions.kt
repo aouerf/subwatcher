@@ -7,7 +7,7 @@ internal object Versions {
   const val ktlint = "9.1.1"
   const val gradleVersions = "0.27.0"
 
-  const val sqlDelight = "1.2.1"
+  const val sqlDelight = "1.2.2"
 
   const val androidDesugarJdkLibs = "1.0.4"
 
@@ -16,8 +16,8 @@ internal object Versions {
 
   object AndroidX {
     const val appcompat = "1.2.0-alpha01"
-    const val activity = "1.1.0-rc03"
-    const val fragment = "1.2.0-rc05"
+    const val activity = "1.1.0"
+    const val fragment = "1.2.0"
     const val core = "1.2.0-rc01"
     const val constraintLayout = "2.0.0-beta4"
     const val coordinatorLayout = "1.1.0"
@@ -25,8 +25,8 @@ internal object Versions {
     const val swipeRefreshLayout = "1.1.0-alpha03"
     const val browser = "1.3.0-alpha01"
 
-    const val lifecycle = "2.2.0-rc03"
-    const val viewModelSavedState = "1.0.0-rc03"
+    const val lifecycle = "2.2.0"
+    const val viewModelSavedState = "1.0.0"
   }
 
   const val coroutines = "1.3.3"
