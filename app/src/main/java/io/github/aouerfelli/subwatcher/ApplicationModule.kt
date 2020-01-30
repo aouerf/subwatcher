@@ -2,18 +2,22 @@ package io.github.aouerfelli.subwatcher
 
 import android.content.Context
 import coil.ImageLoader
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import io.github.aouerfelli.subwatcher.ui.MainModule
 import javax.inject.Singleton
 
 @Module(includes = [MainModule::class])
-object ApplicationModule {
+abstract class ApplicationModule {
 
-  @Provides
-  fun provideContext(application: SubwatcherApplication): Context = application
+  @Binds
+  abstract fun bindContext(application: SubwatcherApplication): Context
 
-  @Provides
-  @Singleton
-  fun provideImageLoader(context: Context): ImageLoader = ImageLoader(context)
+  companion object {
+
+    @Provides
+    @Singleton
+    fun provideImageLoader(context: Context): ImageLoader = ImageLoader(context)
+  }
 }
