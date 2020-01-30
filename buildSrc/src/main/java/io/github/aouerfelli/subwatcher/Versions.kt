@@ -15,10 +15,10 @@ internal object Versions {
   const val insetter = "0.2.0"
 
   object AndroidX {
-    const val appcompat = "1.2.0-alpha01"
+    const val appcompat = "1.2.0-alpha02"
     const val activity = "1.1.0"
     const val fragment = "1.2.0"
-    const val core = "1.2.0-rc01"
+    const val core = "1.3.0-alpha01"
     const val constraintLayout = "2.0.0-beta4"
     const val coordinatorLayout = "1.1.0"
     const val recyclerView = "1.2.0-alpha01"
