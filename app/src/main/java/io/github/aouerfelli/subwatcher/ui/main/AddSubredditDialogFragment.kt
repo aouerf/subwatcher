@@ -1,6 +1,7 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.os.Bundle
+import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +24,14 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    val inputFilters = binding?.subredditField?.editText?.filters.orEmpty()
+    val inputWhitespaceFilter = InputFilter { source, _, _, _, _, _ ->
+      source.filterNot(Char::isWhitespace)
+    }
+    // Whitespace filter should come before the maxLength filter so that the character limit doesn't
+    // account for possible whitespace
+    binding?.subredditField?.editText?.filters = arrayOf(inputWhitespaceFilter, *inputFilters)
+
     binding?.subredditField?.editText?.requestFocus()
     dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
   }
