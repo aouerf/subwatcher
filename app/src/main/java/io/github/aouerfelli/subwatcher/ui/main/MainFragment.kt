@@ -76,6 +76,10 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
       viewModel.refresh()
     }
 
+    binding.addSubredditButton.setOnClickListener {
+      val dialogFragment = AddSubredditDialogFragment()
+      dialogFragment.show(requireActivity().supportFragmentManager, dialogFragment.tag)
+    }
     binding.addSubredditButton.setOnLongClickListener {
       if (BuildConfig.DEBUG) {
         viewModel.add("random")

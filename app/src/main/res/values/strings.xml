@@ -9,6 +9,10 @@
 
   <string name="add_subreddit_button_extended_label">Add subreddit</string>
 
+  <string name="add_subreddit_dialog_prefix">r/</string>
+  <string name="add_subreddit_dialog_hint">subreddit</string>
+  <string name="add_subreddit_dialog_confirm">Add</string>
+
   <string name="added_subreddit">r/%s was added</string>
   <string name="added_subreddit_exists">r/%s is already added</string>
   <string name="added_subreddit_does_not_exist">r/%s does not exist</string>
