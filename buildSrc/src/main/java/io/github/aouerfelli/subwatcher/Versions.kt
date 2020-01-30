@@ -30,7 +30,7 @@ internal object Versions {
   }
 
   const val coroutines = "1.3.3"
-  const val dagger = "2.25.4"
+  const val dagger = "2.26"
   const val assistedInject = "0.5.2"
   const val okHttp = "4.3.1"
   const val retrofit = "2.7.1"
