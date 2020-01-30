@@ -31,9 +31,12 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     // Whitespace filter should come before the maxLength filter so that the character limit doesn't
     // account for possible whitespace
     binding?.subredditField?.editText?.filters = arrayOf(inputWhitespaceFilter, *inputFilters)
+  }
 
+  override fun onActivityCreated(savedInstanceState: Bundle?) {
+    super.onActivityCreated(savedInstanceState)
     binding?.subredditField?.editText?.requestFocus()
-    dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+    dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
   }
 
   override fun onDestroyView() {
