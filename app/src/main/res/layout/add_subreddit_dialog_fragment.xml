@@ -24,6 +24,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:hint="@string/add_subreddit_dialog_hint"
+        android:imeActionLabel="@string/add_subreddit_dialog_confirm"
+        android:imeOptions="actionDone"
         android:inputType="text"
         android:maxLength="@integer/subreddit_char_limit"
         android:padding="16dp" />

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -35,8 +36,6 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     binding: AddSubredditDialogFragmentBinding,
     savedInstanceState: Bundle?
   ) {
-    // FIXME: Long-press (text selection toolbar) seems to trigger insets
-    // TODO: Top padding?
     binding.root.doOnApplyWindowInsets { view, insets, initialState ->
       view.updatePadding(
         bottom = insets.systemWindowInsetBottom + initialState.paddings.bottom
@@ -44,6 +43,19 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
       view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
         leftMargin = insets.systemWindowInsetLeft + initialState.margins.left
         rightMargin = insets.systemWindowInsetRight + initialState.margins.right
+      }
+    }
+
+    binding.addButton.setOnClickListener {
+      val subredditName = binding.subredditField.editText?.text?.toString()
+        ?: return@setOnClickListener
+      TODO("Send subreddit name \"$subredditName\" back to MainFragment")
+    }
+
+    binding.subredditField.editText?.setOnEditorActionListener { _, actionId, _ ->
+      when (actionId) {
+        EditorInfo.IME_ACTION_DONE -> binding.addButton.callOnClick()
+        else -> false
       }
     }
 
@@ -61,8 +73,8 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
-    /*dialog?.window?.findViewById<View>(com.google.android.material.R.id.container)
-      ?.fitsSystemWindows = false*/
+    // FIXME: Long-press (text selection toolbar) adds unnecessary padding when fitsSystemWindows is
+    //  false on the root parent.
     (view?.parent?.parent?.parent as? View)?.fitsSystemWindows = false
 
     binding?.subredditField?.editText?.requestFocus()
