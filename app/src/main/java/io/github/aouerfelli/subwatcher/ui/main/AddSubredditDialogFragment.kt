@@ -73,9 +73,10 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
-    // FIXME: Long-press (text selection toolbar) adds unnecessary padding when fitsSystemWindows is
-    //  false on the root parent.
-    (view?.parent?.parent?.parent as? View)?.fitsSystemWindows = false
+    (view?.parent?.parent as? View)?.apply {
+      fitsSystemWindows = false
+      (parent as? View)?.fitsSystemWindows = false
+    }
 
     binding?.subredditField?.editText?.requestFocus()
     dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
