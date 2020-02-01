@@ -1,5 +1,7 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.LayoutInflater
@@ -14,6 +16,10 @@ import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import io.github.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
 
 class AddSubredditDialogFragment : BottomSheetDialogFragment() {
+
+  companion object {
+    const val SUBREDDIT_NAME_KEY = "subredditName"
+  }
 
   private var binding: AddSubredditDialogFragmentBinding? = null
 
@@ -42,9 +48,11 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     }
 
     binding.addButton.setOnClickListener {
-      val subredditName = binding.subredditField.editText?.text?.toString()
+      val subredditName = binding.subredditField.editText?.text?.toString()?.ifBlank { null }
         ?: return@setOnClickListener
-      TODO("Send subreddit name \"$subredditName\" back to MainFragment.")
+      val intent = Intent().putExtra(SUBREDDIT_NAME_KEY, subredditName)
+      targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+      dismiss()
     }
 
     binding.subredditField.editText?.setOnEditorActionListener { _, actionId, _ ->

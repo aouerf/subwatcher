@@ -1,5 +1,7 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -33,6 +35,10 @@ import timber.log.Timber
 import timber.log.warn
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
+
+  companion object {
+    private const val ADD_SUBREDDIT_REQUEST_CODE = 2
+  }
 
   @Inject
   lateinit var viewModelFactory: MainViewModel.Factory
@@ -78,6 +84,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
     binding.addSubredditButton.setOnClickListener {
       val dialogFragment = AddSubredditDialogFragment()
+      dialogFragment.setTargetFragment(this, ADD_SUBREDDIT_REQUEST_CODE)
       dialogFragment.show(requireActivity().supportFragmentManager, dialogFragment.tag)
     }
     binding.addSubredditButton.setOnLongClickListener {
@@ -108,6 +115,18 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     viewModel.refreshedSubreddits.observeOn(viewLifecycleOwner, ::onSubredditsRefreshed)
     viewModel.addedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditAdded)
     viewModel.deletedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditDeleted)
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (resultCode != Activity.RESULT_OK) return
+    when (requestCode) {
+      ADD_SUBREDDIT_REQUEST_CODE -> {
+        val subredditName = data?.getStringExtra(AddSubredditDialogFragment.SUBREDDIT_NAME_KEY)
+        if (subredditName != null) {
+          viewModel.add(subredditName)
+        }
+      }
+    }
   }
 
   private inline fun onError(result: Result.Error, crossinline onHandled: () -> Unit) {
