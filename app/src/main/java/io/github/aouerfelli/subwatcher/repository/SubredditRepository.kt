@@ -11,7 +11,6 @@ import io.github.aouerfelli.subwatcher.network.AboutSubreddit
 import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
-import io.github.aouerfelli.subwatcher.util.nullIfEmpty
 import io.github.aouerfelli.subwatcher.util.toImageBlob
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -50,7 +49,7 @@ class SubredditRepository @Inject constructor(
       Subreddit.Impl(
         id = SubredditId(id),
         name = SubredditName(displayName),
-        iconImage = iconImageUrl?.nullIfEmpty()?.toUri()?.toImageBlob(imageLoader)
+        iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader)
       )
     }
   }
