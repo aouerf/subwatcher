@@ -18,8 +18,8 @@ inline fun View.makeSnackbar(
   show: Boolean = false,
   crossinline action: () -> Unit = {}
 ): Snackbar {
-  val textString = text.getString(context)
-  val actionTextString = actionText?.getString(context)
+  val textString = context.getString(text)
+  val actionTextString = actionText?.let(context::getString)
   return Snackbar.make(this, textString, length.flag).apply {
     if (actionTextString != null) {
       setAction(actionTextString) { action() }

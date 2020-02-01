@@ -6,12 +6,12 @@ import androidx.annotation.StringRes
 sealed class AndroidString {
   data class Res(@StringRes val resId: Int) : AndroidString()
   data class Raw(val string: String) : AndroidString()
+}
 
-  fun getString(context: Context): String {
-    return when (this) {
-      is Res -> context.getString(resId)
-      is Raw -> string
-    }
+fun Context.getString(androidString: AndroidString): String {
+  return when (androidString) {
+    is AndroidString.Res -> getString(androidString.resId)
+    is AndroidString.Raw -> androidString.string
   }
 }
 
