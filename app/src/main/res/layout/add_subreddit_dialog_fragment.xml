@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:padding="8dp">
 
-  <!-- TODO: Counter? -->
   <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/subreddit_field"
       android:layout_width="0dp"
