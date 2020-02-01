@@ -28,19 +28,14 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    val binding = requireNotNull(binding) { "There is no view currently attached to this dialog." }
-    onBindingCreated(binding, savedInstanceState)
-  }
+    // This is only called after onCreateView(), which is where binding gets assigned.
+    val binding = binding!!
 
-  private fun onBindingCreated(
-    binding: AddSubredditDialogFragmentBinding,
-    savedInstanceState: Bundle?
-  ) {
-    binding.root.doOnApplyWindowInsets { view, insets, initialState ->
-      view.updatePadding(
+    binding.root.doOnApplyWindowInsets { v, insets, initialState ->
+      v.updatePadding(
         bottom = insets.systemWindowInsetBottom + initialState.paddings.bottom
       )
-      view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
         leftMargin = insets.systemWindowInsetLeft + initialState.margins.left
         rightMargin = insets.systemWindowInsetRight + initialState.margins.right
       }
@@ -49,7 +44,7 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     binding.addButton.setOnClickListener {
       val subredditName = binding.subredditField.editText?.text?.toString()
         ?: return@setOnClickListener
-      TODO("Send subreddit name \"$subredditName\" back to MainFragment")
+      TODO("Send subreddit name \"$subredditName\" back to MainFragment.")
     }
 
     binding.subredditField.editText?.setOnEditorActionListener { _, actionId, _ ->
@@ -78,6 +73,7 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
       (parent as? View)?.fitsSystemWindows = false
     }
 
+    // Bring up soft input method automatically.
     binding?.subredditField?.editText?.requestFocus()
     dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
   }
