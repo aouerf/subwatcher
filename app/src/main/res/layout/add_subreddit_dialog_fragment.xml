@@ -10,7 +10,9 @@
       android:id="@+id/subreddit_field"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:paddingVertical="8dp"
       app:boxBackgroundMode="none"
+      app:counterMaxLength="@integer/subreddit_char_limit"
       app:hintEnabled="false"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toStartOf="@id/add_button"
@@ -28,7 +30,7 @@
         android:imeOptions="actionDone"
         android:inputType="text"
         android:maxLength="@integer/subreddit_char_limit"
-        android:padding="16dp" />
+        android:paddingTop="8dp" />
 
   </com.google.android.material.textfield.TextInputLayout>
 
@@ -37,6 +39,7 @@
       style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:enabled="false"
       android:text="@string/add_subreddit_dialog_confirm"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

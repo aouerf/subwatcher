@@ -11,8 +11,10 @@ import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
+import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
 
 class AddSubredditDialogFragment : BottomSheetDialogFragment() {
@@ -49,7 +51,10 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
     binding.addButton.setOnClickListener {
       val subredditName = binding.subredditField.editText?.text?.toString()?.ifBlank { null }
-        ?: return@setOnClickListener
+      if (subredditName == null) {
+        binding.subredditField.error = getString(R.string.add_subreddit_dialog_error)
+        return@setOnClickListener
+      }
       val intent = Intent().putExtra(SUBREDDIT_NAME_KEY, subredditName)
       targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
       dismiss()
@@ -69,6 +74,14 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     // Whitespace filter should come before the maxLength filter so that the character limit doesn't
     // account for possible whitespace.
     binding.subredditField.editText?.filters = arrayOf(inputWhitespaceFilter, *inputFilters)
+
+    binding.subredditField.editText?.doAfterTextChanged {
+      val isNotBlank = !it.isNullOrBlank()
+      binding.addButton.isEnabled = isNotBlank
+      if (isNotBlank) {
+        binding.subredditField.isErrorEnabled = false
+      }
+    }
   }
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
