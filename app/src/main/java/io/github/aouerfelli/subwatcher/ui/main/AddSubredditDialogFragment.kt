@@ -86,14 +86,16 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
     (view?.parent?.parent as? View)?.apply {
       fitsSystemWindows = false
       (parent as? View)?.fitsSystemWindows = false
     }
+  }
 
+  override fun onResume() {
+    super.onResume()
     // Bring up soft input method automatically.
     binding?.subredditField?.editText?.requestFocus()
     dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
