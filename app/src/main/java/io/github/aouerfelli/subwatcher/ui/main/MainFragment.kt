@@ -22,11 +22,11 @@ import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.EventSnackbar
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
-import io.github.aouerfelli.subwatcher.util.launch
+import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observeOn
-import io.github.aouerfelli.subwatcher.util.onSwipe
-import io.github.aouerfelli.subwatcher.util.setThemeColorScheme
+import io.github.aouerfelli.subwatcher.util.extensions.onSwipe
+import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.toAndroidString
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn

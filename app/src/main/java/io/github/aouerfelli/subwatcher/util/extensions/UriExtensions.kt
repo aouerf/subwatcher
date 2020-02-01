@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.util
+package io.github.aouerfelli.subwatcher.util.extensions
 
 import android.content.Context
 import android.net.Uri

@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.util
+package io.github.aouerfelli.subwatcher.util.extensions
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +33,9 @@ inline fun RecyclerView.onSwipe(
       recyclerView: RecyclerView,
       viewHolder: RecyclerView.ViewHolder,
       target: RecyclerView.ViewHolder
-    ) = false
+    ): Boolean {
+      return false
+    }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
       val swipedDirection = Direction.values().single { it.flag == direction }

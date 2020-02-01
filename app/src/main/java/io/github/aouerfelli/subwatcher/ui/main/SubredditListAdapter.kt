@@ -11,8 +11,8 @@ import coil.transform.CircleCropTransformation
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
 import io.github.aouerfelli.subwatcher.repository.asUrl
-import io.github.aouerfelli.subwatcher.util.launch
-import io.github.aouerfelli.subwatcher.util.layoutInflater
+import io.github.aouerfelli.subwatcher.util.extensions.launch
+import io.github.aouerfelli.subwatcher.util.extensions.layoutInflater
 import io.github.aouerfelli.subwatcher.util.load
 import io.github.aouerfelli.subwatcher.util.toBitmap
 
