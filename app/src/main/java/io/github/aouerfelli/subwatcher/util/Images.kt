@@ -1,15 +1,23 @@
 package io.github.aouerfelli.subwatcher.util
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.widget.ImageView
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
 import coil.api.get
-import coil.api.load
+import coil.api.loadAny
+import coil.bitmappool.BitmapPool
+import coil.decode.DataSource
+import coil.decode.Options
+import coil.fetch.FetchResult
+import coil.fetch.Fetcher
+import coil.fetch.SourceResult
 import coil.request.LoadRequestBuilder
 import coil.request.RequestDisposable
+import coil.size.Size
+import okio.buffer
+import okio.source
 import java.io.ByteArrayOutputStream
 
 // TODO: De-inlined because of https://github.com/cashapp/sqldelight/issues/1203#issuecomment-487438538
@@ -23,7 +31,7 @@ class ImageBlob(val image: ByteArray) {
 }
 
 suspend fun Uri.toImageBlob(imageLoader: ImageLoader): ImageBlob {
-  // TODO: Use OkHttp to fetch image directly
+  // TODO: Use OkHttp to fetch the image blob directly
   val drawable = imageLoader.get(this)
   val bitmap = drawable.toBitmap()
   val bitmapByteArray = ByteArrayOutputStream(bitmap.byteCount).use { outputStream ->
@@ -33,16 +41,30 @@ suspend fun Uri.toImageBlob(imageLoader: ImageLoader): ImageBlob {
   return ImageBlob(bitmapByteArray)
 }
 
-fun ImageBlob.toBitmap(): Bitmap {
-  return BitmapFactory.decodeByteArray(image, 0, image.size)
+class ByteArrayFetcher : Fetcher<ByteArray> {
+
+  override fun key(data: ByteArray): String? = null
+
+  override suspend fun fetch(
+    pool: BitmapPool,
+    data: ByteArray,
+    size: Size,
+    options: Options
+  ): FetchResult {
+    return SourceResult(
+      source = data.inputStream().source().buffer(),
+      mimeType = null,
+      dataSource = DataSource.MEMORY
+    )
+  }
 }
 
 inline fun ImageView.load(
-  bitmap: Bitmap?,
+  imageBlob: ImageBlob?,
   imageLoader: ImageLoader,
-  builder: LoadRequestBuilder.() -> Unit = {}
+  builder: LoadRequestBuilder.() -> Unit = { }
 ): RequestDisposable {
-  return imageLoader.load(context, bitmap) {
+  return imageLoader.loadAny(context, imageBlob?.image) {
     target(this@load)
     builder()
   }

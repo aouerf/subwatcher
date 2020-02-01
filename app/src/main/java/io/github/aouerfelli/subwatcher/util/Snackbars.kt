@@ -16,7 +16,7 @@ inline fun View.makeSnackbar(
   actionText: AndroidString? = null,
   length: SnackbarLength = SnackbarLength.SHORT,
   show: Boolean = false,
-  crossinline action: () -> Unit = {}
+  crossinline action: () -> Unit = { }
 ): Snackbar {
   val textString = context.getString(text)
   val actionTextString = actionText?.let(context::getString)

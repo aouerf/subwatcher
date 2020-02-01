@@ -14,7 +14,6 @@ import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.layoutInflater
 import io.github.aouerfelli.subwatcher.util.load
-import io.github.aouerfelli.subwatcher.util.toBitmap
 
 class SubredditListAdapter(private val imageLoader: ImageLoader) :
   ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
@@ -49,7 +48,7 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
         field = value
         value ?: return
         itemBinding.name.text = value.name.name
-        itemBinding.icon.load(value.iconImage?.toBitmap(), imageLoader) {
+        itemBinding.icon.load(value.iconImage, imageLoader) {
           crossfade(true)
           transformations(CircleCropTransformation())
           // TODO: fallback()
