@@ -16,9 +16,9 @@ import coil.fetch.SourceResult
 import coil.request.LoadRequestBuilder
 import coil.request.RequestDisposable
 import coil.size.Size
+import java.io.ByteArrayOutputStream
 import okio.buffer
 import okio.source
-import java.io.ByteArrayOutputStream
 
 // TODO: De-inlined because of https://github.com/cashapp/sqldelight/issues/1203#issuecomment-487438538
 class ImageBlob(val image: ByteArray) {
