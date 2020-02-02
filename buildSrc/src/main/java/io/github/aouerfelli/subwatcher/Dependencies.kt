@@ -66,6 +66,7 @@ object Dependencies {
   object Moshi {
     const val runtime = "com.squareup.moshi:moshi:${Versions.moshi}"
     const val compiler = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
+    const val adapters = "com.squareup.moshi:moshi-adapters:${Versions.moshi}"
 
     object Sealed {
       const val runtime =

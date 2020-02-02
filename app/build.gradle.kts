@@ -99,6 +99,7 @@ dependencies {
   implementation(Dependencies.Retrofit.moshiConverter)
   implementation(Dependencies.Moshi.runtime)
   kapt(Dependencies.Moshi.compiler)
+  implementation(Dependencies.Moshi.adapters)
   implementation(Dependencies.Moshi.Sealed.runtime)
   kapt(Dependencies.Moshi.Sealed.compiler)
 
