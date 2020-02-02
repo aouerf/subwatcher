@@ -44,7 +44,7 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  private suspend fun AboutSubreddit.mapSubreddit(): Subreddit {
+  private suspend fun AboutSubreddit.Success.mapSubreddit(): Subreddit {
     return with(data) {
       Subreddit.Impl(
         id = SubredditId(id),
@@ -54,9 +54,20 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  private suspend fun fetchSubreddit(name: SubredditName): Result<Subreddit> {
+  private suspend inline fun fetchSubreddit(
+    name: SubredditName,
+    onSuccess: (Subreddit) -> Unit = { }
+  ): Result<Subreddit> {
     val response = api.fetch { getAboutSubreddit(name.name) }
-    return response.mapToResult { it.mapSubreddit() }
+    println(response)
+    // TODO: Merge this with Response.mapToResult()
+    if (response is Response.Success && response.body !is AboutSubreddit.Success) {
+      return Result.networkFailure()
+    }
+    return response.mapToResult { body ->
+      check(body is AboutSubreddit.Success) { "Response body should be a success." }
+      body.mapSubreddit().also { onSuccess(it) }
+    }
   }
 
   private suspend fun insertSubreddit(subreddit: Subreddit): Result<Subreddit> {
@@ -108,8 +119,7 @@ class SubredditRepository @Inject constructor(
   }
 
   private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    val response = api.fetch { getAboutSubreddit(subreddit.name.name) }
-    return response.mapToResult { body -> body.mapSubreddit().also { updateSubreddit(it) } }
+    return fetchSubreddit(subreddit.name) { updateSubreddit(it) }
   }
 
   suspend fun refreshSubreddits(): Result<Nothing> {

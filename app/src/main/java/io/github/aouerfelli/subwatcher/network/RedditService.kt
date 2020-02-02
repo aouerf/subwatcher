@@ -1,10 +1,10 @@
 package io.github.aouerfelli.subwatcher.network
 
 import com.squareup.moshi.JsonDataException
-import java.io.IOException
 import retrofit2.HttpException
 import retrofit2.http.GET
 import retrofit2.http.Path
+import java.io.IOException
 
 interface RedditService {
 
@@ -12,7 +12,7 @@ interface RedditService {
   suspend fun getAboutSubreddit(@Path("subreddit") subreddit: String): AboutSubreddit
 }
 
-suspend fun <T : Any> RedditService.fetch(request: suspend RedditService.() -> T): Response<T> {
+inline fun <T : Any> RedditService.fetch(request: RedditService.() -> T): Response<T> {
   return try {
     val response = request()
     Response.Success(response)
