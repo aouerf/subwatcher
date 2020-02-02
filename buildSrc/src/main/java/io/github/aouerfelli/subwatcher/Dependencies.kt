@@ -66,6 +66,12 @@ object Dependencies {
   object Moshi {
     const val runtime = "com.squareup.moshi:moshi:${Versions.moshi}"
     const val compiler = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.moshi}"
+
+    object Sealed {
+      const val runtime =
+        "dev.zacsweers.moshisealed:moshi-sealed-annotations:${Versions.moshiSealed}"
+      const val compiler = "dev.zacsweers.moshisealed:moshi-sealed-codegen:${Versions.moshiSealed}"
+    }
   }
 
   object SqlDelight {
