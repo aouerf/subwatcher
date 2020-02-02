@@ -17,7 +17,11 @@ suspend fun <T : Any> RedditService.fetch(request: suspend RedditService.() -> T
     val response = request()
     Response.Success(response)
   } catch (e: HttpException) {
-    Response.Failure.Fetch(e.code())
+    when (val code = e.code()) {
+      in Response.Failure.Fetch.clientErrorRange -> Response.Failure.Parse
+      // in Response.Failure.Fetch.serverErrorRange -> Response.Failure.Fetch(code)
+      else -> Response.Failure.Fetch(code)
+    }
   } catch (e: JsonDataException) {
     Response.Failure.Parse
   } catch (e: IOException) {
