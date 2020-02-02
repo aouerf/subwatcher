@@ -10,6 +10,7 @@ import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.util.MutableReactiveEvent
 import io.github.aouerfelli.subwatcher.util.asImmutable
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
@@ -38,10 +39,16 @@ class MainViewModel @AssistedInject constructor(
   private val _refreshedSubreddits = MutableReactiveEvent<Result<Nothing>>()
   val refreshedSubreddits = _refreshedSubreddits.asImmutable()
 
-  private inline fun load(crossinline load: suspend () -> Unit) = viewModelScope.launch {
+  private inline fun load(crossinline load: suspend () -> Unit) {
     _isLoading.offer(true)
-    load()
-    _isLoading.offer(false)
+    viewModelScope.launch {
+      load()
+    }.invokeOnCompletion {
+      val noJobsRunning = viewModelScope.coroutineContext[Job]?.children?.none() != false
+      if (noJobsRunning) {
+        _isLoading.offer(false)
+      }
+    }
   }
 
   fun refresh() {
