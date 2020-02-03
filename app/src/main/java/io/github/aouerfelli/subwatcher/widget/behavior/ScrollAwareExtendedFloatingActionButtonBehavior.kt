@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 
 class ScrollAwareExtendedFloatingActionButtonBehavior(context: Context, attrs: AttributeSet) :
@@ -60,7 +61,13 @@ class ScrollAwareExtendedFloatingActionButtonBehavior(context: Context, attrs: A
     if (dyConsumed > 0 && child.isExtended) {
       child.shrink()
     } else if (dyConsumed < 0 && !child.isExtended) {
-      child.extend()
+      val canScrollUp = target.canScrollVertically(-1) ||
+          (target is SwipeRefreshLayout && target.canChildScrollUp())
+      // The FAB should not return to an extended FAB until the user scrolls back to the top of the
+      // page.
+      if (canScrollUp) {
+        child.extend()
+      }
     }
   }
 }
