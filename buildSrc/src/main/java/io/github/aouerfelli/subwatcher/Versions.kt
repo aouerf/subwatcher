@@ -11,9 +11,6 @@ internal object Versions {
 
   const val androidDesugarJdkLibs = "1.0.4"
 
-  const val material = "1.2.0-alpha04"
-  const val insetter = "0.2.0"
-
   object AndroidX {
     const val appcompat = "1.2.0-alpha02"
     const val activity = "1.1.0"
@@ -29,12 +26,15 @@ internal object Versions {
     const val viewModelSavedState = "1.0.0"
   }
 
+  const val material = "1.2.0-alpha04"
+  const val insetter = "0.2.0"
+
   const val coroutines = "1.3.3"
   const val dagger = "2.26"
   const val assistedInject = "0.5.2"
   const val okHttp = "4.3.1"
   const val retrofit = "2.7.1"
   const val moshi = "1.9.2"
-  const val coil = "0.9.2"
+  const val coil = "0.9.3"
   const val timber = "5.0.0-SNAPSHOT"
 }
