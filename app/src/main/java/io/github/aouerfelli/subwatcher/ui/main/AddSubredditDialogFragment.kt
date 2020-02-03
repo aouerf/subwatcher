@@ -30,6 +30,7 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+    // TODO: Not inheriting from the app theme (https://github.com/material-components/material-components-android/issues/99)
     return AddSubredditDialogFragmentBinding.inflate(inflater, container, false)
       .also { binding = it }
       .root
@@ -88,6 +89,8 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     super.onActivityCreated(savedInstanceState)
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
+    // The inner container also has fitsSystemWindow disabled to prevent the text selection toolbar
+    // from adding padding to the view.
     (view?.parent?.parent as? View)?.apply {
       fitsSystemWindows = false
       (parent as? View)?.fitsSystemWindows = false
