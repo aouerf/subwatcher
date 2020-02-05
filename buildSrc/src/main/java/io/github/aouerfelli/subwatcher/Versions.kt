@@ -23,7 +23,6 @@ internal object Versions {
     const val browser = "1.3.0-alpha01"
 
     const val lifecycle = "2.2.0"
-    const val viewModelSavedState = "1.0.0"
   }
 
   const val material = "1.2.0-alpha04"
