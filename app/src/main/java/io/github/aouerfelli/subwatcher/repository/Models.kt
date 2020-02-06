@@ -9,4 +9,4 @@ inline class SubredditId(val id: String)
 inline class SubredditName(val name: String)
 typealias SubredditIcon = ImageBlob
 
-fun SubredditName.asUrl() = "$redditBaseUrl/r/$name".toUri()
+fun SubredditName.asUrl() = "$redditBaseUrl/r/$name/new".toUri()
