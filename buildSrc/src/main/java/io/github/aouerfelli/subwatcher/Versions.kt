@@ -27,7 +27,7 @@ internal object Versions {
 
   const val material = "1.2.0-alpha04"
   const val insetter = "0.2.0"
-  const val coil = "0.9.4"
+  const val coil = "0.9.5"
 
   const val coroutines = "1.3.3"
   const val dagger = "2.26"
