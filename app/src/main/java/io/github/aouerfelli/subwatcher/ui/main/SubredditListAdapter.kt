@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
 import coil.transform.CircleCropTransformation
+import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
 import io.github.aouerfelli.subwatcher.repository.asUrl
@@ -51,7 +52,8 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
         itemBinding.icon.load(value.iconImage, imageLoader) {
           crossfade(true)
           transformations(CircleCropTransformation())
-          // TODO: fallback()
+          placeholder(R.drawable.ic_reddit_mark)
+          fallback(R.drawable.ic_reddit_mark)
         }
       }
 
