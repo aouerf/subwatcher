@@ -8,7 +8,6 @@ import dagger.Provides
 import io.github.aouerfelli.subwatcher.Database
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.SubredditIcon
-import io.github.aouerfelli.subwatcher.repository.SubredditId
 import io.github.aouerfelli.subwatcher.repository.SubredditName
 import javax.inject.Singleton
 
@@ -21,10 +20,6 @@ object DatabaseModule {
   @Singleton
   fun provideDatabase(context: Context): Database {
     val subredditAdapter = Subreddit.Adapter(
-      idAdapter = object : ColumnAdapter<SubredditId, String> {
-        override fun decode(databaseValue: String) = SubredditId(databaseValue)
-        override fun encode(value: SubredditId) = value.id
-      },
       nameAdapter = object : ColumnAdapter<SubredditName, String> {
         override fun decode(databaseValue: String) = SubredditName(databaseValue)
         override fun encode(value: SubredditName) = value.name

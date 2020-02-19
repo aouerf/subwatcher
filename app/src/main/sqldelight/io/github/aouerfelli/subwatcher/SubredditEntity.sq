@@ -1,10 +1,8 @@
-import io.github.aouerfelli.subwatcher.repository.SubredditId;
 import io.github.aouerfelli.subwatcher.repository.SubredditName;
 import io.github.aouerfelli.subwatcher.repository.SubredditIcon;
 
 CREATE TABLE subreddit(
-    id TEXT AS SubredditId NOT NULL UNIQUE PRIMARY KEY,
-    name TEXT AS SubredditName NOT NULL UNIQUE COLLATE NOCASE,
+    name TEXT AS SubredditName NOT NULL UNIQUE PRIMARY KEY COLLATE NOCASE,
     iconImage BLOB AS SubredditIcon
 );
 
@@ -20,16 +18,15 @@ WHERE name = ?;
 
 insert:
 INSERT OR FAIL INTO subreddit(
-    id, name, iconImage
+  name, iconImage
 )
 VALUES ?;
--- VALUES (?, ?, ?);
 
 update:
 UPDATE subreddit
-SET name = ?, iconImage = ?
-WHERE id = ?;
+SET iconImage = ?
+WHERE name = ?;
 
 delete:
 DELETE FROM subreddit
-WHERE id = ?;
+WHERE name = ?;

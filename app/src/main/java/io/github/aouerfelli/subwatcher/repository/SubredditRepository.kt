@@ -47,7 +47,6 @@ class SubredditRepository @Inject constructor(
   private suspend fun AboutSubreddit.mapSubreddit(): Subreddit {
     return with(data) {
       Subreddit.Impl(
-        id = SubredditId(id),
         name = SubredditName(displayName),
         iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader)
       )
@@ -94,7 +93,7 @@ class SubredditRepository @Inject constructor(
 
   suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
     return withContext(ioDispatcher) {
-      db.delete(subreddit.id)
+      db.delete(subreddit.name)
       Result.success(subreddit)
     }
   }
@@ -102,7 +101,7 @@ class SubredditRepository @Inject constructor(
   private suspend fun updateSubreddit(subreddit: Subreddit) {
     return withContext(ioDispatcher) {
       with(subreddit) {
-        db.update(id = id, name = name, iconImage = iconImage)
+        db.update(name = name, iconImage = iconImage)
       }
     }
   }

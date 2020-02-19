@@ -22,7 +22,7 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
   companion object {
     private val diffCallback = object : DiffUtil.ItemCallback<Subreddit>() {
       override fun areItemsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
-        return oldItem.id == newItem.id
+        return oldItem.name == newItem.name
       }
 
       @SuppressLint("DiffUtilEquals")

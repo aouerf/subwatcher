@@ -5,7 +5,6 @@ import io.github.aouerfelli.subwatcher.util.ImageBlob
 
 const val redditBaseUrl = "https://www.reddit.com"
 
-inline class SubredditId(val id: String)
 inline class SubredditName(val name: String)
 typealias SubredditIcon = ImageBlob
 
