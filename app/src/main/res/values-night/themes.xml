@@ -6,8 +6,8 @@
     <item name="colorPrimaryVariant">@color/reddit_teal</item>
     <item name="colorOnPrimary">@android:color/white</item>
 
-    <item name="colorSecondary">@color/reddit_yellow</item>
-    <item name="colorSecondaryVariant">@color/reddit_mango</item>
+    <item name="colorSecondary">@color/reddit_mango</item>
+    <item name="colorSecondaryVariant">@color/reddit_yellow</item>
     <item name="colorOnSecondary">@android:color/black</item>
   </style>
 
