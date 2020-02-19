@@ -93,6 +93,7 @@ dependencies {
   compileOnly(Dependencies.Dagger.AssistedInject.runtime)
   kapt(Dependencies.Dagger.AssistedInject.compiler)
 
+  implementation(platform(Dependencies.OkHttp.bom))
   implementation(Dependencies.OkHttp.client)
   implementation(Dependencies.OkHttp.loggingInterceptor)
   implementation(Dependencies.Retrofit.client)
