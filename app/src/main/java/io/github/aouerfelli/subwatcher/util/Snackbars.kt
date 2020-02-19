@@ -1,8 +1,10 @@
 package io.github.aouerfelli.subwatcher.util
 
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import io.github.aouerfelli.subwatcher.R
 
 enum class SnackbarLength(val flag: Int) {
   INDEFINITE(Snackbar.LENGTH_INDEFINITE),
@@ -10,7 +12,6 @@ enum class SnackbarLength(val flag: Int) {
   LONG(Snackbar.LENGTH_LONG)
 }
 
-// TODO: Theme snackbar
 inline fun View.makeSnackbar(
   text: AndroidString,
   actionText: AndroidString? = null,
@@ -23,6 +24,8 @@ inline fun View.makeSnackbar(
   return Snackbar.make(this, textString, length.flag).apply {
     if (actionTextString != null) {
       setAction(actionTextString) { action() }
+      val oppositeSecondaryColor = ContextCompat.getColor(context, R.color.color_secondary_opposite)
+      setActionTextColor(oppositeSecondaryColor)
     }
     if (show) {
       show()
