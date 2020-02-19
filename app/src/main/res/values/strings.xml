@@ -7,6 +7,9 @@
   <string name="action_undo">Undo</string>
   <string name="action_view">View</string>
 
+  <string name="empty_state_title">Nothing to watch</string>
+  <string name="empty_state_subtitle">Get started by adding a subreddit to list.</string>
+
   <string name="add_subreddit_button_extended_label">Add subreddit</string>
 
   <string name="add_subreddit_dialog_prefix">r/</string>

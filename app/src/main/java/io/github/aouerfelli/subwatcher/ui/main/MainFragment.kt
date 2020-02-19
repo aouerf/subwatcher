@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
@@ -107,7 +108,12 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     }
 
     viewModel.subredditList
-      .onEach { subredditListAdapter.submitList(it) }
+      .onEach { list ->
+        subredditListAdapter.submitList(list)
+        val isListNotEmpty = list.isNotEmpty()
+        binding.subredditsRefresh.isEnabled = isListNotEmpty
+        binding.emptyStateContainer.isGone = isListNotEmpty
+      }
       .launchIn(viewLifecycleOwner.lifecycleScope)
     viewModel.isLoading
       .onEach { binding.subredditsRefresh.isRefreshing = it }
