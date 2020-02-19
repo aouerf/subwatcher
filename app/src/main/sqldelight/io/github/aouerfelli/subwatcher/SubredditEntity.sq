@@ -1,9 +1,9 @@
 import io.github.aouerfelli.subwatcher.repository.SubredditName;
-import io.github.aouerfelli.subwatcher.repository.SubredditIcon;
+import io.github.aouerfelli.subwatcher.repository.SubredditIconImage;
 
 CREATE TABLE subreddit(
     name TEXT AS SubredditName NOT NULL UNIQUE PRIMARY KEY COLLATE NOCASE,
-    iconImage BLOB AS SubredditIcon
+    iconImage BLOB AS SubredditIconImage
 );
 
 selectAll:

@@ -6,6 +6,6 @@ import io.github.aouerfelli.subwatcher.util.ImageBlob
 const val redditBaseUrl = "https://www.reddit.com"
 
 inline class SubredditName(val name: String)
-typealias SubredditIcon = ImageBlob
+typealias SubredditIconImage = ImageBlob
 
 fun SubredditName.asUrl() = "$redditBaseUrl/r/$name/new".toUri()
