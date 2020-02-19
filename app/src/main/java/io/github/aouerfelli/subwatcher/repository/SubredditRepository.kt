@@ -48,7 +48,8 @@ class SubredditRepository @Inject constructor(
     return with(data) {
       Subreddit.Impl(
         name = SubredditName(displayName),
-        iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader)
+        iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader),
+        lastPosted = null
       )
     }
   }

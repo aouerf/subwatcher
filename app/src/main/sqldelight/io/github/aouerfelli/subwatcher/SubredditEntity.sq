@@ -1,9 +1,11 @@
-import io.github.aouerfelli.subwatcher.repository.SubredditName;
 import io.github.aouerfelli.subwatcher.repository.SubredditIconImage;
+import io.github.aouerfelli.subwatcher.repository.SubredditName;
+import java.time.Instant;
 
 CREATE TABLE subreddit(
     name TEXT AS SubredditName NOT NULL UNIQUE PRIMARY KEY COLLATE NOCASE,
-    iconImage BLOB AS SubredditIconImage
+    iconImage BLOB AS SubredditIconImage,
+    lastPosted INTEGER AS Instant
 );
 
 selectAll:
