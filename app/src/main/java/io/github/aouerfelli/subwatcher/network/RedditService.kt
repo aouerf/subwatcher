@@ -10,6 +10,9 @@ interface RedditService {
 
   @GET("/r/{subreddit}/about.json")
   suspend fun getAboutSubreddit(@Path("subreddit") subreddit: String): AboutSubreddit
+
+  @GET("/r/{subreddit}/new.json")
+  suspend fun getNewPosts(@Path("subreddit") subreddit: String): Posts
 }
 
 suspend fun <T : Any> RedditService.fetch(request: suspend RedditService.() -> T): Response<T> {
