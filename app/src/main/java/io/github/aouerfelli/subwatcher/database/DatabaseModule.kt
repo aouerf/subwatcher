@@ -1,6 +1,5 @@
 package io.github.aouerfelli.subwatcher.database
 
-import android.annotation.SuppressLint
 import android.content.Context
 import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.android.AndroidSqliteDriver
@@ -9,8 +8,8 @@ import dagger.Provides
 import io.github.aouerfelli.subwatcher.Database
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.SubredditIconImage
+import io.github.aouerfelli.subwatcher.repository.SubredditLastPosted
 import io.github.aouerfelli.subwatcher.repository.SubredditName
-import java.time.Instant
 import javax.inject.Singleton
 
 @Module
@@ -30,10 +29,9 @@ object DatabaseModule {
         override fun decode(databaseValue: ByteArray) = SubredditIconImage(databaseValue)
         override fun encode(value: SubredditIconImage) = value.image
       },
-      // Core library desugaring handles Instant on API < 26
-      lastPostedAdapter = @SuppressLint("NewApi") object : ColumnAdapter<Instant, Long> {
-        override fun decode(databaseValue: Long) = Instant.ofEpochSecond(databaseValue)
-        override fun encode(value: Instant) = value.epochSecond
+      lastPostedAdapter = object : ColumnAdapter<SubredditLastPosted, Long> {
+        override fun decode(databaseValue: Long) = SubredditLastPosted(databaseValue)
+        override fun encode(value: SubredditLastPosted) = value.epochSeconds
       }
     )
 

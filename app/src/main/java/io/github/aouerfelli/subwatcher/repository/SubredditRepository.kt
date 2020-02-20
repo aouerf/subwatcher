@@ -102,14 +102,19 @@ class SubredditRepository @Inject constructor(
   private suspend fun updateSubreddit(subreddit: Subreddit) {
     return withContext(ioDispatcher) {
       with(subreddit) {
-        db.update(name = name, iconImage = iconImage)
+        db.update(name = name, iconImage = iconImage, lastPosted = lastPosted)
       }
     }
   }
 
   private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
     val response = api.fetch { getAboutSubreddit(subreddit.name.name) }
-    return response.mapToResult { body -> body.mapSubreddit().also { updateSubreddit(it) } }
+    return response.mapToResult { body ->
+      (body.mapSubreddit() as Subreddit.Impl)
+        // Preserve last posted instead of resetting it
+        .copy(lastPosted = subreddit.lastPosted)
+        .also { updateSubreddit(it) }
+    }
   }
 
   suspend fun refreshSubreddits(): Result<Nothing> {
@@ -137,5 +142,26 @@ class SubredditRepository @Inject constructor(
       }.awaitAll()
       finalResult
     }
+  }
+
+  suspend fun checkForNewerPosts(subreddit: Subreddit): UInt {
+    val newPostsWrapper = api.fetch { getNewPosts(subreddit.name.name) }
+    if (newPostsWrapper !is Response.Success) {
+      // If network request failed, assume that there are no new posts
+      return 0u
+    }
+    val newPosts = newPostsWrapper.body.data.children
+    val lastPosted = SubredditLastPosted(newPosts.first().data.createdUtc)
+    val subredditLastPosted = subreddit.lastPosted
+    updateSubreddit((subreddit as Subreddit.Impl).copy(lastPosted = lastPosted))
+
+    // TODO: Indicate if reached max number of unread posts
+    if (subredditLastPosted == null) {
+      return newPosts.size.toUInt()
+    }
+    // Checks for the number of posts newer than the last known one
+    return newPosts
+      .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) <= subredditLastPosted }
+      .toUInt()
   }
 }
