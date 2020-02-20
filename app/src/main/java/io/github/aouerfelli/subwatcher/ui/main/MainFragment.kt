@@ -1,17 +1,11 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -30,10 +24,10 @@ import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.EventSnackbar
 import io.github.aouerfelli.subwatcher.util.SnackbarLength
-import io.github.aouerfelli.subwatcher.util.extensions.buildCustomTabsIntent
 import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.onSwipe
 import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
+import io.github.aouerfelli.subwatcher.util.launchNewSubredditPostsNotification
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.toAndroidString
@@ -47,9 +41,6 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
   companion object {
     private const val ADD_SUBREDDIT_REQUEST_CODE = 2
-
-    private const val NOTIFICATION_NEW_POSTS_CHANNEL_ID = "newSubredditPosts"
-    private const val NOTIFICATION_NEW_POSTS_ID = 1
   }
 
   @Inject
@@ -75,38 +66,8 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    // TODO: Remove notification handling away from fragment
-    val applicationContext = requireContext().applicationContext
-    val notificationManager = NotificationManagerCompat.from(applicationContext)
-    if (Build.VERSION.SDK_INT >= 26) {
-      // TODO: String resources
-      val channelName = "New subreddit posts"
-      val channelDescription = "Shows the number of new posts for a subreddit since the last check."
-      val channelImportance = NotificationManager.IMPORTANCE_DEFAULT
-      val channel = NotificationChannel(
-        NOTIFICATION_NEW_POSTS_CHANNEL_ID,
-        channelName,
-        channelImportance
-      ).apply {
-        description = channelDescription
-      }
-      notificationManager.createNotificationChannel(channel)
-    }
-    // TODO: Check for all subreddits in database
     val subredditName = SubredditName("androiddev")
-    val customTabsIntent = subredditName.asUrl().buildCustomTabsIntent()
-    val contentIntent = PendingIntent.getActivity(
-      applicationContext, 0, customTabsIntent.intent, 0, customTabsIntent.startAnimationBundle
-    )
-    val notification =
-      NotificationCompat.Builder(applicationContext, NOTIFICATION_NEW_POSTS_CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_reddit_mark)
-        .setContentTitle("r/${subredditName.name}")
-        .setContentText("24 new posts") // TODO: String resource
-        .setContentIntent(contentIntent)
-        .setAutoCancel(true)
-        .build()
-    notificationManager.notify(subredditName.name, NOTIFICATION_NEW_POSTS_ID, notification)
+    requireContext().launchNewSubredditPostsNotification(subredditName, 24u)
   }
 
   override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
