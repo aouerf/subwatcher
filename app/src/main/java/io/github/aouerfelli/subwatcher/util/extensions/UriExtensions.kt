@@ -9,6 +9,12 @@ private val customTabsIntentBuilder = CustomTabsIntent.Builder()
   .enableUrlBarHiding()
   .setShowTitle(true)
 
+fun Uri.buildCustomTabsIntent(): CustomTabsIntent {
+  return customTabsIntentBuilder
+    .build()
+    .also { it.intent.data = this }
+}
+
 fun Uri.launch(context: Context) {
   val intent = customTabsIntentBuilder.build()
   intent.launchUrl(context, this)
