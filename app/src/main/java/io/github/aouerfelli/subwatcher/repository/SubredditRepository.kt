@@ -99,21 +99,21 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  private suspend fun updateSubreddit(subreddit: Subreddit) {
+  private suspend fun updateSubreddit(
+    subreddit: Subreddit,
+    lastPosted: SubredditLastPosted? = subreddit.lastPosted
+  ) {
     return withContext(ioDispatcher) {
-      with(subreddit) {
-        db.update(name = name, iconImage = iconImage, lastPosted = lastPosted)
-      }
+      db.update(name = subreddit.name, iconImage = subreddit.iconImage, lastPosted = lastPosted)
     }
   }
 
   private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
     val response = api.fetch { getAboutSubreddit(subreddit.name.name) }
     return response.mapToResult { body ->
-      (body.mapSubreddit() as Subreddit.Impl)
-        // Preserve last posted instead of resetting it
-        .copy(lastPosted = subreddit.lastPosted)
-        .also { updateSubreddit(it) }
+      body.mapSubreddit()
+        // Update subreddit details, preserving last posted time instead of resetting it
+        .also { updateSubreddit(it, lastPosted = subreddit.lastPosted) }
     }
   }
 
@@ -153,7 +153,7 @@ class SubredditRepository @Inject constructor(
     val newPosts = newPostsWrapper.body.data.children
     val lastPosted = SubredditLastPosted(newPosts.first().data.createdUtc)
     val subredditLastPosted = subreddit.lastPosted
-    updateSubreddit((subreddit as Subreddit.Impl).copy(lastPosted = lastPosted))
+    updateSubreddit(subreddit, lastPosted = lastPosted)
 
     // TODO: Indicate if reached max number of unread posts
     if (subredditLastPosted == null) {
