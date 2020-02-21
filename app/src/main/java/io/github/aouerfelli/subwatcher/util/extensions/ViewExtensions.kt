@@ -7,7 +7,7 @@ import io.github.aouerfelli.subwatcher.R
 
 // TODO: Custom view
 fun SwipeRefreshLayout.setThemeColorScheme() {
-  val foregroundColor = context.getThemeColor(R.attr.colorSecondary)
+  val foregroundColor = context.getThemeColor(R.attr.colorPrimary)
   val backgroundColor = context.getThemeColor(R.attr.colorBackgroundFloating)
   setColorSchemeColors(foregroundColor)
   setProgressBackgroundColorSchemeColor(backgroundColor)
