@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="color_secondary_opposite">@color/color_secondary_light</color>
+  <color name="color_primary_opposite">@color/color_primary_light</color>
 
   <color name="translucent_white">#33FFFFFF</color> <!-- 20% white -->
   <color name="translucent_black">#B3000000</color> <!-- 70% black -->
