@@ -19,7 +19,7 @@ import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
-import io.github.aouerfelli.subwatcher.repository.SubredditName
+import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.EventSnackbar
@@ -44,6 +44,10 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   }
 
   @Inject
+  // TODO: Remove from this fragment (used for SubredditRepository::checkForNewerPosts)
+  lateinit var repository: SubredditRepository
+
+  @Inject
   lateinit var viewModelFactory: MainViewModel.Factory
   override val viewModelClass = MainViewModel::class
 
@@ -62,13 +66,6 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   }
 
   override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    val subredditName = SubredditName("androiddev")
-    requireContext().notifyNewSubredditPosts(subredditName, 24u)
-  }
 
   override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
     subredditListAdapter = SubredditListAdapter(imageLoader)
@@ -122,6 +119,14 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         val isListNotEmpty = list.isNotEmpty()
         binding.subredditsRefresh.isEnabled = isListNotEmpty
         binding.emptyStateContainer.isGone = isListNotEmpty
+
+        // TODO: Remove notification check from fragment
+        list.forEach { subreddit ->
+          val unreadPostsAmount = repository.checkForNewerPosts(subreddit)
+          if (unreadPostsAmount > 0u) {
+            requireContext().notifyNewSubredditPosts(subreddit.name, unreadPostsAmount)
+          }
+        }
       }
       .launchIn(viewLifecycleOwner.lifecycleScope)
     viewModel.isLoading

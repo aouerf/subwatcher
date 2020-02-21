@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
 
 @Singleton
@@ -29,7 +30,7 @@ class SubredditRepository @Inject constructor(
 
   private val ioDispatcher = Dispatchers.IO
 
-  val subreddits = db.selectAll().asFlow().mapToList(ioDispatcher)
+  val subreddits = db.selectAll().asFlow().mapToList(ioDispatcher).distinctUntilChanged()
 
   private inline fun <T : Any, U : Any> Response<T>.mapToResult(
     transform: (T) -> U
@@ -162,6 +163,7 @@ class SubredditRepository @Inject constructor(
     // Checks for the number of posts newer than the last known one
     return newPosts
       .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) <= subredditLastPosted }
+      .let { if (it == -1) newPosts.size else it }
       .toUInt()
   }
 }
