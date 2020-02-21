@@ -14,7 +14,7 @@ internal object Versions {
   object AndroidX {
     const val appcompat = "1.2.0-alpha02"
     const val activity = "1.1.0"
-    const val fragment = "1.2.1"
+    const val fragment = "1.2.2"
     const val core = "1.3.0-alpha01"
     const val constraintLayout = "2.0.0-beta4"
     const val coordinatorLayout = "1.1.0"
@@ -25,8 +25,8 @@ internal object Versions {
     const val lifecycle = "2.2.0"
   }
 
-  const val material = "1.2.0-alpha04"
-  const val insetter = "0.2.0"
+  const val material = "1.2.0-alpha05"
+  const val insetter = "0.2.1"
   const val coil = "0.9.5"
 
   const val coroutines = "1.3.3"

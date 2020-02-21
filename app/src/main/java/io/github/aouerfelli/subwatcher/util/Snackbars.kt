@@ -24,8 +24,8 @@ inline fun View.makeSnackbar(
   return Snackbar.make(this, textString, length.flag).apply {
     if (actionTextString != null) {
       setAction(actionTextString) { action() }
-      val oppositeSecondaryColor = ContextCompat.getColor(context, R.color.color_secondary_opposite)
-      setActionTextColor(oppositeSecondaryColor)
+      val oppositePrimaryColor = ContextCompat.getColor(context, R.color.color_primary_opposite)
+      setActionTextColor(oppositePrimaryColor)
     }
     if (show) {
       show()

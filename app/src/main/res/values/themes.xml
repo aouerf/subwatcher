@@ -14,11 +14,11 @@
   <style name="Base.Theme.Subwatcher" parent="Base.V21.Theme.Subwatcher" />
 
   <style name="Theme.Subwatcher" parent="Base.Theme.Subwatcher">
-    <item name="colorPrimary">@color/reddit_blue</item>
+    <item name="colorPrimary">@color/color_primary_light</item>
     <item name="colorPrimaryVariant">@color/reddit_alien_blue</item>
     <item name="colorOnPrimary">@android:color/white</item>
 
-    <item name="colorSecondary">@color/color_secondary_light</item>
+    <item name="colorSecondary">@color/reddit_orangered</item>
     <item name="colorSecondaryVariant">@color/reddit_orange</item>
     <item name="colorOnSecondary">@android:color/white</item>
   </style>
