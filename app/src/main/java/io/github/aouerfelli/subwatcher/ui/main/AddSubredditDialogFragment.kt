@@ -30,7 +30,6 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    // TODO: Not inheriting from the app theme (https://github.com/material-components/material-components-android/issues/99)
     return AddSubredditDialogFragmentBinding.inflate(inflater, container, false)
       .also { binding = it }
       .root
