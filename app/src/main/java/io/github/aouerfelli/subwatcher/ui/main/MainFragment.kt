@@ -122,9 +122,9 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
         // TODO: Remove notification check from fragment
         list.forEach { subreddit ->
-          val unreadPostsAmount = repository.checkForNewerPosts(subreddit)
-          if (unreadPostsAmount > 0u) {
-            requireContext().notifyNewSubredditPosts(subreddit.name, unreadPostsAmount)
+          val (unread, total) = repository.checkForNewerPosts(subreddit)
+          if (unread > 0u) {
+            requireContext().notifyNewSubredditPosts(subreddit.name, unread, total)
           }
         }
       }

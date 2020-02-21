@@ -145,25 +145,26 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  suspend fun checkForNewerPosts(subreddit: Subreddit): UInt {
+  suspend fun checkForNewerPosts(subreddit: Subreddit): Pair<UInt, UInt> {
     val newPostsWrapper = api.fetch { getNewPosts(subreddit.name.name) }
     if (newPostsWrapper !is Response.Success) {
       // If network request failed, assume that there are no new posts
-      return 0u
+      return 0u to 0u
     }
     val newPosts = newPostsWrapper.body.data.children
     val lastPosted = SubredditLastPosted(newPosts.first().data.createdUtc)
     val subredditLastPosted = subreddit.lastPosted
     updateSubreddit(subreddit, lastPosted = lastPosted)
 
-    // TODO: Indicate if reached max number of unread posts
-    if (subredditLastPosted == null) {
-      return newPosts.size.toUInt()
+    val unreadPostsAmount = if (subredditLastPosted == null) {
+      newPosts.size.toUInt()
+    } else {
+      // Checks for the number of posts newer than the last known one (wrap around to size if -1)
+      newPosts
+        .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) < subredditLastPosted }
+        .let { it % (newPosts.size + 1) }
+        .toUInt()
     }
-    // Checks for the number of posts newer than the last known one
-    return newPosts
-      .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) <= subredditLastPosted }
-      .let { if (it == -1) newPosts.size else it }
-      .toUInt()
+    return unreadPostsAmount to newPosts.size.toUInt()
   }
 }

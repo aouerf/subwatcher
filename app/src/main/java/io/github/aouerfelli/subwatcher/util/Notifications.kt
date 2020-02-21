@@ -50,13 +50,23 @@ fun Context.registerNotificationChannels() {
 
 fun Context.notifyNewSubredditPosts(
   subredditName: SubredditName,
-  unreadPostsAmount: UInt
+  unreadPostsAmount: UInt,
+  totalPostsAmount: UInt
 ): Notification {
   val notificationManager = NotificationManagerCompat.from(applicationContext)
 
   val channelId = NotificationChannelId.NEW_SUBREDDIT_POSTS.toString()
   val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subredditName.name)
-  val contentText = getString(R.string.notify_new_subreddit_posts_text, unreadPostsAmount.toInt())
+  val contentTextRes = if (unreadPostsAmount < totalPostsAmount) {
+    if (unreadPostsAmount == 1u) {
+      R.string.notify_new_subreddit_posts_text_singular
+    } else {
+      R.string.notify_new_subreddit_posts_text
+    }
+  } else {
+    R.string.notify_new_subreddit_posts_text_max
+  }
+  val contentText = getString(contentTextRes, unreadPostsAmount.toInt())
   val customTabsIntent = subredditName.asUrl().buildCustomTabsIntent()
   val contentIntent = PendingIntent.getActivity(
     applicationContext, 0, customTabsIntent.intent, 0, customTabsIntent.startAnimationBundle
