@@ -31,7 +31,6 @@ data class Post(
   @Json(name = "data") val data: PostData
 )
 
-
 @JsonClass(generateAdapter = true)
 data class PostData(
   @Json(name = "id") val id: String,

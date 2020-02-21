@@ -27,8 +27,8 @@ import io.github.aouerfelli.subwatcher.util.SnackbarLength
 import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.onSwipe
 import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
-import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
+import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.toAndroidString
 import javax.inject.Inject
