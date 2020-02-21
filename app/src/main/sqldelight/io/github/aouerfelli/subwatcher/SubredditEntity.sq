@@ -20,7 +20,7 @@ WHERE name = ?;
 
 insert:
 INSERT OR FAIL INTO subreddit(
-  name, iconImage
+  name, iconImage, lastPosted
 )
 VALUES ?;
 
