@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.content.Context
 import android.os.Build
+import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import io.github.aouerfelli.subwatcher.R
@@ -22,17 +23,16 @@ private enum class NotificationChannelId {
 
 private data class NotificationChannelData(
   val id: NotificationChannelId,
-  val title: AndroidString,
-  val description: AndroidString? = null,
+  @StringRes val title: Int,
+  @StringRes val description: Int? = null,
   val importance: Int = NotificationManagerCompat.IMPORTANCE_DEFAULT
 )
 
 private val channelsData = listOf(
   NotificationChannelData(
     NotificationChannelId.NEW_SUBREDDIT_POSTS,
-    // TODO: String resources
-    "New subreddit posts".toAndroidString(),
-    "Shows the number of new posts for a subreddit since the last check.".toAndroidString()
+    R.string.notify_new_subreddit_posts_channel_title,
+    R.string.notify_new_subreddit_posts_channel_desc
   )
 )
 
@@ -48,23 +48,33 @@ fun Context.registerNotificationChannels() {
   }.forEach(notificationManager::createNotificationChannel)
 }
 
-fun Context.launchNewSubredditPostsNotification(
+fun Context.notifyNewSubredditPosts(
   subredditName: SubredditName,
   unreadPostsAmount: UInt
 ): Notification {
   val notificationManager = NotificationManagerCompat.from(applicationContext)
+
+  val channelId = NotificationChannelId.NEW_SUBREDDIT_POSTS.toString()
+  val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subredditName.name)
+  val contentText = getString(R.string.notify_new_subreddit_posts_text, unreadPostsAmount.toInt())
   val customTabsIntent = subredditName.asUrl().buildCustomTabsIntent()
   val contentIntent = PendingIntent.getActivity(
     applicationContext, 0, customTabsIntent.intent, 0, customTabsIntent.startAnimationBundle
   )
-  val notification =
-    NotificationCompat.Builder(applicationContext, NotificationChannelId.NEW_SUBREDDIT_POSTS.toString())
-      .setSmallIcon(R.drawable.ic_reddit_mark)
-      .setContentTitle("r/${subredditName.name}")
-      .setContentText("$unreadPostsAmount new posts") // TODO: String resource
-      .setContentIntent(contentIntent)
-      .setAutoCancel(true)
-      .build()
-  notificationManager.notify(subredditName.name, NotificationId.NEW_SUBREDDIT_POSTS.ordinal, notification)
+
+  val notification = NotificationCompat.Builder(applicationContext, channelId)
+    .setSmallIcon(R.drawable.ic_reddit_mark)
+    .setContentTitle(contentTitle)
+    .setContentText(contentText)
+    .setContentIntent(contentIntent)
+    .setAutoCancel(true)
+    .build()
+  // Use the subreddit name as the tag to generate a unique identifier for each subreddit of this
+  // type of notification.
+  notificationManager.notify(
+    subredditName.name,
+    NotificationId.NEW_SUBREDDIT_POSTS.ordinal,
+    notification
+  )
   return notification
 }

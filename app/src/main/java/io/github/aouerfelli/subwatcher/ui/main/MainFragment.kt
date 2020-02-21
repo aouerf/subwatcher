@@ -27,7 +27,7 @@ import io.github.aouerfelli.subwatcher.util.SnackbarLength
 import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.onSwipe
 import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
-import io.github.aouerfelli.subwatcher.util.launchNewSubredditPostsNotification
+import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.toAndroidString
@@ -67,7 +67,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     super.onCreate(savedInstanceState)
 
     val subredditName = SubredditName("androiddev")
-    requireContext().launchNewSubredditPostsNotification(subredditName, 24u)
+    requireContext().notifyNewSubredditPosts(subredditName, 24u)
   }
 
   override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
