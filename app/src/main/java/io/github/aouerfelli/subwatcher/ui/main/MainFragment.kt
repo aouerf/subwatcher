@@ -19,6 +19,7 @@ import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
+import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.EventSnackbar
@@ -27,6 +28,7 @@ import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.onSwipe
 import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
+import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.toAndroidString
 import javax.inject.Inject
@@ -40,6 +42,10 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   companion object {
     private const val ADD_SUBREDDIT_REQUEST_CODE = 2
   }
+
+  @Inject
+  // TODO: Remove from this fragment (used for SubredditRepository::checkForNewerPosts)
+  lateinit var repository: SubredditRepository
 
   @Inject
   lateinit var viewModelFactory: MainViewModel.Factory
@@ -113,6 +119,14 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         val isListNotEmpty = list.isNotEmpty()
         binding.subredditsRefresh.isEnabled = isListNotEmpty
         binding.emptyStateContainer.isGone = isListNotEmpty
+
+        // TODO: Remove notification check from fragment
+        list.forEach { subreddit ->
+          val (unread, total) = repository.checkForNewerPosts(subreddit)
+          if (unread > 0u) {
+            requireContext().notifyNewSubredditPosts(subreddit.name, unread, total)
+          }
+        }
       }
       .launchIn(viewLifecycleOwner.lifecycleScope)
     viewModel.isLoading

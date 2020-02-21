@@ -48,6 +48,7 @@ android {
       "-progressive",
       "-XXLanguage:+NewInference",
       "-XXLanguage:+InlineClasses",
+      "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
       "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
       "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
     )

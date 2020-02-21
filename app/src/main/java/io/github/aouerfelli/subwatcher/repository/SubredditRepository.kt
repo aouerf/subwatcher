@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
 
 @Singleton
@@ -29,7 +30,7 @@ class SubredditRepository @Inject constructor(
 
   private val ioDispatcher = Dispatchers.IO
 
-  val subreddits = db.selectAll().asFlow().mapToList(ioDispatcher)
+  val subreddits = db.selectAll().asFlow().mapToList(ioDispatcher).distinctUntilChanged()
 
   private inline fun <T : Any, U : Any> Response<T>.mapToResult(
     transform: (T) -> U
@@ -47,9 +48,9 @@ class SubredditRepository @Inject constructor(
   private suspend fun AboutSubreddit.mapSubreddit(): Subreddit {
     return with(data) {
       Subreddit.Impl(
-        id = SubredditId(id),
         name = SubredditName(displayName),
-        iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader)
+        iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader),
+        lastPosted = null
       )
     }
   }
@@ -94,22 +95,27 @@ class SubredditRepository @Inject constructor(
 
   suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
     return withContext(ioDispatcher) {
-      db.delete(subreddit.id)
+      db.delete(subreddit.name)
       Result.success(subreddit)
     }
   }
 
-  private suspend fun updateSubreddit(subreddit: Subreddit) {
+  private suspend fun updateSubreddit(
+    subreddit: Subreddit,
+    lastPosted: SubredditLastPosted? = subreddit.lastPosted
+  ) {
     return withContext(ioDispatcher) {
-      with(subreddit) {
-        db.update(id = id, name = name, iconImage = iconImage)
-      }
+      db.update(name = subreddit.name, iconImage = subreddit.iconImage, lastPosted = lastPosted)
     }
   }
 
   private suspend fun refreshSubreddit(subreddit: Subreddit): Result<Subreddit> {
     val response = api.fetch { getAboutSubreddit(subreddit.name.name) }
-    return response.mapToResult { body -> body.mapSubreddit().also { updateSubreddit(it) } }
+    return response.mapToResult { body ->
+      body.mapSubreddit()
+        // Update subreddit details, preserving last posted time instead of resetting it
+        .also { updateSubreddit(it, lastPosted = subreddit.lastPosted) }
+    }
   }
 
   suspend fun refreshSubreddits(): Result<Nothing> {
@@ -137,5 +143,28 @@ class SubredditRepository @Inject constructor(
       }.awaitAll()
       finalResult
     }
+  }
+
+  suspend fun checkForNewerPosts(subreddit: Subreddit): Pair<UInt, UInt> {
+    val newPostsWrapper = api.fetch { getNewPosts(subreddit.name.name) }
+    if (newPostsWrapper !is Response.Success) {
+      // If network request failed, assume that there are no new posts
+      return 0u to 0u
+    }
+    val newPosts = newPostsWrapper.body.data.children
+    val lastPosted = SubredditLastPosted(newPosts.first().data.createdUtc)
+    val subredditLastPosted = subreddit.lastPosted
+    updateSubreddit(subreddit, lastPosted = lastPosted)
+
+    val unreadPostsAmount = if (subredditLastPosted == null) {
+      newPosts.size.toUInt()
+    } else {
+      // Checks for the number of posts newer than the last known one (wrap around to size if -1)
+      newPosts
+        .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) < subredditLastPosted }
+        .let { it % (newPosts.size + 1) }
+        .toUInt()
+    }
+    return unreadPostsAmount to newPosts.size.toUInt()
   }
 }
