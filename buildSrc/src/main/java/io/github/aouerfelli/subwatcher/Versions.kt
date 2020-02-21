@@ -26,7 +26,7 @@ internal object Versions {
   }
 
   const val material = "1.2.0-alpha05"
-  const val insetter = "0.2.0"
+  const val insetter = "0.2.1"
   const val coil = "0.9.5"
 
   const val coroutines = "1.3.3"
