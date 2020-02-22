@@ -10,10 +10,16 @@ import dagger.Module
 import dagger.Provides
 import io.github.aouerfelli.subwatcher.ui.MainModule
 import io.github.aouerfelli.subwatcher.util.ByteArrayFetcher
-import io.github.aouerfelli.subwatcher.work.NewPostsWorkerFactory
+import io.github.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
+import io.github.aouerfelli.subwatcher.work.WorkersModule
 import javax.inject.Singleton
 
-@Module(includes = [MainModule::class])
+@Module(
+  includes = [
+    MainModule::class,
+    WorkersModule::class
+  ]
+)
 abstract class ApplicationModule {
 
   @Binds
@@ -26,7 +32,7 @@ abstract class ApplicationModule {
     fun provideWorkManager(context: Context) = WorkManager.getInstance(context)
 
     @Provides
-    fun provideWorkConfiguration(workerFactory: NewPostsWorkerFactory): Configuration {
+    fun provideWorkConfiguration(workerFactory: SubwatcherWorkerFactory): Configuration {
       return Configuration.Builder()
         .setWorkerFactory(workerFactory)
         .build()

@@ -10,11 +10,11 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.android.support.DaggerApplication
 import io.github.aouerfelli.subwatcher.util.registerNotificationChannels
-import io.github.aouerfelli.subwatcher.work.NewPostsWorker
-import timber.log.LogcatTree
-import timber.log.Timber
+import io.github.aouerfelli.subwatcher.work.newposts.NewPostsWorker
 import java.time.Duration
 import javax.inject.Inject
+import timber.log.LogcatTree
+import timber.log.Timber
 
 class SubwatcherApplication : DaggerApplication(), Configuration.Provider {
 

@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.work
+package io.github.aouerfelli.subwatcher.work.newposts
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -7,6 +7,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
+import io.github.aouerfelli.subwatcher.work.WorkerAssistedInjectFactory
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import timber.log.debug
@@ -22,9 +23,7 @@ class NewPostsWorker @AssistedInject constructor(
   }
 
   @AssistedInject.Factory
-  interface Factory {
-    fun create(appContext: Context, workerParams: WorkerParameters): NewPostsWorker
-  }
+  interface Factory : WorkerAssistedInjectFactory
 
   override suspend fun doWork(): Result {
     Timber.debug { "$WORK_NAME Worker running" }
