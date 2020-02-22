@@ -25,7 +25,7 @@ INSERT OR FAIL INTO subreddit(
 VALUES ?;
 
 update:
-UPDATE subreddit
+UPDATE OR IGNORE subreddit
 SET iconImage = ?, lastPosted = ?
 WHERE name = ?;
 

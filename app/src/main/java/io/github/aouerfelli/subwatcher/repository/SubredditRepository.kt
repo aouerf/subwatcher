@@ -12,14 +12,14 @@ import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
 import io.github.aouerfelli.subwatcher.util.toImageBlob
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class SubredditRepository @Inject constructor(
@@ -90,7 +90,12 @@ class SubredditRepository @Inject constructor(
   }
 
   suspend fun addSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    return insertSubreddit(subreddit)
+    return insertSubreddit(subreddit).also { result ->
+      // Attempt to update lastPosted property if not set already
+      if (result is Result.Success && result.data.lastPosted == null) {
+        checkForNewerPosts(result.data)
+      }
+    }
   }
 
   suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
@@ -156,6 +161,7 @@ class SubredditRepository @Inject constructor(
     updateSubreddit(subreddit, lastPosted = lastPosted)
 
     val unreadPostsAmount = if (subredditLastPosted == null) {
+      // If this subreddit has not been checked previously, then assume all posts are new
       newPosts.size.toUInt()
     } else {
       // Checks for the number of posts newer than the last known one (wrap around to size if -1)
