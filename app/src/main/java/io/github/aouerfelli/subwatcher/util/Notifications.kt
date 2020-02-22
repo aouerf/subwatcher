@@ -51,7 +51,8 @@ fun Context.registerNotificationChannels() {
 fun Context.notifyNewSubredditPosts(
   subredditName: SubredditName,
   unreadPostsAmount: UInt,
-  totalPostsAmount: UInt
+  totalPostsAmount: UInt,
+  isFirstNotification: Boolean = false
 ): Notification {
   val notificationManager = NotificationManagerCompat.from(applicationContext)
 
@@ -76,6 +77,13 @@ fun Context.notifyNewSubredditPosts(
     .setSmallIcon(R.drawable.ic_reddit_mark)
     .setContentTitle(contentTitle)
     .setContentText(contentText)
+    .setGroup(NotificationId.NEW_SUBREDDIT_POSTS.toString())
+    .apply {
+      if (isFirstNotification) {
+        setGroupSummary(true)
+      }
+    }
+    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
     .setContentIntent(contentIntent)
     .setAutoCancel(true)
     .build()
