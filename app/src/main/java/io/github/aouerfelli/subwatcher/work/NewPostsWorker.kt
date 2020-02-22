@@ -31,12 +31,11 @@ class NewPostsWorker @AssistedInject constructor(
 
     val list = repository.subreddits.first()
     list.forEach { subreddit ->
-      val (unread, total) = repository.checkForNewerPosts(subreddit)
+      val (unread, total) = repository.checkForNewerPosts(subreddit) ?: return Result.failure()
       if (unread > 0u) {
         applicationContext.notifyNewSubredditPosts(subreddit.name, unread, total)
       }
     }
-
     return Result.success()
   }
 }

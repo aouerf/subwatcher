@@ -12,14 +12,14 @@ import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
 import io.github.aouerfelli.subwatcher.util.toImageBlob
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
 @Singleton
 class SubredditRepository @Inject constructor(
@@ -145,11 +145,10 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  suspend fun checkForNewerPosts(subreddit: Subreddit): Pair<UInt, UInt> {
+  suspend fun checkForNewerPosts(subreddit: Subreddit): Pair<UInt, UInt>? {
     val newPostsWrapper = api.fetch { getNewPosts(subreddit.name.name) }
     if (newPostsWrapper !is Response.Success) {
-      // If network request failed, assume that there are no new posts
-      return 0u to 0u
+      return null
     }
     val newPosts = newPostsWrapper.body.data.children
     val lastPosted = SubredditLastPosted(newPosts.first().data.createdUtc)
@@ -162,7 +161,7 @@ class SubredditRepository @Inject constructor(
       // Checks for the number of posts newer than the last known one (wrap around to size if -1)
       newPosts
         .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) < subredditLastPosted }
-        .let { it % (newPosts.size + 1) }
+        .let { if (it == -1) newPosts.size else it }
         .toUInt()
     }
     return unreadPostsAmount to newPosts.size.toUInt()
