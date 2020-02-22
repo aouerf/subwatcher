@@ -6,6 +6,8 @@ import androidx.work.WorkerParameters
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
+import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import timber.log.debug
 
@@ -26,7 +28,15 @@ class NewPostsWorker @AssistedInject constructor(
 
   override suspend fun doWork(): Result {
     Timber.debug { "$WORK_NAME Worker running" }
-    // TODO("not implemented")
+
+    val list = repository.subreddits.first()
+    list.forEach { subreddit ->
+      val (unread, total) = repository.checkForNewerPosts(subreddit)
+      if (unread > 0u) {
+        applicationContext.notifyNewSubredditPosts(subreddit.name, unread, total)
+      }
+    }
+
     return Result.success()
   }
 }
