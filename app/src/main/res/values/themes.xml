@@ -4,10 +4,10 @@
 
   <style name="Base.Theme.Subwatcher" parent="Platform.Theme.Subwatcher">
     <item name="android:statusBarColor">@color/status_bar_scrim</item>
-    <item name="android:windowLightStatusBar" tools:targetApi="23">@bool/light_mode</item>
+    <item name="android:windowLightStatusBar" tools:targetApi="23">@bool/is_light_mode</item>
 
     <item name="android:navigationBarColor">@color/nav_bar_scrim</item>
-    <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/light_mode</item>
+    <item name="android:windowLightNavigationBar" tools:targetApi="27">@bool/is_light_mode</item>
     <item name="android:navigationBarDividerColor" tools:targetApi="27">@color/divider</item>
   </style>
 
