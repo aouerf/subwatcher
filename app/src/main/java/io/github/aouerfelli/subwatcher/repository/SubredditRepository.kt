@@ -9,13 +9,13 @@ import io.github.aouerfelli.subwatcher.network.AboutSubreddit
 import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
+import io.github.aouerfelli.subwatcher.util.extensions.forEachAsync
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 @Singleton
@@ -134,15 +134,10 @@ class SubredditRepository @Inject constructor(
 
     return coroutineScope {
       var finalResult: Result<Nothing> = Result.success()
-      val subreddits = withContext(ioDispatcher) {
-        db.selectAll().executeAsList()
+      val subreddits = subreddits.first()
+      subreddits.forEachAsync { subreddit ->
+        refreshSubreddit(subreddit).also { finalResult = checkResult(finalResult, it) }
       }
-      // TODO: Wait for concurrent Flow (https://github.com/Kotlin/kotlinx.coroutines/issues/1147)
-      subreddits.map { subreddit ->
-        async {
-          refreshSubreddit(subreddit).also { finalResult = checkResult(finalResult, it) }
-        }
-      }.awaitAll()
       finalResult
     }
   }

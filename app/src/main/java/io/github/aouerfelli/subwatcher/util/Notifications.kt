@@ -8,8 +8,12 @@ import android.os.Build
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.drawable.toBitmap
+import coil.ImageLoader
+import coil.api.get
 import io.github.aouerfelli.subwatcher.R
-import io.github.aouerfelli.subwatcher.repository.SubredditName
+import io.github.aouerfelli.subwatcher.Subreddit
+import io.github.aouerfelli.subwatcher.repository.asUri
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.util.extensions.buildCustomTabsIntent
 
@@ -49,15 +53,17 @@ fun Context.registerNotificationChannels() {
   }.forEach(notificationManager::createNotificationChannel)
 }
 
-fun Context.notifyNewSubredditPosts(
-  subredditName: SubredditName,
+suspend fun Context.notifyNewSubredditPosts(
+  subreddit: Subreddit,
   unreadPostsAmount: UInt,
-  totalPostsAmount: UInt
+  totalPostsAmount: UInt,
+  imageLoader: ImageLoader
 ): Notification {
   val notificationManager = NotificationManagerCompat.from(applicationContext)
 
   val channelId = NotificationChannelId.NEW_POSTS.toString()
-  val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subredditName.name)
+  val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subreddit.name.name)
+  // TODO: Add to existing counter if previous notification wasn't cancelled
   val contentTextRes = if (unreadPostsAmount < totalPostsAmount) {
     if (unreadPostsAmount == 1u) {
       R.string.notify_new_subreddit_posts_text_singular
@@ -68,16 +74,17 @@ fun Context.notifyNewSubredditPosts(
     R.string.notify_new_subreddit_posts_text_max
   }
   val contentText = getString(contentTextRes, unreadPostsAmount.toInt())
-  val customTabsIntent = subredditName.asUrl().buildCustomTabsIntent()
+  val largeIcon = subreddit.iconUrl?.asUri()?.let { imageLoader.get(it) }?.toBitmap()
+  val customTabsIntent = subreddit.name.asUrl().buildCustomTabsIntent()
   val contentIntent = PendingIntent.getActivity(
     applicationContext, 0, customTabsIntent.intent, 0, customTabsIntent.startAnimationBundle
   )
 
-  // TODO: Set large icon
   val notification = NotificationCompat.Builder(applicationContext, channelId)
     .setContentTitle(contentTitle)
     .setContentText(contentText)
     .setSmallIcon(R.drawable.ic_reddit_mark)
+    .setLargeIcon(largeIcon)
     .setGroup(NotificationId.NEW_POSTS.toString())
     .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
     .setContentIntent(contentIntent)
@@ -87,7 +94,7 @@ fun Context.notifyNewSubredditPosts(
   // Use the subreddit name as the tag to generate a unique identifier for each subreddit of this
   // type of notification.
   notificationManager.notify(
-    subredditName.name,
+    subreddit.name.name,
     NotificationId.NEW_POSTS.ordinal,
     notification
   )
