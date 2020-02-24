@@ -5,7 +5,7 @@ internal object Versions {
 
   const val androidGradlePlugin = "4.0.0-alpha09"
   const val ktlint = "9.2.1"
-  const val gradleVersions = "0.27.0"
+  const val gradleVersions = "0.28.0"
 
   const val sqlDelight = "1.2.2"
 
