@@ -1,11 +1,11 @@
-import io.github.aouerfelli.subwatcher.repository.SubredditIconImage;
+import io.github.aouerfelli.subwatcher.repository.SubredditIconUrl;
 import io.github.aouerfelli.subwatcher.repository.SubredditLastPosted;
 import io.github.aouerfelli.subwatcher.repository.SubredditName;
 
 CREATE TABLE subreddit(
-    name TEXT AS SubredditName NOT NULL UNIQUE PRIMARY KEY COLLATE NOCASE,
-    iconImage BLOB AS SubredditIconImage,
-    lastPosted INTEGER AS SubredditLastPosted
+  name TEXT AS SubredditName NOT NULL UNIQUE PRIMARY KEY COLLATE NOCASE,
+  iconUrl TEXT AS SubredditIconUrl,
+  lastPosted INTEGER AS SubredditLastPosted
 );
 
 selectAll:
@@ -20,13 +20,13 @@ WHERE name = ?;
 
 insert:
 INSERT OR FAIL INTO subreddit(
-  name, iconImage, lastPosted
+  name, iconUrl, lastPosted
 )
 VALUES ?;
 
 update:
 UPDATE OR IGNORE subreddit
-SET iconImage = ?, lastPosted = ?
+SET iconUrl = ?, lastPosted = ?
 WHERE name = ?;
 
 delete:

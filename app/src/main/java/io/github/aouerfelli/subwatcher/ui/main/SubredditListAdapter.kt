@@ -11,10 +11,11 @@ import coil.transform.CircleCropTransformation
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
+import io.github.aouerfelli.subwatcher.repository.asUri
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.layoutInflater
-import io.github.aouerfelli.subwatcher.util.load
+import io.github.aouerfelli.subwatcher.util.extensions.load
 
 class SubredditListAdapter(private val imageLoader: ImageLoader) :
   ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
@@ -49,10 +50,9 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
         field = value
         value ?: return
         itemBinding.name.text = value.name.name
-        itemBinding.icon.load(value.iconImage, imageLoader) {
+        itemBinding.icon.load(value.iconUrl?.asUri(), imageLoader) {
           crossfade(true)
           transformations(CircleCropTransformation())
-          placeholder(R.drawable.ic_reddit_mark)
           fallback(R.drawable.ic_reddit_mark)
         }
       }

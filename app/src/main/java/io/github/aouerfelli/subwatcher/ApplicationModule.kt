@@ -3,13 +3,11 @@ package io.github.aouerfelli.subwatcher
 import android.content.Context
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import coil.ImageLoader
 import coil.ImageLoaderBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import io.github.aouerfelli.subwatcher.ui.MainModule
-import io.github.aouerfelli.subwatcher.util.ByteArrayFetcher
 import io.github.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
 import io.github.aouerfelli.subwatcher.work.WorkersModule
 import javax.inject.Singleton
@@ -40,12 +38,6 @@ abstract class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideImageLoader(context: Context): ImageLoader {
-      return ImageLoaderBuilder(context)
-        .componentRegistry {
-          add(ByteArrayFetcher())
-        }
-        .build()
-    }
+    fun provideImageLoader(context: Context) = ImageLoaderBuilder(context).build()
   }
 }
