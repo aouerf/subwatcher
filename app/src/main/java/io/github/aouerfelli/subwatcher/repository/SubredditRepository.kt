@@ -74,7 +74,7 @@ class SubredditRepository @Inject constructor(
       db.select(name).executeAsOneOrNull()
     }
     if (existingSubreddit != null) {
-      return Result.success(existingSubreddit)
+      return Result.databaseFailure()
     }
 
     val fetchResult = fetchSubreddit(name)
