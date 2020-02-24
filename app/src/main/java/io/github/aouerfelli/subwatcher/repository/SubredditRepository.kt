@@ -1,8 +1,6 @@
 package io.github.aouerfelli.subwatcher.repository
 
 import android.database.sqlite.SQLiteConstraintException
-import androidx.core.net.toUri
-import coil.ImageLoader
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.aouerfelli.subwatcher.Subreddit
@@ -11,7 +9,6 @@ import io.github.aouerfelli.subwatcher.network.AboutSubreddit
 import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
-import io.github.aouerfelli.subwatcher.util.toImageBlob
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -24,8 +21,7 @@ import kotlinx.coroutines.withContext
 @Singleton
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
-  private val db: SubredditEntityQueries,
-  private val imageLoader: ImageLoader
+  private val db: SubredditEntityQueries
 ) {
 
   private val ioDispatcher = Dispatchers.IO
@@ -45,11 +41,11 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  private suspend fun AboutSubreddit.mapSubreddit(): Subreddit {
+  private fun AboutSubreddit.mapSubreddit(): Subreddit {
     return with(data) {
       Subreddit.Impl(
         name = SubredditName(displayName),
-        iconImage = iconImageUrl?.ifEmpty { null }?.toUri()?.toImageBlob(imageLoader),
+        iconUrl = iconImageUrl?.ifEmpty { null }?.let(::SubredditIconUrl),
         lastPosted = null
       )
     }
@@ -105,7 +101,7 @@ class SubredditRepository @Inject constructor(
     lastPosted: SubredditLastPosted? = subreddit.lastPosted
   ) {
     return withContext(ioDispatcher) {
-      db.update(name = subreddit.name, iconImage = subreddit.iconImage, lastPosted = lastPosted)
+      db.update(name = subreddit.name, iconUrl = subreddit.iconUrl, lastPosted = lastPosted)
     }
   }
 

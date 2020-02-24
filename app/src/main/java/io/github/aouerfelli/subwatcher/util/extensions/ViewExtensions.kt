@@ -1,9 +1,26 @@
 package io.github.aouerfelli.subwatcher.util.extensions
 
+import android.net.Uri
+import android.widget.ImageView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import coil.ImageLoader
+import coil.api.load
+import coil.request.LoadRequestBuilder
+import coil.request.RequestDisposable
 import io.github.aouerfelli.subwatcher.R
+
+inline fun ImageView.load(
+  uri: Uri?,
+  imageLoader: ImageLoader,
+  builder: LoadRequestBuilder.() -> Unit = { }
+): RequestDisposable {
+  return imageLoader.load(context, uri) {
+    target(this@load)
+    builder()
+  }
+}
 
 // TODO: Custom view
 fun SwipeRefreshLayout.setThemeColorScheme() {
