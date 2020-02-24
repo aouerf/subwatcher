@@ -91,6 +91,7 @@ class SubredditRepository @Inject constructor(
 
   suspend fun addSubreddit(subreddit: Subreddit): Result<Subreddit> {
     return insertSubreddit(subreddit).also { result ->
+      // TODO: Run in db transaction
       // Attempt to update lastPosted property if not set already
       if (result is Result.Success && result.data.lastPosted == null) {
         checkForNewerPosts(result.data)

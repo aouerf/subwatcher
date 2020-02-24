@@ -14,11 +14,11 @@ import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.util.extensions.buildCustomTabsIntent
 
 private enum class NotificationId {
-  NEW_SUBREDDIT_POSTS
+  NEW_POSTS
 }
 
 private enum class NotificationChannelId {
-  NEW_SUBREDDIT_POSTS
+  NEW_POSTS
 }
 
 private data class NotificationChannelData(
@@ -30,7 +30,7 @@ private data class NotificationChannelData(
 
 private val channelsData = listOf(
   NotificationChannelData(
-    NotificationChannelId.NEW_SUBREDDIT_POSTS,
+    NotificationChannelId.NEW_POSTS,
     R.string.notify_new_subreddit_posts_channel_title,
     R.string.notify_new_subreddit_posts_channel_desc
   )
@@ -40,6 +40,7 @@ fun Context.registerNotificationChannels() {
   if (Build.VERSION.SDK_INT < 26) {
     return
   }
+
   val notificationManager = NotificationManagerCompat.from(applicationContext)
   channelsData.map { (id, title, description, importance) ->
     NotificationChannel(id.toString(), getString(title), importance).apply {
@@ -51,12 +52,11 @@ fun Context.registerNotificationChannels() {
 fun Context.notifyNewSubredditPosts(
   subredditName: SubredditName,
   unreadPostsAmount: UInt,
-  totalPostsAmount: UInt,
-  isFirstNotification: Boolean = false
+  totalPostsAmount: UInt
 ): Notification {
   val notificationManager = NotificationManagerCompat.from(applicationContext)
 
-  val channelId = NotificationChannelId.NEW_SUBREDDIT_POSTS.toString()
+  val channelId = NotificationChannelId.NEW_POSTS.toString()
   val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subredditName.name)
   val contentTextRes = if (unreadPostsAmount < totalPostsAmount) {
     if (unreadPostsAmount == 1u) {
@@ -73,26 +73,24 @@ fun Context.notifyNewSubredditPosts(
     applicationContext, 0, customTabsIntent.intent, 0, customTabsIntent.startAnimationBundle
   )
 
+  // TODO: Set large icon
   val notification = NotificationCompat.Builder(applicationContext, channelId)
-    .setSmallIcon(R.drawable.ic_reddit_mark)
     .setContentTitle(contentTitle)
     .setContentText(contentText)
-    .setGroup(NotificationId.NEW_SUBREDDIT_POSTS.toString())
-    .apply {
-      if (isFirstNotification) {
-        setGroupSummary(true)
-      }
-    }
+    .setSmallIcon(R.drawable.ic_reddit_mark)
+    .setGroup(NotificationId.NEW_POSTS.toString())
     .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
     .setContentIntent(contentIntent)
     .setAutoCancel(true)
     .build()
+
   // Use the subreddit name as the tag to generate a unique identifier for each subreddit of this
   // type of notification.
   notificationManager.notify(
     subredditName.name,
-    NotificationId.NEW_SUBREDDIT_POSTS.ordinal,
+    NotificationId.NEW_POSTS.ordinal,
     notification
   )
+
   return notification
 }

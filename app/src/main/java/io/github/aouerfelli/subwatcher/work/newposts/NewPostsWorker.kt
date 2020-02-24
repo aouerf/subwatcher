@@ -28,13 +28,14 @@ class NewPostsWorker @AssistedInject constructor(
   override suspend fun doWork(): Result {
     Timber.debug { "$WORK_NAME Worker running" }
 
-    val list = repository.subreddits.first()
-    list.forEachIndexed { index, subreddit ->
+    val subreddits = repository.subreddits.first()
+    subreddits.forEach { subreddit ->
       val (unread, total) = repository.checkForNewerPosts(subreddit) ?: return Result.failure()
       if (unread > 0u) {
-        applicationContext.notifyNewSubredditPosts(subreddit.name, unread, total, index == 0)
+        applicationContext.notifyNewSubredditPosts(subreddit.name, unread, total)
       }
     }
+
     return Result.success()
   }
 }
