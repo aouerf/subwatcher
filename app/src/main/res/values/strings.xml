@@ -27,7 +27,7 @@
   <string name="notify_new_subreddit_posts_channel_desc">Shows the number of new posts for a subreddit since the last check.</string>
   <string name="notify_new_subreddit_posts_summary_text">%d subreddits have new posts</string>
   <string name="notify_new_subreddit_posts_title">r/%s</string>
-  <string name="notify_new_subreddit_posts_text_singular">has 1 new post</string>
-  <string name="notify_new_subreddit_posts_text">has %d new posts</string>
-  <string name="notify_new_subreddit_posts_text_max">has %d or more new posts</string>
+  <string name="notify_new_subreddit_posts_text_singular">1 new post</string>
+  <string name="notify_new_subreddit_posts_text">%d new posts</string>
+  <string name="notify_new_subreddit_posts_text_max">%d+ new posts</string>
 </resources>
