@@ -7,6 +7,7 @@ import coil.ImageLoader
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
+import io.github.aouerfelli.subwatcher.util.extensions.mapAsync
 import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import io.github.aouerfelli.subwatcher.work.WorkerAssistedInjectFactory
 import kotlinx.coroutines.flow.first
@@ -31,15 +32,14 @@ class NewPostsWorker @AssistedInject constructor(
     Timber.debug { "$WORK_NAME worker running" }
 
     val subreddits = repository.subreddits.first()
-    // TODO: Send summary notification first, then notify the rest asynchronously
-    val details = subreddits.mapNotNull { subreddit ->
-      val (unread, total) = repository.checkForNewerPosts(subreddit) ?: return@mapNotNull null
-      if (unread > 0u) {
-        Triple(subreddit, unread, total)
-      } else {
+    val details = subreddits.mapAsync { subreddit ->
+      val newPosts = repository.checkForNewerPosts(subreddit)
+      if (newPosts == null || newPosts.first == 0u) {
         null
+      } else {
+        subreddit to newPosts
       }
-    }.sortedByDescending { (subreddit, _, _) -> subreddit.name }
+    }.filterNotNull().sortedByDescending { (subreddit, _) -> subreddit.name }
     applicationContext.notifyNewSubredditPosts(details, imageLoader)
 
     return Result.success()

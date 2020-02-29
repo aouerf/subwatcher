@@ -12,10 +12,9 @@ import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
 import io.github.aouerfelli.subwatcher.repository.asUri
-import io.github.aouerfelli.subwatcher.repository.asUrl
-import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.layoutInflater
 import io.github.aouerfelli.subwatcher.util.extensions.load
+import io.github.aouerfelli.subwatcher.work.newposts.ViewSubredditBroadcastReceiver
 
 class SubredditListAdapter(private val imageLoader: ImageLoader) :
   ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
@@ -62,7 +61,11 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
     }
 
     override fun onClick(v: View) {
-      item?.name?.asUrl()?.launch(v.context)
+      val subreddit = item ?: return
+      val context = v.context//.getActivityContext() ?: v.context
+      // TODO: Do not use BroadcastReceiver for this as this will start a new task
+      val intent = ViewSubredditBroadcastReceiver.createIntent(context, subreddit.name)
+      context.sendBroadcast(intent)
     }
   }
 }

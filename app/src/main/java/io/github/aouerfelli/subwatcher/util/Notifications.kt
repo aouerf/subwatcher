@@ -15,9 +15,8 @@ import coil.api.get
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.asUri
-import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.MainActivity
-import io.github.aouerfelli.subwatcher.util.extensions.buildCustomTabsIntent
+import io.github.aouerfelli.subwatcher.work.newposts.ViewSubredditBroadcastReceiver
 
 private enum class NotificationId {
   NEW_POSTS
@@ -47,7 +46,7 @@ fun Context.registerNotificationChannels() {
     return
   }
 
-  val notificationManager = NotificationManagerCompat.from(applicationContext)
+  val notificationManager = NotificationManagerCompat.from(this)
   channelsData.map { (id, title, description, importance) ->
     NotificationChannel(id.toString(), getString(title), importance).apply {
       this.description = description?.let(::getString)
@@ -55,94 +54,98 @@ fun Context.registerNotificationChannels() {
   }.forEach(notificationManager::createNotificationChannel)
 }
 
+// This is a suspend function because of the large icon loading with Coil
 suspend fun Context.notifyNewSubredditPosts(
-  subreddits: List<Triple<Subreddit, UInt, UInt>>,
+  subreddits: List<Pair<Subreddit, Pair<UInt, UInt>>>,
   imageLoader: ImageLoader
 ) {
   if (subreddits.isEmpty()) {
     return
   }
 
-  val notificationManager = NotificationManagerCompat.from(applicationContext)
+  val channelId = NotificationChannelId.NEW_POSTS.toString()
+
+  fun buildNewSubredditPostsSummaryNotification(): Notification? {
+    if (Build.VERSION.SDK_INT < 24) {
+      // If bundle notifications are not available then don't use a summary notification
+      return null
+    }
+
+    // TODO: Cancel summary notification when there are no more notifications
+
+    // The bundle is hidden when there is only a single notification. so there is no need to worry
+    // about the singular form.
+    val summaryText = getString(R.string.notify_new_subreddit_posts_summary_text, subreddits.size)
+    val style = NotificationCompat.InboxStyle()
+      .setSummaryText(summaryText)
+
+    val mainActivityIntent = Intent(this, MainActivity::class.java)
+    val contentIntent = PendingIntent.getActivity(this, 0, mainActivityIntent, 0)
+
+    return NotificationCompat.Builder(this, channelId)
+      .setSmallIcon(R.drawable.ic_reddit_mark)
+      .setGroup(NotificationId.NEW_POSTS.toString())
+      .setGroupSummary(true)
+      .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+      .setStyle(style)
+      .setContentIntent(contentIntent)
+      .build()
+  }
+
+  // This request code makes each PendingIntent unique by incrementing it for every notification.
+  // TODO: Make it more explicit
+  var requestCode = 0
+  suspend fun buildNewSubredditPostsNotification(
+    details: Pair<Subreddit, Pair<UInt, UInt>>,
+    imageLoader: ImageLoader
+  ): Notification {
+    val (subreddit, postsAmount) = details
+    val (unreadPostsAmount, totalPostsAmount) = postsAmount
+
+    val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subreddit.name.name)
+    val contentTextRes = if (unreadPostsAmount < totalPostsAmount) {
+      if (unreadPostsAmount == 1u) {
+        R.string.notify_new_subreddit_posts_text_singular
+      } else {
+        R.string.notify_new_subreddit_posts_text
+      }
+    } else {
+      R.string.notify_new_subreddit_posts_text_max
+    }
+    // If there is only one new post then the argument is ignored
+    val contentText = getString(contentTextRes, unreadPostsAmount.toInt())
+    val largeIcon = subreddit.iconUrl?.asUri()?.let { imageLoader.get(it) }?.toBitmap()
+
+    val intent = ViewSubredditBroadcastReceiver.createIntent(this, subreddit.name)
+    val contentIntent = PendingIntent.getBroadcast(this, requestCode++, intent, 0)
+
+    return NotificationCompat.Builder(this, channelId)
+      .setContentTitle(contentTitle)
+      .setContentText(contentText)
+      .setSmallIcon(R.drawable.ic_reddit_mark)
+      .setLargeIcon(largeIcon)
+      .setGroup(NotificationId.NEW_POSTS.toString())
+      .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+      .setContentIntent(contentIntent)
+      .setAutoCancel(true)
+      .build()
+  }
+
+  val notificationManager = NotificationManagerCompat.from(this)
 
   val notificationId = NotificationId.NEW_POSTS.ordinal
 
   val notifications = subreddits.map { buildNewSubredditPostsNotification(it, imageLoader) }
 
-  val summaryNotification = buildNewSubredditPostsSummaryNotification(notifications.size.toUInt())
+  val summaryNotification = buildNewSubredditPostsSummaryNotification()
   if (summaryNotification != null) {
     notificationManager.notify(notificationId, summaryNotification)
   }
 
-  subreddits.map(Triple<Subreddit, UInt, UInt>::first).zip(notifications)
+  subreddits.map(Pair<Subreddit, *>::first).zip(notifications)
     .forEach { (subreddit, notification) ->
       // Use the subreddit name as the tag to generate a unique identifier for each subreddit of
       // this type of notification.
       notificationManager.notify(subreddit.name.name, notificationId, notification)
     }
-}
-
-private fun Context.buildNewSubredditPostsSummaryNotification(numberOfSubreddits: UInt): Notification? {
-  if (Build.VERSION.SDK_INT < 24) {
-    // If bundle notifications are not available then don't use a summary notification
-    return null
-  }
-
-  val channelId = NotificationChannelId.NEW_POSTS.toString()
-
-  // The bundle is hidden when there is only a single notification. so there is no need to worry
-  // about the singular form.
-  val summaryText = getString(R.string.notify_new_subreddit_posts_summary_text, numberOfSubreddits)
-  val style = NotificationCompat.InboxStyle()
-    .setSummaryText(summaryText)
-
-  val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
-  val contentIntent = PendingIntent.getActivity(applicationContext, 0, mainActivityIntent, 0)
-
-  return NotificationCompat.Builder(applicationContext, channelId)
-    .setSmallIcon(R.drawable.ic_reddit_mark)
-    .setGroup(NotificationId.NEW_POSTS.toString())
-    .setGroupSummary(true)
-    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-    .setStyle(style)
-    .setContentIntent(contentIntent)
-    .build()
-}
-
-private suspend fun Context.buildNewSubredditPostsNotification(
-  details: Triple<Subreddit, UInt, UInt>,
-  imageLoader: ImageLoader
-): Notification {
-  val (subreddit, unreadPostsAmount, totalPostsAmount) = details
-
-  val channelId = NotificationChannelId.NEW_POSTS.toString()
-  val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subreddit.name.name)
-  // TODO: Add to existing counter if previous notification wasn't cancelled
-  val contentTextRes = if (unreadPostsAmount < totalPostsAmount) {
-    if (unreadPostsAmount == 1u) {
-      R.string.notify_new_subreddit_posts_text_singular
-    } else {
-      R.string.notify_new_subreddit_posts_text
-    }
-  } else {
-    R.string.notify_new_subreddit_posts_text_max
-  }
-  // If there is only one new post then the argument is ignored
-  val contentText = getString(contentTextRes, unreadPostsAmount.toInt())
-  val largeIcon = subreddit.iconUrl?.asUri()?.let { imageLoader.get(it) }?.toBitmap()
-  val customTabsIntent = subreddit.name.asUrl().buildCustomTabsIntent()
-  val contentIntent = PendingIntent.getActivity(
-    applicationContext, 0, customTabsIntent.intent, 0, customTabsIntent.startAnimationBundle
-  )
-
-  return NotificationCompat.Builder(applicationContext, channelId)
-    .setContentTitle(contentTitle)
-    .setContentText(contentText)
-    .setSmallIcon(R.drawable.ic_reddit_mark)
-    .setLargeIcon(largeIcon)
-    .setGroup(NotificationId.NEW_POSTS.toString())
-    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-    .setContentIntent(contentIntent)
-    .setAutoCancel(true)
-    .build()
 }
