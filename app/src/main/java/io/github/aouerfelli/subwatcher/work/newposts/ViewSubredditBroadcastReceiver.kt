@@ -19,11 +19,11 @@ import javax.inject.Inject
 class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
 
   companion object {
-    private const val SUBREDDIT_NAME_EXTRA = "subreddit_name"
-
     fun createIntent(context: Context, subredditName: SubredditName): Intent {
       return Intent(context, ViewSubredditBroadcastReceiver::class.java)
-        .putExtra(SUBREDDIT_NAME_EXTRA, subredditName.name)
+        // This is to make the intent unique, as extras aren't taken into account for PendingIntents
+        // TODO: When minSdk 29 becomes viable, replace action with identifier
+        .setAction(subredditName.name)
     }
   }
 
@@ -38,7 +38,7 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
     goAsync(processCoroutineScope) {
       val timber = Timber.tagged(this::class.java.simpleName)
 
-      val subredditName = intent.getStringExtra(SUBREDDIT_NAME_EXTRA)?.let(::SubredditName)
+      val subredditName = intent.action?.let(::SubredditName)
       if (subredditName == null) {
         timber.warn { "No subreddit name was provided." }
         return@goAsync
