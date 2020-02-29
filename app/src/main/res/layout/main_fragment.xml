@@ -40,7 +40,7 @@
         android:id="@+id/empty_state_image"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:src="@drawable/ic_undraw_empty_xct9"
+        android:src="@drawable/empty_state_placeholder"
         app:layout_constraintBottom_toTopOf="@id/empty_state_text_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_percent="0.35"
