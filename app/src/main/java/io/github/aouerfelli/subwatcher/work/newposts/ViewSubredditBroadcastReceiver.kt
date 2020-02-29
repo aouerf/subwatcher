@@ -10,9 +10,9 @@ import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.util.extensions.goAsync
 import io.github.aouerfelli.subwatcher.util.extensions.launch
+import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
-import javax.inject.Inject
 
 // TODO: Move to more appropriate location
 class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {

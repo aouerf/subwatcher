@@ -28,11 +28,11 @@ import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.toAndroidString
+import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import timber.log.warn
-import javax.inject.Inject
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 

@@ -11,14 +11,14 @@ import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
 import io.github.aouerfelli.subwatcher.util.extensions.forEachAsync
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 class SubredditRepository @Inject constructor(
