@@ -62,10 +62,9 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
 
     override fun onClick(v: View) {
       val subreddit = item ?: return
-      val context = v.context//.getActivityContext() ?: v.context
       // TODO: Do not use BroadcastReceiver for this as this will start a new task
-      val intent = ViewSubredditBroadcastReceiver.createIntent(context, subreddit.name)
-      context.sendBroadcast(intent)
+      val intent = ViewSubredditBroadcastReceiver.createIntent(v.context, subreddit.name)
+      v.context.sendBroadcast(intent)
     }
   }
 }
