@@ -7,7 +7,7 @@
 build
 
 # Android
-/local.properties
+local.properties
 /captures
 
 # macOS
