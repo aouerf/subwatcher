@@ -1,6 +1,7 @@
 package io.github.aouerfelli.subwatcher.repository
 
 import android.database.sqlite.SQLiteConstraintException
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.aouerfelli.subwatcher.Subreddit
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +23,8 @@ import javax.inject.Singleton
 @Singleton
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
-  private val db: SubredditEntityQueries
+  private val db: SubredditEntityQueries,
+  private val processLifecycleCoroutineScope: LifecycleCoroutineScope
 ) {
 
   private val ioDispatcher = Dispatchers.IO
@@ -189,8 +192,10 @@ class SubredditRepository @Inject constructor(
     return SubredditLastPosted(newestPost.data.createdUtc)
   }
 
-  suspend fun updateLastPosted(subreddit: Subreddit) {
-    val lastPosted = getLastPosted(subreddit.name)
-    updateSubreddit(copyLastPosted(subreddit, lastPosted))
+  fun updateLastPosted(subreddit: Subreddit) {
+    processLifecycleCoroutineScope.launch {
+      val lastPosted = getLastPosted(subreddit.name)
+      updateSubreddit(copyLastPosted(subreddit, lastPosted))
+    }
   }
 }

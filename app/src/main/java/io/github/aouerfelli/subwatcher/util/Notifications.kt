@@ -85,6 +85,7 @@ suspend fun Context.notifyNewSubredditPosts(
     val intent = ViewSubredditBroadcastReceiver.createIntent(this, subreddit.name)
     val contentIntent = PendingIntent.getBroadcast(this, 0, intent, 0)
 
+    // TODO: Add inbox-style to preview new post titles
     NotificationCompat.Builder(this, channelId)
       .setContentTitle(contentTitle)
       .setContentText(contentText)

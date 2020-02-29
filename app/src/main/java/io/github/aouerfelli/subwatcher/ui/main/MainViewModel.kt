@@ -74,4 +74,8 @@ class MainViewModel @AssistedInject constructor(
       _deletedSubreddit.value = repository.deleteSubreddit(subreddit)
     }
   }
+
+  fun updateLastPosted(subreddit: Subreddit) {
+    repository.updateLastPosted(subreddit)
+  }
 }

@@ -15,7 +15,6 @@ import timber.log.warn
 import javax.inject.Inject
 
 // TODO: Move to more appropriate location
-// TODO: Replace with Activity to avoid creating a new task
 class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
 
   companion object {
@@ -31,11 +30,11 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
   lateinit var repository: SubredditRepository
 
   @Inject
-  lateinit var processCoroutineScope: LifecycleCoroutineScope
+  lateinit var processLifecycleCoroutineScope: LifecycleCoroutineScope
 
   override fun onReceive(context: Context, intent: Intent) {
     super.onReceive(context, intent)
-    goAsync(processCoroutineScope) {
+    goAsync(processLifecycleCoroutineScope) {
       val timber = Timber.tagged(this::class.java.simpleName)
 
       val subredditName = intent.action?.let(::SubredditName)

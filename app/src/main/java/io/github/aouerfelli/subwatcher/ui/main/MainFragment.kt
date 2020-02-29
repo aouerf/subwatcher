@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -29,11 +28,11 @@ import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
 import io.github.aouerfelli.subwatcher.util.observeOn
 import io.github.aouerfelli.subwatcher.util.toAndroidString
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import timber.log.warn
+import javax.inject.Inject
 
 class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
@@ -62,7 +61,10 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
 
   override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
-    subredditListAdapter = SubredditListAdapter(imageLoader)
+    subredditListAdapter = SubredditListAdapter(imageLoader) { subreddit, viewContext ->
+      subreddit.name.asUrl().launch(viewContext)
+      viewModel.updateLastPosted(subreddit)
+    }
     binding.subredditList.adapter = subredditListAdapter
     binding.subredditList.onSwipe { viewHolder, _ ->
       val position = viewHolder.adapterPosition
@@ -136,7 +138,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
   }
 
   private inline fun onError(result: Result.Error, crossinline onHandled: () -> Unit) {
-    @StringRes val stringRes = when (result) {
+    val stringRes = when (result) {
       Result.Error.ConnectionError -> R.string.no_connection
       Result.Error.NetworkError -> R.string.server_unreachable
     }
@@ -168,7 +170,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     }
 
     fun onFailure(failure: Result.Failure) {
-      @StringRes val stringRes = when (failure) {
+      val stringRes = when (failure) {
         Result.Failure.NetworkFailure -> R.string.added_subreddit_does_not_exist
         Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
       }
