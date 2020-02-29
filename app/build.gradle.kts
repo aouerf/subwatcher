@@ -84,6 +84,9 @@ dependencies {
 
   implementation(Dependencies.AndroidX.Lifecycle.viewModel)
   implementation(Dependencies.AndroidX.Lifecycle.viewModelSavedState)
+  implementation(Dependencies.AndroidX.Lifecycle.process)
+
+  implementation(Dependencies.AndroidX.work)
 
   implementation(Dependencies.coil)
 

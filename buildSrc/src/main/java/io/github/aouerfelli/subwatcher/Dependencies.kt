@@ -36,7 +36,10 @@ object Dependencies {
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}"
       const val viewModelSavedState =
         "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.AndroidX.lifecycle}"
+      const val process = "androidx.lifecycle:lifecycle-process:${Versions.AndroidX.lifecycle}"
     }
+
+    const val work = "androidx.work:work-runtime-ktx:${Versions.AndroidX.work}"
   }
 
   object Dagger {
@@ -54,7 +57,7 @@ object Dependencies {
   }
 
   object OkHttp {
-    const val bom  = "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}"
+    const val bom = "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}"
     const val client = "com.squareup.okhttp3:okhttp"
     const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor"
   }

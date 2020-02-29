@@ -33,7 +33,5 @@ data class Post(
 
 @JsonClass(generateAdapter = true)
 data class PostData(
-  @Json(name = "id") val id: String,
-  @Json(name = "subreddit") val subreddit: String,
   @Json(name = "created_utc") val createdUtc: Long
 )

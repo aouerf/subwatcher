@@ -20,7 +20,7 @@ import io.github.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBin
 class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
   companion object {
-    const val SUBREDDIT_NAME_KEY = "subredditName"
+    const val SUBREDDIT_NAME_KEY = "subreddit_name"
   }
 
   private var binding: AddSubredditDialogFragmentBinding? = null

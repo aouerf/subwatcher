@@ -1,6 +1,7 @@
 package io.github.aouerfelli.subwatcher.repository
 
 import android.database.sqlite.SQLiteConstraintException
+import androidx.lifecycle.LifecycleCoroutineScope
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import io.github.aouerfelli.subwatcher.Subreddit
@@ -9,19 +10,21 @@ import io.github.aouerfelli.subwatcher.network.AboutSubreddit
 import io.github.aouerfelli.subwatcher.network.RedditService
 import io.github.aouerfelli.subwatcher.network.Response
 import io.github.aouerfelli.subwatcher.network.fetch
+import io.github.aouerfelli.subwatcher.util.extensions.forEachAsync
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Singleton
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
-  private val db: SubredditEntityQueries
+  private val db: SubredditEntityQueries,
+  private val processLifecycleCoroutineScope: LifecycleCoroutineScope
 ) {
 
   private val ioDispatcher = Dispatchers.IO
@@ -56,6 +59,16 @@ class SubredditRepository @Inject constructor(
     return response.mapToResult { it.mapSubreddit() }
   }
 
+  suspend fun getSubreddit(subredditName: SubredditName): Subreddit? {
+    return withContext(ioDispatcher) {
+      db.select(subredditName).executeAsOneOrNull()
+    }
+  }
+
+  private fun copyLastPosted(subreddit: Subreddit, lastPosted: SubredditLastPosted?): Subreddit {
+    return (subreddit as Subreddit.Impl).copy(lastPosted = lastPosted)
+  }
+
   private suspend fun insertSubreddit(subreddit: Subreddit): Result<Subreddit> {
     return withContext(ioDispatcher) {
       try {
@@ -67,12 +80,11 @@ class SubredditRepository @Inject constructor(
     }
   }
 
+  // TODO: Make param SubredditName instead of String
   suspend fun addSubreddit(subredditName: String): Result<Subreddit> {
     val name = SubredditName(subredditName)
 
-    val existingSubreddit = withContext(ioDispatcher) {
-      db.select(name).executeAsOneOrNull()
-    }
+    val existingSubreddit = getSubreddit(name)
     if (existingSubreddit != null) {
       return Result.databaseFailure()
     }
@@ -86,7 +98,18 @@ class SubredditRepository @Inject constructor(
   }
 
   suspend fun addSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    return insertSubreddit(subreddit)
+    // Attempt to update lastPosted if not already set
+    val subredditToAdd = if (subreddit.lastPosted == null) {
+      val lastPosted = getLastPosted(subreddit.name)
+      if (lastPosted != null) {
+        copyLastPosted(subreddit, lastPosted)
+      } else {
+        subreddit
+      }
+    } else {
+      subreddit
+    }
+    return insertSubreddit(subredditToAdd)
   }
 
   suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
@@ -96,12 +119,13 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  private suspend fun updateSubreddit(
-    subreddit: Subreddit,
-    lastPosted: SubredditLastPosted? = subreddit.lastPosted
-  ) {
+  private suspend fun updateSubreddit(subreddit: Subreddit) {
     return withContext(ioDispatcher) {
-      db.update(name = subreddit.name, iconUrl = subreddit.iconUrl, lastPosted = lastPosted)
+      db.update(
+        name = subreddit.name,
+        iconUrl = subreddit.iconUrl,
+        lastPosted = subreddit.lastPosted
+      )
     }
   }
 
@@ -110,7 +134,7 @@ class SubredditRepository @Inject constructor(
     return response.mapToResult { body ->
       body.mapSubreddit()
         // Update subreddit details, preserving last posted time instead of resetting it
-        .also { updateSubreddit(it, lastPosted = subreddit.lastPosted) }
+        .also { updateSubreddit(copyLastPosted(it, subreddit.lastPosted)) }
     }
   }
 
@@ -128,39 +152,50 @@ class SubredditRepository @Inject constructor(
 
     return coroutineScope {
       var finalResult: Result<Nothing> = Result.success()
-      val subreddits = withContext(ioDispatcher) {
-        db.selectAll().executeAsList()
+      val subreddits = subreddits.first()
+      subreddits.forEachAsync { subreddit ->
+        refreshSubreddit(subreddit).also { finalResult = checkResult(finalResult, it) }
       }
-      // TODO: Wait for concurrent Flow (https://github.com/Kotlin/kotlinx.coroutines/issues/1147)
-      subreddits.map { subreddit ->
-        async {
-          refreshSubreddit(subreddit).also { finalResult = checkResult(finalResult, it) }
-        }
-      }.awaitAll()
       finalResult
     }
   }
 
-  suspend fun checkForNewerPosts(subreddit: Subreddit): Pair<UInt, UInt> {
-    val newPostsWrapper = api.fetch { getNewPosts(subreddit.name.name) }
-    if (newPostsWrapper !is Response.Success) {
-      // If network request failed, assume that there are no new posts
-      return 0u to 0u
+  suspend fun checkForNewerPosts(subreddit: Subreddit): Pair<UInt, UInt>? {
+    val newPostsResponse = api.fetch { getNewPosts(subreddit.name.name) }
+    if (newPostsResponse !is Response.Success) {
+      return null
     }
-    val newPosts = newPostsWrapper.body.data.children
-    val lastPosted = SubredditLastPosted(newPosts.first().data.createdUtc)
+    val newPosts = newPostsResponse.body.data.children
     val subredditLastPosted = subreddit.lastPosted
-    updateSubreddit(subreddit, lastPosted = lastPosted)
 
     val unreadPostsAmount = if (subredditLastPosted == null) {
+      // If this subreddit has not been checked previously, then assume all posts are new
       newPosts.size.toUInt()
     } else {
-      // Checks for the number of posts newer than the last known one (wrap around to size if -1)
+      // Checks for the number of posts newer than the last known one
       newPosts
-        .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) < subredditLastPosted }
-        .let { it % (newPosts.size + 1) }
+        .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) <= subredditLastPosted }
+        // If an older post wasn't found, then all the posts are new
+        .let { if (it == -1) newPosts.size else it }
         .toUInt()
     }
     return unreadPostsAmount to newPosts.size.toUInt()
+  }
+
+  private suspend fun getLastPosted(subredditName: SubredditName): SubredditLastPosted? {
+    val newPostsResponse = api.fetch { getNewPosts(subredditName.name) }
+    if (newPostsResponse !is Response.Success) {
+      return null
+    }
+
+    val newestPost = newPostsResponse.body.data.children.first()
+    return SubredditLastPosted(newestPost.data.createdUtc)
+  }
+
+  fun updateLastPosted(subreddit: Subreddit) {
+    processLifecycleCoroutineScope.launch {
+      val lastPosted = getLastPosted(subreddit.name)
+      updateSubreddit(copyLastPosted(subreddit, lastPosted))
+    }
   }
 }

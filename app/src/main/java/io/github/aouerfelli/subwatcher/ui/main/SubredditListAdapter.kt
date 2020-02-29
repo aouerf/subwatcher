@@ -1,6 +1,7 @@
 package io.github.aouerfelli.subwatcher.ui.main
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,16 +13,16 @@ import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.SubredditItemBinding
 import io.github.aouerfelli.subwatcher.repository.asUri
-import io.github.aouerfelli.subwatcher.repository.asUrl
-import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.layoutInflater
 import io.github.aouerfelli.subwatcher.util.extensions.load
 
-class SubredditListAdapter(private val imageLoader: ImageLoader) :
-  ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffCallback) {
+class SubredditListAdapter(
+  private val imageLoader: ImageLoader,
+  private val itemClickCallback: (Subreddit, Context) -> Unit
+) : ListAdapter<Subreddit, SubredditListAdapter.ViewHolder>(diffItemCallback) {
 
   companion object {
-    private val diffCallback = object : DiffUtil.ItemCallback<Subreddit>() {
+    private val diffItemCallback = object : DiffUtil.ItemCallback<Subreddit>() {
       override fun areItemsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
         return oldItem.name == newItem.name
       }
@@ -62,7 +63,8 @@ class SubredditListAdapter(private val imageLoader: ImageLoader) :
     }
 
     override fun onClick(v: View) {
-      item?.name?.asUrl()?.launch(v.context)
+      val subreddit = item ?: return
+      itemClickCallback(subreddit, v.context)
     }
   }
 }
