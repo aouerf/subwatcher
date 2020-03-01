@@ -1,9 +1,8 @@
-package io.github.aouerfelli.subwatcher.work.newposts
+package io.github.aouerfelli.subwatcher.broadcast
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-// TODO: Move to more appropriate location
 @Module
 abstract class BroadcastReceiversModule {
 

@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.work.newposts
+package io.github.aouerfelli.subwatcher.broadcast
 
 import android.app.Activity
 import android.content.Context
@@ -14,14 +14,13 @@ import javax.inject.Inject
 import timber.log.Timber
 import timber.log.warn
 
-// TODO: Move to more appropriate location
 class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
 
   companion object {
     fun createIntent(context: Context, subredditName: SubredditName): Intent {
       return Intent(context, ViewSubredditBroadcastReceiver::class.java)
         // This is to make the intent unique, as extras aren't taken into account for PendingIntents
-        // TODO: When minSdk 29 becomes viable, replace action with identifier
+        // TODO: When min SDK 29 becomes viable, replace action with identifier
         .setAction(subredditName.name)
     }
   }
@@ -30,11 +29,11 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
   lateinit var repository: SubredditRepository
 
   @Inject
-  lateinit var processLifecycleCoroutineScope: LifecycleCoroutineScope
+  lateinit var processLifecycleScope: LifecycleCoroutineScope
 
   override fun onReceive(context: Context, intent: Intent) {
     super.onReceive(context, intent)
-    goAsync(processLifecycleCoroutineScope) {
+    goAsync(processLifecycleScope) {
       val timber = Timber.tagged(this::class.java.simpleName)
 
       val subredditName = intent.action?.let(::SubredditName)

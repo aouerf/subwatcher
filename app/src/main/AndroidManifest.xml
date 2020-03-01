@@ -29,7 +29,7 @@
         android:authorities="androidx.work.impl.WorkManagerInitializer"
         tools:node="remove" />
 
-    <receiver android:name=".work.newposts.ViewSubredditBroadcastReceiver" />
+    <receiver android:name=".broadcast.ViewSubredditBroadcastReceiver" />
 
   </application>
 

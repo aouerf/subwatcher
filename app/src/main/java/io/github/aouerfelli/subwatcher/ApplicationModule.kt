@@ -13,7 +13,7 @@ import dagger.Provides
 import io.github.aouerfelli.subwatcher.ui.MainModule
 import io.github.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
 import io.github.aouerfelli.subwatcher.work.WorkersModule
-import io.github.aouerfelli.subwatcher.work.newposts.BroadcastReceiversModule
+import io.github.aouerfelli.subwatcher.broadcast.BroadcastReceiversModule
 import javax.inject.Singleton
 
 @Module(
