@@ -1,4 +1,4 @@
-package io.github.aouerfelli.subwatcher.work.newposts
+package io.github.aouerfelli.subwatcher.work
 
 import android.content.Context
 import androidx.work.CoroutineWorker
@@ -9,7 +9,6 @@ import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.util.extensions.mapAsync
 import io.github.aouerfelli.subwatcher.util.notifyNewSubredditPosts
-import io.github.aouerfelli.subwatcher.work.WorkerAssistedInjectFactory
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import timber.log.debug
