@@ -1,19 +1,13 @@
 package io.github.aouerfelli.subwatcher
 
-import android.annotation.SuppressLint
 import android.os.StrictMode
 import androidx.work.Configuration
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import dagger.android.support.DaggerApplication
 import io.github.aouerfelli.subwatcher.util.registerNotificationChannels
 import io.github.aouerfelli.subwatcher.work.NewPostsWorker
 import timber.log.LogcatTree
 import timber.log.Timber
-import java.time.Duration
 import javax.inject.Inject
 
 class SubwatcherApplication : DaggerApplication(), Configuration.Provider {
@@ -35,23 +29,7 @@ class SubwatcherApplication : DaggerApplication(), Configuration.Provider {
       setupStrictMode()
     }
     registerNotificationChannels()
-    enqueueNewPostsWork()
-  }
-
-  @SuppressLint("NewApi") // Core library desugaring handles java.time backport
-  private fun enqueueNewPostsWork() {
-    val repeatInterval = Duration.ofHours(1)
-    val constraints = Constraints.Builder()
-      .setRequiredNetworkType(NetworkType.CONNECTED)
-      .build()
-    val workRequest = PeriodicWorkRequestBuilder<NewPostsWorker>(repeatInterval)
-      .setConstraints(constraints)
-      .build()
-    workManager.enqueueUniquePeriodicWork(
-      NewPostsWorker.WORK_NAME,
-      ExistingPeriodicWorkPolicy.REPLACE,
-      workRequest
-    )
+    NewPostsWorker.enqueue(workManager)
   }
 
   private fun setupStrictMode() {
