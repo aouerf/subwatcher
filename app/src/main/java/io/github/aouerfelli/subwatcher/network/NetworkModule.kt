@@ -5,8 +5,6 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import io.github.aouerfelli.subwatcher.repository.redditBaseUrl
-import javax.inject.Qualifier
-import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -17,6 +15,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
 import timber.log.debug
+import javax.inject.Qualifier
+import javax.inject.Singleton
 
 @Module
 object NetworkModule {

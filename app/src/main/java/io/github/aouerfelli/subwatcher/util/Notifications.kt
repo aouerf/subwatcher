@@ -12,8 +12,8 @@ import coil.ImageLoader
 import coil.api.get
 import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
-import io.github.aouerfelli.subwatcher.repository.asUri
 import io.github.aouerfelli.subwatcher.broadcast.ViewSubredditBroadcastReceiver
+import io.github.aouerfelli.subwatcher.repository.asUri
 
 private enum class NotificationId {
   NEW_POSTS

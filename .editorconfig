@@ -10,3 +10,6 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 ij_continuation_indent_size = 4
+
+[*.{kt, kts}]
+disabled_rules = import-ordering
