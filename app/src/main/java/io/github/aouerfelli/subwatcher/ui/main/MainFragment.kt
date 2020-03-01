@@ -18,6 +18,7 @@ import io.github.aouerfelli.subwatcher.R
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import io.github.aouerfelli.subwatcher.repository.Result
+import io.github.aouerfelli.subwatcher.repository.SubredditName
 import io.github.aouerfelli.subwatcher.repository.asUrl
 import io.github.aouerfelli.subwatcher.ui.BaseFragment
 import io.github.aouerfelli.subwatcher.util.EventSnackbar
@@ -92,7 +93,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     }
     binding.addSubredditButton.setOnLongClickListener {
       if (BuildConfig.DEBUG) {
-        viewModel.add("random")
+        viewModel.add(SubredditName("random"))
         true
       } else {
         false
@@ -129,7 +130,8 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     if (resultCode != Activity.RESULT_OK) return
     when (requestCode) {
       ADD_SUBREDDIT_REQUEST_CODE -> {
-        val subredditName = data?.getStringExtra(AddSubredditDialogFragment.SUBREDDIT_NAME_KEY)
+        val key = AddSubredditDialogFragment.SUBREDDIT_NAME_KEY
+        val subredditName = data?.getStringExtra(key)?.let(::SubredditName)
         if (subredditName != null) {
           viewModel.add(subredditName)
         }
@@ -155,7 +157,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
     }
   }
 
-  private fun onSubredditAdded(nameAndResult: Pair<String, Result<Subreddit>>) {
+  private fun onSubredditAdded(nameAndResult: Pair<SubredditName, Result<Subreddit>>) {
     val (name, result) = nameAndResult
 
     fun onSuccess(subreddit: Subreddit) {
@@ -174,7 +176,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
         Result.Failure.NetworkFailure -> R.string.added_subreddit_does_not_exist
         Result.Failure.DatabaseFailure -> R.string.added_subreddit_exists
       }
-      val string = getString(stringRes, name).toAndroidString()
+      val string = getString(stringRes, name.name).toAndroidString()
       val snackbar = binding?.root?.makeSnackbar(string)?.setAnchorView(binding?.addSubredditButton)
       eventSnackbar.set(snackbar, viewModel.addedSubreddit::clear)
     }

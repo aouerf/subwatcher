@@ -24,7 +24,7 @@ import kotlinx.coroutines.withContext
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
   private val db: SubredditEntityQueries,
-  private val processLifecycleCoroutineScope: LifecycleCoroutineScope
+  private val processLifecycleScope: LifecycleCoroutineScope
 ) {
 
   private val ioDispatcher = Dispatchers.IO
@@ -80,16 +80,13 @@ class SubredditRepository @Inject constructor(
     }
   }
 
-  // TODO: Make param SubredditName instead of String
-  suspend fun addSubreddit(subredditName: String): Result<Subreddit> {
-    val name = SubredditName(subredditName)
-
-    val existingSubreddit = getSubreddit(name)
+  suspend fun addSubreddit(subredditName: SubredditName): Result<Subreddit> {
+    val existingSubreddit = getSubreddit(subredditName)
     if (existingSubreddit != null) {
       return Result.databaseFailure()
     }
 
-    val fetchResult = fetchSubreddit(name)
+    val fetchResult = fetchSubreddit(subredditName)
     if (fetchResult !is Result.Success) {
       return fetchResult
     }
@@ -193,7 +190,7 @@ class SubredditRepository @Inject constructor(
   }
 
   fun updateLastPosted(subreddit: Subreddit) {
-    processLifecycleCoroutineScope.launch {
+    processLifecycleScope.launch {
       val lastPosted = getLastPosted(subreddit.name)
       updateSubreddit(copyLastPosted(subreddit, lastPosted))
     }

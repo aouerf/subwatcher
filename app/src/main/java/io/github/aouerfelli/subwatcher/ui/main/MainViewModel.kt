@@ -7,6 +7,7 @@ import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.Result
+import io.github.aouerfelli.subwatcher.repository.SubredditName
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
 import io.github.aouerfelli.subwatcher.util.MutableReactiveEvent
 import io.github.aouerfelli.subwatcher.util.asImmutable
@@ -30,7 +31,7 @@ class MainViewModel @AssistedInject constructor(
   private val _isLoading = ConflatedBroadcastChannel(false)
   val isLoading = _isLoading.asFlow()
 
-  private val _addedSubreddit = MutableReactiveEvent<Pair<String, Result<Subreddit>>>()
+  private val _addedSubreddit = MutableReactiveEvent<Pair<SubredditName, Result<Subreddit>>>()
   val addedSubreddit = _addedSubreddit.asImmutable()
 
   private val _deletedSubreddit = MutableReactiveEvent<Result<Subreddit>>()
@@ -57,7 +58,7 @@ class MainViewModel @AssistedInject constructor(
     }
   }
 
-  fun add(subredditName: String) {
+  fun add(subredditName: SubredditName) {
     load {
       _addedSubreddit.value = subredditName to repository.addSubreddit(subredditName)
     }
