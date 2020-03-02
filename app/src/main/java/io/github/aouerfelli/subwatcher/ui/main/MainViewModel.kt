@@ -9,11 +9,9 @@ import io.github.aouerfelli.subwatcher.Subreddit
 import io.github.aouerfelli.subwatcher.repository.Result
 import io.github.aouerfelli.subwatcher.repository.SubredditName
 import io.github.aouerfelli.subwatcher.repository.SubredditRepository
-import io.github.aouerfelli.subwatcher.util.MutableReactiveEvent
+import io.github.aouerfelli.subwatcher.util.MutableEventStream
 import io.github.aouerfelli.subwatcher.util.asImmutable
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
@@ -28,26 +26,26 @@ class MainViewModel @AssistedInject constructor(
 
   val subredditList = repository.subreddits
 
-  private val _isLoading = ConflatedBroadcastChannel(false)
-  val isLoading = _isLoading.asFlow()
+  private val _isLoading = MutableEventStream(false)
+  val isLoading = _isLoading.asImmutable()
 
-  private val _addedSubreddit = MutableReactiveEvent<Pair<SubredditName, Result<Subreddit>>>()
+  private val _addedSubreddit = MutableEventStream<Pair<SubredditName, Result<Subreddit>>>()
   val addedSubreddit = _addedSubreddit.asImmutable()
 
-  private val _deletedSubreddit = MutableReactiveEvent<Result<Subreddit>>()
+  private val _deletedSubreddit = MutableEventStream<Result<Subreddit>>()
   val deletedSubreddit = _deletedSubreddit.asImmutable()
 
-  private val _refreshedSubreddits = MutableReactiveEvent<Result<Nothing>>()
+  private val _refreshedSubreddits = MutableEventStream<Result<Nothing>>()
   val refreshedSubreddits = _refreshedSubreddits.asImmutable()
 
   private inline fun load(crossinline load: suspend () -> Unit) {
-    _isLoading.offer(true)
+    _isLoading.value = true
     viewModelScope.launch {
       load()
     }.invokeOnCompletion {
       val noJobsRunning = viewModelScope.coroutineContext[Job]?.children?.none() != false
       if (noJobsRunning) {
-        _isLoading.offer(false)
+        _isLoading.value = false
       }
     }
   }

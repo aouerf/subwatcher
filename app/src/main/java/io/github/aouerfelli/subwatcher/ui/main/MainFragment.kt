@@ -27,7 +27,7 @@ import io.github.aouerfelli.subwatcher.util.extensions.launch
 import io.github.aouerfelli.subwatcher.util.extensions.onSwipe
 import io.github.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import io.github.aouerfelli.subwatcher.util.makeSnackbar
-import io.github.aouerfelli.subwatcher.util.observeOn
+import io.github.aouerfelli.subwatcher.util.observe
 import io.github.aouerfelli.subwatcher.util.toAndroidString
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -112,18 +112,15 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
     viewModel.subredditList
       .onEach { list ->
+        binding.emptyStateContainer.isGone = list.isNotEmpty()
         subredditListAdapter.submitList(list)
-        val isListNotEmpty = list.isNotEmpty()
-        binding.subredditsRefresh.isEnabled = isListNotEmpty
-        binding.emptyStateContainer.isGone = isListNotEmpty
+        binding.subredditsRefresh.isEnabled = list.isNotEmpty()
       }
       .launchIn(viewLifecycleOwner.lifecycleScope)
-    viewModel.isLoading
-      .onEach { binding.subredditsRefresh.isRefreshing = it }
-      .launchIn(viewLifecycleOwner.lifecycleScope)
-    viewModel.refreshedSubreddits.observeOn(viewLifecycleOwner, ::onSubredditsRefreshed)
-    viewModel.addedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditAdded)
-    viewModel.deletedSubreddit.observeOn(viewLifecycleOwner, ::onSubredditDeleted)
+    viewModel.isLoading.observe(viewLifecycleOwner, binding.subredditsRefresh::setRefreshing)
+    viewModel.refreshedSubreddits.observe(viewLifecycleOwner, ::onSubredditsRefreshed)
+    viewModel.addedSubreddit.observe(viewLifecycleOwner, ::onSubredditAdded)
+    viewModel.deletedSubreddit.observe(viewLifecycleOwner, ::onSubredditDeleted)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
