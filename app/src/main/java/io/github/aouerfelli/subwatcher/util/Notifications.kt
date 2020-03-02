@@ -89,7 +89,7 @@ suspend fun Context.notifyNewSubredditPosts(
     NotificationCompat.Builder(this, channelId)
       .setContentTitle(contentTitle)
       .setContentText(contentText)
-      .setSmallIcon(R.drawable.ic_reddit_mark)
+      .setSmallIcon(R.drawable.ic_stat_name)
       .setLargeIcon(largeIcon)
       .setContentIntent(contentIntent)
       .setAutoCancel(true)
