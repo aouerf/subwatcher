@@ -48,7 +48,8 @@ class MutableEventStream<T : Any> private constructor(
 
   companion object {
     operator fun <T : Any> invoke(
-      value: T, handle: SavedStateHandle,
+      value: T,
+      handle: SavedStateHandle,
       key: SavedStateHandler<T>
     ): MutableEventStream<T> {
       handle[key] = value
