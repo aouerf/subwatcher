@@ -4,9 +4,9 @@ import android.os.StrictMode
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import dagger.android.support.DaggerApplication
+import io.github.aouerfelli.subwatcher.util.DebugLogcatTree
 import io.github.aouerfelli.subwatcher.util.registerNotificationChannels
 import io.github.aouerfelli.subwatcher.work.NewPostsWorker
-import timber.log.LogcatTree
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,10 +25,14 @@ class SubwatcherApplication : DaggerApplication(), Configuration.Provider {
   override fun onCreate() {
     super.onCreate()
     if (BuildConfig.DEBUG) {
-      Timber.plant(LogcatTree())
+      Timber.plant(DebugLogcatTree())
       setupStrictMode()
     }
     registerNotificationChannels()
+    enqueueWork()
+  }
+
+  private fun enqueueWork() {
     NewPostsWorker.enqueue(workManager)
   }
 

@@ -34,11 +34,9 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {
     super.onReceive(context, intent)
     goAsync(processLifecycleScope) {
-      val timber = Timber.tagged(this::class.java.simpleName)
-
       val subredditName = intent.action?.let(::SubredditName)
       if (subredditName == null) {
-        timber.warn { "No subreddit name was provided." }
+        Timber.warn { "No subreddit name was provided." }
         return@goAsync
       }
 
@@ -46,7 +44,7 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
 
       val subreddit = repository.getSubreddit(subredditName)
       if (subreddit == null) {
-        timber.warn { "Subreddit ${subredditName.name} is not in database." }
+        Timber.warn { "Subreddit ${subredditName.name} is not in database." }
         return@goAsync
       }
       repository.updateLastPosted(subreddit)
