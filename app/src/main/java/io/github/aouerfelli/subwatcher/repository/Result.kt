@@ -32,8 +32,8 @@ sealed class Result<out T : Any> {
     return when (this) {
       Success.Empty -> "Success"
       is Success -> "Success($data)"
-      is Failure -> "Failure[${this.javaClass.simpleName}]"
-      is Error -> "Error[${this.javaClass.simpleName}]"
+      is Failure -> "Failure[${this::class.simpleName}]"
+      is Error -> "Error[${this::class.simpleName}]"
     }
   }
 }
