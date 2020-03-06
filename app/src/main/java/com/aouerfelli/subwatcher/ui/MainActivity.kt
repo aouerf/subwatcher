@@ -9,6 +9,7 @@ import com.aouerfelli.subwatcher.R
 class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    setTheme(R.style.Theme_Subwatcher)
     super.onCreate(savedInstanceState)
 
     if (Build.VERSION.SDK_INT == 26 && resources.getBoolean(R.bool.is_light_mode)) {

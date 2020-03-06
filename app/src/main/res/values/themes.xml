@@ -11,6 +11,10 @@
     <item name="android:navigationBarDividerColor" tools:targetApi="27">@color/divider</item>
   </style>
 
+  <style name="Theme.Subwatcher.Launcher" parent="Base.Theme.Subwatcher">
+    <item name="android:windowBackground">@drawable/splash_screen</item>
+  </style>
+
   <style name="Theme.Subwatcher" parent="Base.Theme.Subwatcher">
     <item name="colorPrimary">@color/color_primary_light</item>
     <item name="colorPrimaryVariant">@color/reddit_alien_blue</item>
