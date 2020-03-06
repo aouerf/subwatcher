@@ -1,20 +1,20 @@
 /* TODO: Blocked by https://github.com/gradle/gradle/issues/9270
-import io.github.aouerfelli.subwatcher.GradlePlugins
+import com.aouerfelli.subwatcher.GradlePlugins
 */
-import io.github.aouerfelli.subwatcher.Dependencies
-import io.github.aouerfelli.subwatcher.Kotlin
+import com.aouerfelli.subwatcher.Dependencies
+import com.aouerfelli.subwatcher.Kotlin
 
 plugins {
-  id(io.github.aouerfelli.subwatcher.GradlePlugins.Android.id)
-  kotlin(io.github.aouerfelli.subwatcher.Kotlin.android)
-  kotlin(io.github.aouerfelli.subwatcher.Kotlin.kapt)
-  id(io.github.aouerfelli.subwatcher.GradlePlugins.SqlDelight.id)
+  id(com.aouerfelli.subwatcher.GradlePlugins.Android.id)
+  kotlin(com.aouerfelli.subwatcher.Kotlin.android)
+  kotlin(com.aouerfelli.subwatcher.Kotlin.kapt)
+  id(com.aouerfelli.subwatcher.GradlePlugins.SqlDelight.id)
 }
 
 android {
   compileSdkVersion(29)
   defaultConfig {
-    applicationId = "io.github.aouerfelli.subwatcher"
+    applicationId = "com.aouerfelli.subwatcher"
     minSdkVersion(21)
     targetSdkVersion(29)
     versionCode = 1

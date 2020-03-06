@@ -1,0 +1,34 @@
+import com.aouerfelli.subwatcher.repository.SubredditIconUrl;
+import com.aouerfelli.subwatcher.repository.SubredditLastPosted;
+import com.aouerfelli.subwatcher.repository.SubredditName;
+
+CREATE TABLE subreddit(
+  name TEXT AS SubredditName NOT NULL UNIQUE PRIMARY KEY COLLATE NOCASE,
+  iconUrl TEXT AS SubredditIconUrl,
+  lastPosted INTEGER AS SubredditLastPosted
+);
+
+selectAll:
+SELECT *
+FROM subreddit
+ORDER BY name ASC;
+
+select:
+SELECT *
+FROM subreddit
+WHERE name = ?;
+
+insert:
+INSERT OR FAIL INTO subreddit(
+  name, iconUrl, lastPosted
+)
+VALUES ?;
+
+update:
+UPDATE OR IGNORE subreddit
+SET iconUrl = ?, lastPosted = ?
+WHERE name = ?;
+
+delete:
+DELETE FROM subreddit
+WHERE name = ?;
