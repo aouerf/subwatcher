@@ -60,6 +60,7 @@ object Dependencies {
     const val bom = "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}"
     const val client = "com.squareup.okhttp3:okhttp"
     const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor"
+    const val mockWebServer = "com.squareup.okhttp3:mockwebserver"
   }
 
   object Retrofit {

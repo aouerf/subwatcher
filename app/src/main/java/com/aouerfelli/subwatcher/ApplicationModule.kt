@@ -8,6 +8,8 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import coil.ImageLoaderBuilder
 import com.aouerfelli.subwatcher.broadcast.BroadcastReceiversModule
+import com.aouerfelli.subwatcher.network.NetworkDetails
+import com.aouerfelli.subwatcher.repository.redditBaseUrl
 import com.aouerfelli.subwatcher.ui.MainModule
 import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
@@ -18,6 +20,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.Dispatchers
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import javax.inject.Singleton
 
 @Module(
@@ -42,6 +45,14 @@ abstract class ApplicationModule {
         override val unconfined = Dispatchers.Unconfined
         override val io = Dispatchers.IO
       }
+    }
+
+    @Provides
+    fun provideNetworkDetails(context: Context): NetworkDetails {
+      return NetworkDetails(
+        baseUrl = redditBaseUrl.toHttpUrl(),
+        cacheDir = context.cacheDir
+      )
     }
 
     @Provides
