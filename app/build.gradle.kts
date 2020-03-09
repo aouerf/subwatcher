@@ -112,5 +112,6 @@ dependencies {
 
   testImplementation(Dependencies.Test.jUnit)
   testImplementation(Dependencies.Test.coroutines)
+  testImplementation(Dependencies.SqlDelight.jvm)
   kaptTest(Dependencies.Dagger.compiler)
 }

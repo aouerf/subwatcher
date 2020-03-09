@@ -12,6 +12,8 @@ import com.aouerfelli.subwatcher.ui.MainModule
 import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
 import com.aouerfelli.subwatcher.work.WorkersModule
+import com.squareup.sqldelight.android.AndroidSqliteDriver
+import com.squareup.sqldelight.db.SqlDriver
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -40,6 +42,15 @@ abstract class ApplicationModule {
         override val unconfined = Dispatchers.Unconfined
         override val io = Dispatchers.IO
       }
+    }
+
+    @Provides
+    fun provideSqlDriver(context: Context): SqlDriver {
+      return AndroidSqliteDriver(
+        schema = Database.Schema,
+        context = context,
+        name = "subwatcher.db"
+      )
     }
 
     @Provides

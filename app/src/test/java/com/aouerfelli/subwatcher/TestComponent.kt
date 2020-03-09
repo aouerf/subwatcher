@@ -1,5 +1,6 @@
 package com.aouerfelli.subwatcher
 
+import com.aouerfelli.subwatcher.database.DatabaseModule
 import com.aouerfelli.subwatcher.repository.SubredditRepositoryTest
 import dagger.BindsInstance
 import dagger.Component
@@ -9,7 +10,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(
   modules = [
-    TestModule::class
+    TestModule::class,
+    DatabaseModule::class
   ]
 )
 interface TestComponent {

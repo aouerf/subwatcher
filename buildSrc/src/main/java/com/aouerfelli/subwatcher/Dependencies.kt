@@ -74,6 +74,7 @@ object Dependencies {
 
   object SqlDelight {
     const val android = "com.squareup.sqldelight:android-driver:${Versions.sqlDelight}"
+    const val jvm = "com.squareup.sqldelight:sqlite-driver:${Versions.sqlDelight}"
     const val coroutines =
       "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqlDelight}"
   }
