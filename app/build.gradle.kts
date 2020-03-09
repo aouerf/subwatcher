@@ -57,7 +57,7 @@ android {
     viewBinding = true
   }
   packagingOptions {
-    pickFirst("META-INF/kotlinx-coroutines-core.kotlin_module")
+    exclude("META-INF/*.kotlin_module")
   }
 }
 
@@ -109,4 +109,9 @@ dependencies {
   implementation(Dependencies.SqlDelight.coroutines)
 
   implementation(Dependencies.timber)
+
+  testImplementation(Dependencies.Test.jUnit)
+  testImplementation(Dependencies.Test.mockK)
+  testImplementation(Dependencies.Test.coroutines)
+  kaptTest(Dependencies.Dagger.compiler)
 }

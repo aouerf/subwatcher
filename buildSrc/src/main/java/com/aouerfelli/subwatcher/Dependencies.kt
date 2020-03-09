@@ -77,4 +77,10 @@ object Dependencies {
     const val coroutines =
       "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqlDelight}"
   }
+
+  object Test {
+    const val jUnit = "junit:junit:${Versions.jUnit}"
+    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
+    const val mockK = "io.mockk:mockk:${Versions.mockK}"
+  }
 }
