@@ -62,7 +62,7 @@ object NetworkModule {
     }
     val retrofit = Retrofit.Builder()
       .callFactory(callFactory)
-      .baseUrl(NetworkModule.BASE_URL)
+      .baseUrl(BASE_URL)
       .addConverterFactory(MoshiConverterFactory.create())
       .build()
 

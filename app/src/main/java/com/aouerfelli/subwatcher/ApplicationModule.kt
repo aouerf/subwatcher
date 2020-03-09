@@ -1,7 +1,6 @@
 package com.aouerfelli.subwatcher
 
 import android.content.Context
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.work.Configuration
@@ -9,11 +8,14 @@ import androidx.work.WorkManager
 import coil.ImageLoaderBuilder
 import com.aouerfelli.subwatcher.broadcast.BroadcastReceiversModule
 import com.aouerfelli.subwatcher.ui.MainModule
+import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
 import com.aouerfelli.subwatcher.work.WorkersModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module(
@@ -31,7 +33,18 @@ abstract class ApplicationModule {
   companion object {
 
     @Provides
-    fun provideProcessLifecycleCoroutineScope(): LifecycleCoroutineScope {
+    @Singleton
+    fun provideCoroutineDispatchers(): CoroutineDispatchers {
+      return object : CoroutineDispatchers {
+        override val default = Dispatchers.Default
+        override val main = Dispatchers.Main
+        override val unconfined = Dispatchers.Unconfined
+        override val io = Dispatchers.IO
+      }
+    }
+
+    @Provides
+    fun provideProcessLifecycleCoroutineScope(): CoroutineScope {
       return ProcessLifecycleOwner.get().lifecycleScope
     }
 

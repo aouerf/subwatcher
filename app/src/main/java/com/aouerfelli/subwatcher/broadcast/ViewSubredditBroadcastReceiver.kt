@@ -3,13 +3,13 @@ package com.aouerfelli.subwatcher.broadcast
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.lifecycle.LifecycleCoroutineScope
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.repository.asUrl
 import com.aouerfelli.subwatcher.util.extensions.goAsync
 import com.aouerfelli.subwatcher.util.extensions.launch
 import dagger.android.DaggerBroadcastReceiver
+import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import timber.log.warn
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
   lateinit var repository: SubredditRepository
 
   @Inject
-  lateinit var processLifecycleScope: LifecycleCoroutineScope
+  lateinit var processLifecycleScope: CoroutineScope
 
   override fun onReceive(context: Context, intent: Intent) {
     super.onReceive(context, intent)
