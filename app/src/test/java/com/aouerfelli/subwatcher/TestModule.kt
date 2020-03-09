@@ -14,7 +14,6 @@ object TestModule {
   fun provideCoroutineDispatchers(coroutineDispatcher: CoroutineDispatcher): CoroutineDispatchers {
     return object : CoroutineDispatchers {
       override val default = coroutineDispatcher
-      override val main = coroutineDispatcher
       override val unconfined = coroutineDispatcher
       override val io = coroutineDispatcher
     }

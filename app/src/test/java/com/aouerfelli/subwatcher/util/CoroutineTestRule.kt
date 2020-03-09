@@ -7,16 +7,15 @@ import kotlinx.coroutines.test.setMain
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
-class CoroutineTestRule(
-  val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
-) : TestWatcher() {
+class CoroutineTestRule(val dispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()) :
+  TestWatcher() {
 
   override fun starting(description: Description) {
-    Dispatchers.setMain(testDispatcher)
+    Dispatchers.setMain(dispatcher)
   }
 
   override fun finished(description: Description) {
     Dispatchers.resetMain()
-    testDispatcher.cleanupTestCoroutines()
+    dispatcher.cleanupTestCoroutines()
   }
 }
