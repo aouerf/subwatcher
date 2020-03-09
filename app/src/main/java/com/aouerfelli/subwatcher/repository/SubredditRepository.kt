@@ -11,11 +11,9 @@ import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.util.extensions.forEachAsync
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,8 +22,7 @@ import javax.inject.Singleton
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
   private val db: SubredditEntityQueries,
-  private val coroutineDispatchers: CoroutineDispatchers,
-  private val processLifecycleScope: CoroutineScope
+  private val coroutineDispatchers: CoroutineDispatchers
 ) {
 
   val subreddits = db.selectAll().asFlow().mapToList(coroutineDispatchers.io).distinctUntilChanged()
@@ -188,10 +185,8 @@ class SubredditRepository @Inject constructor(
     return SubredditLastPosted(newestPost.data.createdUtc)
   }
 
-  fun updateLastPosted(subreddit: Subreddit) {
-    processLifecycleScope.launch {
-      val lastPosted = getLastPosted(subreddit.name)
-      updateSubreddit(copyLastPosted(subreddit, lastPosted))
-    }
+  suspend fun updateLastPosted(subreddit: Subreddit) {
+    val lastPosted = getLastPosted(subreddit.name)
+    updateSubreddit(copyLastPosted(subreddit, lastPosted))
   }
 }
