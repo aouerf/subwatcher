@@ -111,7 +111,6 @@ dependencies {
   implementation(Dependencies.timber)
 
   testImplementation(Dependencies.Test.jUnit)
-  testImplementation(Dependencies.Test.mockK)
   testImplementation(Dependencies.Test.coroutines)
   kaptTest(Dependencies.Dagger.compiler)
 }
