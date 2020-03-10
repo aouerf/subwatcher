@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,10 @@ import android.view.inputmethod.EditorInfo
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dev.chrisbanes.insetter.doOnApplyWindowInsets
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dev.chrisbanes.insetter.doOnApplyWindowInsets
 
 class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
@@ -60,10 +61,14 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
       dismiss()
     }
 
-    binding.subredditField.editText?.setOnEditorActionListener { _, actionId, _ ->
-      when (actionId) {
-        EditorInfo.IME_ACTION_DONE -> binding.addButton.callOnClick()
-        else -> false
+    binding.subredditField.editText?.setOnEditorActionListener { _, actionId, event ->
+      val isDone = actionId == EditorInfo.IME_ACTION_DONE
+      val isEnter = event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER
+      if (isDone || isEnter) {
+        binding.addButton.callOnClick()
+        true
+      } else {
+        false
       }
     }
 
