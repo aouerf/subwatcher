@@ -30,5 +30,9 @@ object TestModule {
   }
 
   @Provides
-  fun provideSqlDriver(): SqlDriver = JdbcSqliteDriver(IN_MEMORY)
+  fun provideSqlDriver(): SqlDriver {
+    val driver = JdbcSqliteDriver(IN_MEMORY)
+    Database.Schema.create(driver)
+    return driver
+  }
 }

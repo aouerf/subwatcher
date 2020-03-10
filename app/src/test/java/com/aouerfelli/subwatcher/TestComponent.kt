@@ -1,6 +1,7 @@
 package com.aouerfelli.subwatcher
 
 import com.aouerfelli.subwatcher.database.DatabaseModule
+import com.aouerfelli.subwatcher.database.SubredditEntityQueriesTest
 import com.aouerfelli.subwatcher.network.NetworkModule
 import com.aouerfelli.subwatcher.network.RedditServiceTest
 import dagger.BindsInstance
@@ -28,4 +29,5 @@ interface TestComponent {
   }
 
   fun inject(redditServiceTest: RedditServiceTest)
+  fun inject(subredditEntityQueriesTest: SubredditEntityQueriesTest)
 }

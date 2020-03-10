@@ -38,5 +38,5 @@ internal object Versions {
   const val moshi = "1.9.2"
   const val timber = "5.0.0-SNAPSHOT"
 
-  const val jUnit = "4.13"
+  const val jUnit = "5.6.0"
 }
