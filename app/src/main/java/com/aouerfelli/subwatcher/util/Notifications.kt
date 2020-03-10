@@ -60,7 +60,7 @@ suspend fun Context.notifyNewSubredditPosts(
     return
   }
 
-  val channelId = NotificationChannelId.NEW_POSTS.toString()
+  val channelId = NotificationChannelId.NEW_POSTS.name
   val notificationId = NotificationId.NEW_POSTS.ordinal
   val notificationManager = NotificationManagerCompat.from(this)
   notificationManager.cancelAll()
