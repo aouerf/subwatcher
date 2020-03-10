@@ -1,9 +1,10 @@
 package com.aouerfelli.subwatcher
 
 internal object Versions {
+
   const val kotlin = "1.3.70"
 
-  const val androidGradlePlugin = "4.1.0-alpha01"
+  const val androidGradlePlugin = "4.1.0-alpha02"
   const val ktlint = "9.2.1"
   const val gradleVersions = "0.28.0"
 
