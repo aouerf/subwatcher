@@ -2,7 +2,7 @@ package com.aouerfelli.subwatcher
 
 import com.aouerfelli.subwatcher.database.DatabaseModule
 import com.aouerfelli.subwatcher.network.NetworkModule
-import com.aouerfelli.subwatcher.repository.SubredditRepositoryTest
+import com.aouerfelli.subwatcher.network.RedditServiceTest
 import dagger.BindsInstance
 import dagger.Component
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,5 +27,5 @@ interface TestComponent {
     ): TestComponent
   }
 
-  fun inject(subredditRepositoryTest: SubredditRepositoryTest)
+  fun inject(redditServiceTest: RedditServiceTest)
 }

@@ -1,5 +1,6 @@
 package com.aouerfelli.subwatcher.network
 
+import com.squareup.moshi.Moshi
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
@@ -58,8 +59,13 @@ object NetworkModule {
 
   @Provides
   @Singleton
+  fun provideMoshi(): Moshi = Moshi.Builder().build()
+
+  @Provides
+  @Singleton
   fun provideRedditService(
     @NetworkModule.InternalApi okHttpClient: Lazy<OkHttpClient>,
+    moshi: Moshi,
     networkDetails: NetworkDetails
   ): RedditService {
     val callFactory = object : Call.Factory {
@@ -68,7 +74,7 @@ object NetworkModule {
     val retrofit = Retrofit.Builder()
       .callFactory(callFactory)
       .baseUrl(networkDetails.baseUrl)
-      .addConverterFactory(MoshiConverterFactory.create())
+      .addConverterFactory(MoshiConverterFactory.create(moshi))
       .build()
 
     return retrofit.create()
