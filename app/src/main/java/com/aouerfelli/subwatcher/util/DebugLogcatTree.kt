@@ -17,7 +17,7 @@ class DebugLogcatTree : Tree() {
       // Get the simple name of the class
       return stackElement.className
         .substringAfterLast('.')
-        .substringBefore('$')
+        .replace("(\\$\\d+)+$".toRegex(), "")
     }
 
   override fun performLog(priority: Int, tag: String?, throwable: Throwable?, message: String?) {
