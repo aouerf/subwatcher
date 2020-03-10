@@ -39,4 +39,5 @@ internal object Versions {
   const val timber = "5.0.0-SNAPSHOT"
 
   const val jUnit = "5.6.0"
+  const val mockK = "1.9.3"
 }

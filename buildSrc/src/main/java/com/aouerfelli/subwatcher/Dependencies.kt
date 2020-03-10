@@ -83,5 +83,6 @@ object Dependencies {
   object Test {
     const val jUnit = "org.junit.jupiter:junit-jupiter:${Versions.jUnit}"
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
+    const val mockK = "io.mockk:mockk:${Versions.mockK}"
   }
 }

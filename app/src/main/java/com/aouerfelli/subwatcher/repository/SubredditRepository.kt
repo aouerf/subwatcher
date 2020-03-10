@@ -167,9 +167,7 @@ class SubredditRepository @Inject constructor(
     } else {
       // Checks for the number of posts newer than the last known one
       newPosts
-        .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) <= subredditLastPosted }
-        // If an older post wasn't found, then all the posts are new
-        .let { if (it == -1) newPosts.size else it }
+        .count { (post) -> SubredditLastPosted(post.createdUtc) > subredditLastPosted }
         .toUInt()
     }
     return unreadPostsAmount to newPosts.size.toUInt()
