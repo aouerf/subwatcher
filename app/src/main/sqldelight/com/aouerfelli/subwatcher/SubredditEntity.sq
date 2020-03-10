@@ -25,10 +25,13 @@ INSERT OR FAIL INTO subreddit(
 VALUES ?;
 
 update:
-UPDATE OR IGNORE subreddit
+UPDATE subreddit
 SET iconUrl = ?, lastPosted = ?
 WHERE name = ?;
 
 delete:
 DELETE FROM subreddit
 WHERE name = ?;
+
+deleteAll:
+DELETE FROM subreddit;

@@ -1,21 +1,19 @@
 package com.aouerfelli.subwatcher.repository
 
 import android.database.sqlite.SQLiteConstraintException
-import androidx.lifecycle.LifecycleCoroutineScope
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
 import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.SubredditEntityQueries
 import com.aouerfelli.subwatcher.network.AboutSubreddit
 import com.aouerfelli.subwatcher.network.RedditService
 import com.aouerfelli.subwatcher.network.Response
 import com.aouerfelli.subwatcher.network.fetch
+import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.util.extensions.forEachAsync
-import kotlinx.coroutines.Dispatchers
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,12 +22,10 @@ import javax.inject.Singleton
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
   private val db: SubredditEntityQueries,
-  private val processLifecycleScope: LifecycleCoroutineScope
+  private val coroutineDispatchers: CoroutineDispatchers
 ) {
 
-  private val ioDispatcher = Dispatchers.IO
-
-  val subreddits = db.selectAll().asFlow().mapToList(ioDispatcher).distinctUntilChanged()
+  val subreddits = db.selectAll().asFlow().mapToList(coroutineDispatchers.io).distinctUntilChanged()
 
   private inline fun <T : Any, U : Any> Response<T>.mapToResult(
     transform: (T) -> U
@@ -60,7 +56,7 @@ class SubredditRepository @Inject constructor(
   }
 
   suspend fun getSubreddit(subredditName: SubredditName): Subreddit? {
-    return withContext(ioDispatcher) {
+    return withContext(coroutineDispatchers.io) {
       db.select(subredditName).executeAsOneOrNull()
     }
   }
@@ -70,7 +66,7 @@ class SubredditRepository @Inject constructor(
   }
 
   private suspend fun insertSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    return withContext(ioDispatcher) {
+    return withContext(coroutineDispatchers.io) {
       try {
         db.insert(subreddit)
         Result.success(subreddit)
@@ -110,14 +106,14 @@ class SubredditRepository @Inject constructor(
   }
 
   suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    return withContext(ioDispatcher) {
+    return withContext(coroutineDispatchers.io) {
       db.delete(subreddit.name)
       Result.success(subreddit)
     }
   }
 
   private suspend fun updateSubreddit(subreddit: Subreddit) {
-    return withContext(ioDispatcher) {
+    return withContext(coroutineDispatchers.io) {
       db.update(
         name = subreddit.name,
         iconUrl = subreddit.iconUrl,
@@ -171,9 +167,7 @@ class SubredditRepository @Inject constructor(
     } else {
       // Checks for the number of posts newer than the last known one
       newPosts
-        .indexOfFirst { (post) -> SubredditLastPosted(post.createdUtc) <= subredditLastPosted }
-        // If an older post wasn't found, then all the posts are new
-        .let { if (it == -1) newPosts.size else it }
+        .count { (post) -> SubredditLastPosted(post.createdUtc) > subredditLastPosted }
         .toUInt()
     }
     return unreadPostsAmount to newPosts.size.toUInt()
@@ -189,10 +183,8 @@ class SubredditRepository @Inject constructor(
     return SubredditLastPosted(newestPost.data.createdUtc)
   }
 
-  fun updateLastPosted(subreddit: Subreddit) {
-    processLifecycleScope.launch {
-      val lastPosted = getLastPosted(subreddit.name)
-      updateSubreddit(copyLastPosted(subreddit, lastPosted))
-    }
+  suspend fun updateLastPosted(subreddit: Subreddit) {
+    val lastPosted = getLastPosted(subreddit.name)
+    updateSubreddit(copyLastPosted(subreddit, lastPosted))
   }
 }

@@ -60,6 +60,7 @@ object Dependencies {
     const val bom = "com.squareup.okhttp3:okhttp-bom:${Versions.okHttp}"
     const val client = "com.squareup.okhttp3:okhttp"
     const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor"
+    const val mockWebServer = "com.squareup.okhttp3:mockwebserver"
   }
 
   object Retrofit {
@@ -74,7 +75,14 @@ object Dependencies {
 
   object SqlDelight {
     const val android = "com.squareup.sqldelight:android-driver:${Versions.sqlDelight}"
+    const val jvm = "com.squareup.sqldelight:sqlite-driver:${Versions.sqlDelight}"
     const val coroutines =
       "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqlDelight}"
+  }
+
+  object Test {
+    const val jUnit = "org.junit.jupiter:junit-jupiter:${Versions.jUnit}"
+    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
+    const val mockK = "io.mockk:mockk:${Versions.mockK}"
   }
 }

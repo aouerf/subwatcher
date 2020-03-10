@@ -1,21 +1,23 @@
 package com.aouerfelli.subwatcher.ui.main
 
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
 import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.repository.Result
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.util.MutableEventStream
 import com.aouerfelli.subwatcher.util.asImmutable
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
   private val repository: SubredditRepository,
+  private val processLifecycleScope: LifecycleCoroutineScope,
   @Assisted private val handle: SavedStateHandle
 ) : ViewModel() {
 
@@ -75,6 +77,8 @@ class MainViewModel @AssistedInject constructor(
   }
 
   fun updateLastPosted(subreddit: Subreddit) {
-    repository.updateLastPosted(subreddit)
+    processLifecycleScope.launch {
+      repository.updateLastPosted(subreddit)
+    }
   }
 }
