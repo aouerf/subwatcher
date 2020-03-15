@@ -9,7 +9,7 @@
   <color name="reddit_blue">#24A0ED</color>
   <color name="reddit_alien_blue">#0079D3</color>
 
-  <color name="ic_launcher_background">@color/reddit_orangered</color>
+  <color name="ic_launcher_background">@android:color/white</color>
 
   <color name="color_primary_light">@color/reddit_blue</color>
   <color name="color_primary_dark">@color/reddit_mint</color>
