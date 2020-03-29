@@ -98,7 +98,6 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
   override fun onStart() {
     super.onStart()
-    dialog?.window?.setDimAmount(0f)
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
     // The inner container also has fitsSystemWindow disabled to prevent the text selection toolbar
