@@ -61,9 +61,9 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
       dismiss()
     }
 
-    binding.subredditField.editText?.setOnEditorActionListener { _, actionId, event ->
+    binding.subredditField.editText?.setOnEditorActionListener { _, actionId, event: KeyEvent? ->
       val isDone = actionId == EditorInfo.IME_ACTION_DONE
-      val isEnter = event.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER
+      val isEnter = event?.action == KeyEvent.ACTION_DOWN && event.keyCode == KeyEvent.KEYCODE_ENTER
       if (isDone || isEnter) {
         binding.addButton.callOnClick()
         true
