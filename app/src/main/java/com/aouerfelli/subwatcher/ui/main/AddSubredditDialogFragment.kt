@@ -15,6 +15,8 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
+import com.aouerfelli.subwatcher.repository.SubredditName
+import com.aouerfelli.subwatcher.repository.isValid
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.chrisbanes.insetter.doOnApplyWindowInsets
 
@@ -51,8 +53,8 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     }
 
     binding.addButton.setOnClickListener {
-      val subredditName = binding.subredditField.editText?.text?.toString()?.ifBlank { null }
-      if (subredditName == null) {
+      val subredditName = binding.subredditField.editText?.text?.toString()
+      if (!validateSubredditName(subredditName)) {
         binding.subredditField.error = getString(R.string.add_subreddit_dialog_error)
         return@setOnClickListener
       }
@@ -80,13 +82,17 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     // account for possible whitespace.
     binding.subredditField.editText?.filters = arrayOf(inputWhitespaceFilter, *inputFilters)
 
-    binding.subredditField.editText?.doAfterTextChanged {
-      val isNotBlank = !it.isNullOrBlank()
-      binding.addButton.isEnabled = isNotBlank
-      if (isNotBlank) {
+    binding.subredditField.editText?.doAfterTextChanged { text ->
+      val isValid = validateSubredditName(text?.toString())
+      binding.addButton.isEnabled = isValid
+      if (isValid) {
         binding.subredditField.isErrorEnabled = false
       }
     }
+  }
+
+  private fun validateSubredditName(name: String?): Boolean {
+    return !name.isNullOrEmpty() && SubredditName(name.toString()).isValid
   }
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {

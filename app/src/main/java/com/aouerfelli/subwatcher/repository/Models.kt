@@ -10,8 +10,10 @@ inline class SubredditName(val name: String) : Comparable<SubredditName> {
 
 // TODO: De-inlined because of https://github.com/cashapp/sqldelight/issues/1203#issuecomment-487438538
 data class SubredditIconUrl(val url: String)
-
 data class SubredditLastPosted(val epochSeconds: Long)
+
+val SubredditName.isValid: Boolean
+  get() = name.matches("[A-Za-z0-9][A-Za-z0-9_]{2,20}".toRegex())
 
 fun SubredditName.asUrl() = "$redditBaseUrl/r/$name/new".toUri()
 

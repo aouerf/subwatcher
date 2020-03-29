@@ -15,7 +15,7 @@
   <string name="add_subreddit_dialog_prefix">r/</string>
   <string name="add_subreddit_dialog_hint">subreddit</string>
   <string name="add_subreddit_dialog_confirm">Add</string>
-  <string name="add_subreddit_dialog_error">Subreddit name cannot be empty.</string>
+  <string name="add_subreddit_dialog_error">Subreddit name is invalid.</string>
 
   <string name="added_subreddit">r/%s was added.</string>
   <string name="added_subreddit_exists">r/%s is already added.</string>
