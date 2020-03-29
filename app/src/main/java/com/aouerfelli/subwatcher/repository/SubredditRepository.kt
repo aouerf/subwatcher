@@ -12,8 +12,8 @@ import com.aouerfelli.subwatcher.util.extensions.forEachAsync
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,8 +24,6 @@ class SubredditRepository @Inject constructor(
   private val db: SubredditEntityQueries,
   private val coroutineDispatchers: CoroutineDispatchers
 ) {
-
-  val subreddits = db.selectAll().asFlow().mapToList(coroutineDispatchers.io).distinctUntilChanged()
 
   private inline fun <T : Any, U : Any> Response<T>.mapToResult(
     transform: (T) -> U
@@ -53,6 +51,16 @@ class SubredditRepository @Inject constructor(
   private suspend fun fetchSubreddit(name: SubredditName): Result<Subreddit> {
     val response = api.fetch { getAboutSubreddit(name.name) }
     return response.mapToResult { it.mapSubreddit() }
+  }
+
+  fun getSubredditsFlow(): Flow<List<Subreddit>> {
+    return db.selectAll().asFlow().mapToList(coroutineDispatchers.io).distinctUntilChanged()
+  }
+
+  suspend fun getSubreddits(): List<Subreddit> {
+    return withContext(coroutineDispatchers.io) {
+      db.selectAll().executeAsList()
+    }
   }
 
   suspend fun getSubreddit(subredditName: SubredditName): Subreddit? {
@@ -145,7 +153,7 @@ class SubredditRepository @Inject constructor(
 
     return coroutineScope {
       var finalResult: Result<Nothing> = Result.success()
-      val subreddits = subreddits.first()
+      val subreddits = getSubreddits()
       subreddits.forEachAsync { subreddit ->
         refreshSubreddit(subreddit).also { finalResult = checkResult(finalResult, it) }
       }

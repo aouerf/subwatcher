@@ -26,7 +26,7 @@ class MainViewModel @AssistedInject constructor(
     fun create(handle: SavedStateHandle): MainViewModel
   }
 
-  val subredditList = repository.subreddits
+  val subredditList = repository.getSubredditsFlow()
 
   private val _isLoading = MutableEventStream(false)
   val isLoading = _isLoading.asImmutable()

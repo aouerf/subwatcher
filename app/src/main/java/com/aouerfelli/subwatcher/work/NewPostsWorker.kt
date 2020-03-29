@@ -15,7 +15,6 @@ import com.aouerfelli.subwatcher.util.extensions.mapAsync
 import com.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import timber.log.debug
 import java.time.Duration
@@ -53,7 +52,7 @@ class NewPostsWorker @AssistedInject constructor(
   override suspend fun doWork(): Result {
     Timber.debug { "$WORK_NAME worker running" }
 
-    val subreddits = repository.subreddits.first()
+    val subreddits = repository.getSubreddits()
     val details = subreddits.mapAsync { subreddit ->
       val newPosts = repository.checkForNewerPosts(subreddit)
       if (newPosts == null || newPosts.first == 0u) {
