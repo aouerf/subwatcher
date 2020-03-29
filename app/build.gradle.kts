@@ -68,7 +68,8 @@ dependencies {
   coreLibraryDesugaring(Dependencies.androidDesugarJdkLibs)
 
   implementation(kotlin(Kotlin.stdlib))
-  implementation(Dependencies.KotlinX.coroutines)
+  implementation(platform(Dependencies.KotlinX.Coroutines.bom))
+  implementation(Dependencies.KotlinX.Coroutines.android)
 
   implementation(Dependencies.AndroidX.appcompat)
   implementation(Dependencies.AndroidX.activity)
@@ -112,7 +113,7 @@ dependencies {
   implementation(Dependencies.timber)
 
   testImplementation(Dependencies.Test.jUnit)
-  testImplementation(Dependencies.Test.coroutines)
+  testImplementation(Dependencies.KotlinX.Coroutines.test)
   testImplementation(Dependencies.Test.mockK)
   testImplementation(Dependencies.OkHttp.mockWebServer)
   testImplementation(Dependencies.SqlDelight.jvm)

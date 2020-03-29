@@ -14,7 +14,11 @@ object Dependencies {
     "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
 
   object KotlinX {
-    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
+    object Coroutines {
+      const val bom = "org.jetbrains.kotlinx:kotlinx-coroutines-bom:${Versions.coroutines}"
+      const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android"
+      const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test"
+    }
   }
 
   object AndroidX {
@@ -82,7 +86,6 @@ object Dependencies {
 
   object Test {
     const val jUnit = "org.junit.jupiter:junit-jupiter:${Versions.jUnit}"
-    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
     const val mockK = "io.mockk:mockk:${Versions.mockK}"
   }
 }
