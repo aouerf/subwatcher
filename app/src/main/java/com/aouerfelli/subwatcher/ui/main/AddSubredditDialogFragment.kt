@@ -104,7 +104,7 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     // The inner container also has fitsSystemWindow disabled to prevent the text selection toolbar
     // from adding padding to the view.
     // Do this only on API versions where light navigation bars are supported.
-    if (Build.VERSION.SDK_INT >= 26) {
+    if (Build.VERSION.SDK_INT >= 27) {
       (view?.parent?.parent as? View)?.apply {
         fitsSystemWindows = false
         (parent as? View)?.fitsSystemWindows = false
