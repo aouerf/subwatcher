@@ -2,6 +2,7 @@ package com.aouerfelli.subwatcher.ui.main
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.KeyEvent
@@ -97,15 +98,17 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
   override fun onStart() {
     super.onStart()
-
+    dialog?.window?.setDimAmount(0f)
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
     // The inner container also has fitsSystemWindow disabled to prevent the text selection toolbar
     // from adding padding to the view.
-    // FIXME: Navigation bar icons not visible on API < 26
-    (view?.parent?.parent as? View)?.apply {
-      fitsSystemWindows = false
-      (parent as? View)?.fitsSystemWindows = false
+    // Do this only on API versions where light navigation bars are supported.
+    if (Build.VERSION.SDK_INT >= 26) {
+      (view?.parent?.parent as? View)?.apply {
+        fitsSystemWindows = false
+        (parent as? View)?.fitsSystemWindows = false
+      }
     }
   }
 
