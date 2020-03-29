@@ -58,7 +58,7 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel>(
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val binding = checkNotNull(binding) { "This was called before onCreateView()." }
+    val binding = binding!!
     binding.root.setEdgeToEdgeSystemUiFlags(true)
     onBindingCreated(binding, savedInstanceState)
   }
