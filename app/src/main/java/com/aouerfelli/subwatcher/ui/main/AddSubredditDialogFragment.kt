@@ -95,12 +95,14 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     return !name.isNullOrEmpty() && SubredditName(name.toString()).isValid
   }
 
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
+  override fun onStart() {
+    super.onStart()
+
     // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
     // system bars.
     // The inner container also has fitsSystemWindow disabled to prevent the text selection toolbar
     // from adding padding to the view.
+    // FIXME: Navigation bar icons not visible on API < 26
     (view?.parent?.parent as? View)?.apply {
       fitsSystemWindows = false
       (parent as? View)?.fitsSystemWindows = false
