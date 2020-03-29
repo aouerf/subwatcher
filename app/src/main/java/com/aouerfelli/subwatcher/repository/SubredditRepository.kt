@@ -179,8 +179,8 @@ class SubredditRepository @Inject constructor(
       return null
     }
 
-    val newestPost = newPostsResponse.body.data.children.first()
-    return SubredditLastPosted(newestPost.data.createdUtc)
+    val newestPost = newPostsResponse.body.data.children.firstOrNull()
+    return newestPost?.data?.createdUtc?.let(::SubredditLastPosted)
   }
 
   suspend fun updateLastPosted(subreddit: Subreddit) {

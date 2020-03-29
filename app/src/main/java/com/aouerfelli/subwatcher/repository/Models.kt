@@ -17,6 +17,6 @@ fun SubredditName.asUrl() = "$redditBaseUrl/r/$name/new".toUri()
 
 fun SubredditIconUrl.asUri() = url.toUri()
 
-operator fun SubredditLastPosted.compareTo(other: SubredditLastPosted): Int {
-  return epochSeconds.compareTo(other.epochSeconds)
+operator fun SubredditLastPosted?.compareTo(other: SubredditLastPosted?): Int {
+  return compareValues(this?.epochSeconds, other?.epochSeconds)
 }
