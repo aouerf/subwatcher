@@ -3,7 +3,6 @@ package com.aouerfelli.subwatcher.ui.main
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
@@ -35,7 +34,10 @@ import timber.log.Timber
 import timber.log.warn
 import javax.inject.Inject
 
-class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
+class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
+  MainFragmentBinding::inflate,
+  MainViewModel::class
+) {
 
   companion object {
     private const val ADD_SUBREDDIT_REQUEST_CODE = 2
@@ -43,21 +45,12 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>() {
 
   @Inject
   lateinit var viewModelFactory: MainViewModel.Factory
-  override val viewModelClass = MainViewModel::class
 
   @Inject
   lateinit var imageLoader: ImageLoader
   private lateinit var subredditListAdapter: SubredditListAdapter
 
   private val eventSnackbar = EventSnackbar()
-
-  override fun inflateView(
-    inflater: LayoutInflater,
-    root: ViewGroup?,
-    attachToRoot: Boolean
-  ): MainFragmentBinding {
-    return MainFragmentBinding.inflate(inflater, root, attachToRoot)
-  }
 
   override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
 

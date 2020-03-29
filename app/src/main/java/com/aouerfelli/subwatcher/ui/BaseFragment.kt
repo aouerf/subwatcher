@@ -14,7 +14,10 @@ import dagger.android.support.DaggerFragment
 import dev.chrisbanes.insetter.setEdgeToEdgeSystemUiFlags
 import kotlin.reflect.KClass
 
-abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
+abstract class BaseFragment<B : ViewBinding, M : ViewModel>(
+  private val viewInflater: (LayoutInflater, ViewGroup?, Boolean) -> B,
+  private val viewModelClass: KClass<M>
+) : DaggerFragment() {
 
   protected val supportActivity: AppCompatActivity?
     get() = activity as? AppCompatActivity
@@ -25,21 +28,9 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
   protected lateinit var viewModel: M
     private set
 
-  protected abstract val viewModelClass: KClass<M>
-
-  protected abstract fun inflateView(
-    inflater: LayoutInflater,
-    root: ViewGroup?,
-    attachToRoot: Boolean
-  ): B
-
   protected abstract fun createViewModel(handle: SavedStateHandle): M
 
   protected abstract fun onBindingCreated(binding: B, savedInstanceState: Bundle?)
-
-  protected fun requireBinding(): B {
-    return checkNotNull(binding) { "This was called before onCreateView()." }
-  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -62,12 +53,12 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel> : DaggerFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    return inflateView(inflater, container, false).also { binding = it }.root
+    return viewInflater(inflater, container, false).also { binding = it }.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val binding = requireBinding()
+    val binding = checkNotNull(binding) { "This was called before onCreateView()." }
     binding.root.setEdgeToEdgeSystemUiFlags(true)
     onBindingCreated(binding, savedInstanceState)
   }
