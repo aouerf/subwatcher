@@ -8,6 +8,10 @@ import java.io.IOException
 
 interface RedditService {
 
+  companion object {
+    const val baseUrl = "https://www.reddit.com"
+  }
+
   @GET("/r/{subreddit}/about.json")
   suspend fun getAboutSubreddit(@Path("subreddit") subreddit: String): AboutSubreddit
 

@@ -9,7 +9,7 @@ import androidx.work.WorkManager
 import coil.ImageLoaderBuilder
 import com.aouerfelli.subwatcher.broadcast.BroadcastReceiversModule
 import com.aouerfelli.subwatcher.network.NetworkDetails
-import com.aouerfelli.subwatcher.repository.redditBaseUrl
+import com.aouerfelli.subwatcher.network.RedditService
 import com.aouerfelli.subwatcher.ui.MainModule
 import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
@@ -50,7 +50,7 @@ abstract class ApplicationModule {
     @Provides
     fun provideNetworkDetails(context: Context): NetworkDetails {
       return NetworkDetails(
-        baseUrl = redditBaseUrl.toHttpUrl(),
+        baseUrl = RedditService.baseUrl.toHttpUrl(),
         cacheDir = context.cacheDir
       )
     }
