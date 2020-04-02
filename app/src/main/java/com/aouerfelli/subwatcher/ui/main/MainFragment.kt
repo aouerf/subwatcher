@@ -10,6 +10,7 @@ import androidx.core.view.updateMargins
 import androidx.core.view.updatePadding
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView.Adapter
 import coil.ImageLoader
 import com.aouerfelli.subwatcher.BuildConfig
 import com.aouerfelli.subwatcher.R
@@ -59,9 +60,10 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
       subreddit.name.asUrl().launch(viewContext)
       viewModel.updateLastPosted(subreddit)
     }
+    subredditListAdapter.stateRestorationPolicy = Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
     binding.subredditList.adapter = subredditListAdapter
     binding.subredditList.onSwipe { viewHolder, _ ->
-      val position = viewHolder.adapterPosition
+      val position = viewHolder.bindingAdapterPosition
       val item = subredditListAdapter.currentList[position]
       viewModel.delete(item)
     }
