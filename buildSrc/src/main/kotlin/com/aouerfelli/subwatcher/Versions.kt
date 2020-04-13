@@ -4,11 +4,11 @@ internal object Versions {
 
   const val kotlin = "1.3.71"
 
-  const val androidGradlePlugin = "4.1.0-alpha04"
+  const val androidGradlePlugin = "4.1.0-alpha05"
   const val ktlint = "9.2.1"
   const val gradleVersions = "0.28.0"
 
-  const val sqlDelight = "1.2.2"
+  const val sqlDelight = "1.3.0"
 
   const val androidDesugarJdkLibs = "1.0.4"
 
@@ -34,7 +34,7 @@ internal object Versions {
   const val coroutines = "1.3.5"
   const val dagger = "2.27"
   const val assistedInject = "0.5.2"
-  const val okHttp = "4.5.0-RC1"
+  const val okHttp = "4.5.0"
   const val retrofit = "2.8.1"
   const val moshi = "1.9.2"
   const val timber = "5.0.0-SNAPSHOT"
