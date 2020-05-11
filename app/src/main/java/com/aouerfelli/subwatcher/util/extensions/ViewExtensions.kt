@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import coil.ImageLoader
-import coil.api.load
+import coil.request.LoadRequest
 import coil.request.LoadRequestBuilder
 import coil.request.RequestDisposable
 import com.aouerfelli.subwatcher.R
@@ -14,12 +14,15 @@ import com.aouerfelli.subwatcher.R
 inline fun ImageView.load(
   uri: Uri?,
   imageLoader: ImageLoader,
+  // TODO: Switch to explicit builder instead of DSL API
   builder: LoadRequestBuilder.() -> Unit = { }
 ): RequestDisposable {
-  return imageLoader.load(context, uri) {
-    target(this@load)
-    builder()
-  }
+  val request = LoadRequest.Builder(context)
+    .data(uri)
+    .target(this)
+    .apply { builder() }
+    .build()
+  return imageLoader.execute(request)
 }
 
 // TODO: Custom view

@@ -9,7 +9,9 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
+import coil.request.ErrorResult
 import coil.request.GetRequest
+import coil.request.SuccessResult
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.broadcast.ViewSubredditBroadcastReceiver
@@ -81,7 +83,10 @@ suspend fun Context.notifyNewSubredditPosts(
     // If there is only one new post then the argument is ignored
     val contentText = getString(contentTextRes, unreadPostsAmount.toInt())
     val largeIcon = subreddit.iconUrl?.asUri()?.let { uri ->
-      imageLoader.get(GetRequest.Builder(this).data(uri).build())
+      when (val result = imageLoader.execute(GetRequest.Builder(this).data(uri).build())) {
+        is SuccessResult -> result.drawable
+        is ErrorResult -> null
+      }
     }?.toBitmap()
 
     val intent = ViewSubredditBroadcastReceiver.createIntent(this, subreddit.name)
