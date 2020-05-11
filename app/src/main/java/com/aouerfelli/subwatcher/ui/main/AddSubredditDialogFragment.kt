@@ -1,6 +1,7 @@
 package com.aouerfelli.subwatcher.ui.main
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,8 @@ import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.isValid
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dev.chrisbanes.insetter.applySystemWindowInsetsToMargin
 import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
@@ -27,6 +30,22 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
   }
 
   private var binding: AddSubredditDialogFragmentBinding? = null
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+    dialog.behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+      override fun onStateChanged(bottomSheet: View, newState: Int) {
+        // Prevent expanded bottom sheet to avoid removing corners set with shapeAppearanceOverlay
+        if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+          dialog.behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+      }
+
+      override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+    })
+
+    return dialog
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater,

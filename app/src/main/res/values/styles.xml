@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="ThemeOverlay.Subwatcher.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+    <item name="bottomSheetStyle">@style/Widget.Subwatcher.BottomSheet</item>
+  </style>
+
+  <style name="Widget.Subwatcher.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+    <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Subwatcher.BottomSheet</item>
+  </style>
+
+  <style name="ShapeAppearanceOverlay.Subwatcher.BottomSheet" parent="">
+    <item name="cornerFamily">rounded</item>
+    <item name="cornerSize">0dp</item>
+    <item name="cornerSizeTopLeft">8dp</item>
+    <item name="cornerSizeTopRight">8dp</item>
+  </style>
+
+</resources>
