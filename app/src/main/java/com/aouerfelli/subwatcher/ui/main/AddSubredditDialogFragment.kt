@@ -1,8 +1,6 @@
 package com.aouerfelli.subwatcher.ui.main
 
-import android.app.Activity
 import android.app.Dialog
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
@@ -12,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.setFragmentResult
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
 import com.aouerfelli.subwatcher.repository.SubredditName
@@ -75,8 +75,10 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
         binding.subredditField.error = getString(R.string.add_subreddit_dialog_error)
         return@setOnClickListener
       }
-      val intent = Intent().putExtra(SUBREDDIT_NAME_KEY, subredditName)
-      targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, intent)
+      setFragmentResult(
+        MainFragment.ADD_SUBREDDIT_REQUEST_KEY,
+        bundleOf(SUBREDDIT_NAME_KEY to subredditName)
+      )
       dismiss()
     }
 

@@ -1,7 +1,5 @@
 package com.aouerfelli.subwatcher.ui.main
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isGone
 import androidx.lifecycle.SavedStateHandle
@@ -38,7 +36,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
 ) {
 
   companion object {
-    private const val ADD_SUBREDDIT_REQUEST_CODE = 2
+    const val ADD_SUBREDDIT_REQUEST_KEY = "add_subreddit"
   }
 
   @Inject
@@ -51,6 +49,16 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
   private val eventSnackbar = EventSnackbar()
 
   override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    childFragmentManager.setFragmentResultListener(ADD_SUBREDDIT_REQUEST_KEY, this) { _, bundle ->
+      val subredditName = bundle.getString(AddSubredditDialogFragment.SUBREDDIT_NAME_KEY)
+      if (subredditName != null) {
+        viewModel.add(SubredditName(subredditName))
+      }
+    }
+  }
 
   override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
     subredditListAdapter = SubredditListAdapter(imageLoader) { subreddit, viewContext ->
@@ -78,8 +86,7 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
 
     binding.addSubredditButton.setOnClickListener {
       val dialogFragment = AddSubredditDialogFragment()
-      dialogFragment.setTargetFragment(this, ADD_SUBREDDIT_REQUEST_CODE)
-      dialogFragment.show(requireActivity().supportFragmentManager, dialogFragment.tag)
+      dialogFragment.show(childFragmentManager, dialogFragment.tag)
     }
     binding.addSubredditButton.setOnLongClickListener {
       if (BuildConfig.DEBUG) {
@@ -107,19 +114,6 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
     viewModel.refreshedSubreddits.observe(viewLifecycleOwner, ::onSubredditsRefreshed)
     viewModel.addedSubreddit.observe(viewLifecycleOwner, ::onSubredditAdded)
     viewModel.deletedSubreddit.observe(viewLifecycleOwner, ::onSubredditDeleted)
-  }
-
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    if (resultCode != Activity.RESULT_OK) return
-    when (requestCode) {
-      ADD_SUBREDDIT_REQUEST_CODE -> {
-        val key = AddSubredditDialogFragment.SUBREDDIT_NAME_KEY
-        val subredditName = data?.getStringExtra(key)?.let(::SubredditName)
-        if (subredditName != null) {
-          viewModel.add(subredditName)
-        }
-      }
-    }
   }
 
   private inline fun onError(result: Result.Error, crossinline onHandled: () -> Unit) {
