@@ -11,15 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.databinding.AddSubredditDialogFragmentBinding
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.isValid
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dev.chrisbanes.insetter.doOnApplyWindowInsets
+import dev.chrisbanes.insetter.applySystemWindowInsetsToMargin
+import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
 
 class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
@@ -43,15 +42,13 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     // This is only called after onCreateView(), which is where binding gets assigned.
     val binding = binding!!
 
-    binding.root.doOnApplyWindowInsets { v, insets, initialState ->
-      v.updatePadding(
-        bottom = insets.systemWindowInsetBottom + initialState.paddings.bottom
-      )
-      v.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-        leftMargin = insets.systemWindowInsetLeft + initialState.margins.left
-        rightMargin = insets.systemWindowInsetRight + initialState.margins.right
-      }
-    }
+    binding.root.applySystemWindowInsetsToPadding(
+      bottom = true
+    )
+    binding.root.applySystemWindowInsetsToMargin(
+      left = true,
+      right = true
+    )
 
     binding.addButton.setOnClickListener {
       val subredditName = binding.subredditField.editText?.text?.toString()

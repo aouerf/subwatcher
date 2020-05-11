@@ -28,7 +28,8 @@ import com.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import com.aouerfelli.subwatcher.util.makeSnackbar
 import com.aouerfelli.subwatcher.util.observe
 import com.aouerfelli.subwatcher.util.toAndroidString
-import dev.chrisbanes.insetter.doOnApplyWindowInsets
+import dev.chrisbanes.insetter.applySystemWindowInsetsToMargin
+import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
@@ -67,14 +68,12 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
       val item = subredditListAdapter.currentList[position]
       viewModel.delete(item)
     }
-    binding.subredditList.doOnApplyWindowInsets { view, insets, initialState ->
-      view.updatePadding(
-        left = insets.systemWindowInsetLeft + initialState.paddings.left,
-        top = insets.systemWindowInsetTop + initialState.paddings.top,
-        right = insets.systemWindowInsetRight + initialState.paddings.right,
-        bottom = insets.systemWindowInsetBottom + initialState.paddings.bottom
-      )
-    }
+    binding.subredditList.applySystemWindowInsetsToPadding(
+      left = true,
+      top = true,
+      right = true,
+      bottom = true
+    )
 
     binding.subredditsRefresh.setThemeColorScheme()
     binding.subredditsRefresh.setOnRefreshListener {
@@ -94,16 +93,12 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
         false
       }
     }
-    binding.addSubredditButton.doOnApplyWindowInsets { view, insets, initialState ->
-      view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-        updateMargins(
-          left = insets.systemWindowInsetLeft + initialState.margins.left,
-          top = insets.systemWindowInsetTop + initialState.margins.top,
-          right = insets.systemWindowInsetRight + initialState.margins.right,
-          bottom = insets.systemWindowInsetBottom + initialState.margins.bottom
-        )
-      }
-    }
+    binding.addSubredditButton.applySystemWindowInsetsToMargin(
+      left = true,
+      top = true,
+      right = true,
+      bottom = true
+    )
 
     viewModel.subredditList
       .onEach { list ->

@@ -59,7 +59,7 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel>(
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     val binding = binding!!
-    binding.root.setEdgeToEdgeSystemUiFlags(true)
+    binding.root.setEdgeToEdgeSystemUiFlags()
     onBindingCreated(binding, savedInstanceState)
   }
 
