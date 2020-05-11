@@ -30,10 +30,10 @@ import javax.inject.Singleton
     BroadcastReceiversModule::class
   ]
 )
-abstract class ApplicationModule {
+interface ApplicationModule {
 
-  @Binds
-  abstract fun bindContext(application: SubwatcherApplication): Context
+  @get:Binds
+  val SubwatcherApplication.bindContext: Context
 
   companion object {
 
