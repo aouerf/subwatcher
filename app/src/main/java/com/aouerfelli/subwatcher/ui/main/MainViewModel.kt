@@ -13,6 +13,8 @@ import com.aouerfelli.subwatcher.util.asImmutable
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel @AssistedInject constructor(
@@ -28,17 +30,17 @@ class MainViewModel @AssistedInject constructor(
 
   val subredditList = repository.getSubredditsFlow()
 
-  private val _isLoading = MutableEventStream(false)
-  val isLoading = _isLoading.asImmutable()
+  private val _isLoading = MutableStateFlow(false)
+  val isLoading: StateFlow<Boolean> get() = _isLoading
 
   private val _addedSubreddit = MutableEventStream<Pair<SubredditName, Result<Subreddit>>>()
-  val addedSubreddit = _addedSubreddit.asImmutable()
+  val addedSubreddit get() = _addedSubreddit.asImmutable()
 
   private val _deletedSubreddit = MutableEventStream<Result<Subreddit>>()
-  val deletedSubreddit = _deletedSubreddit.asImmutable()
+  val deletedSubreddit get() = _deletedSubreddit.asImmutable()
 
   private val _refreshedSubreddits = MutableEventStream<Result<Nothing>>()
-  val refreshedSubreddits = _refreshedSubreddits.asImmutable()
+  val refreshedSubreddits get() = _refreshedSubreddits.asImmutable()
 
   private inline fun load(crossinline load: suspend () -> Unit) {
     _isLoading.value = true

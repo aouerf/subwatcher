@@ -110,7 +110,9 @@ class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
         binding.subredditsRefresh.isEnabled = list.isNotEmpty()
       }
       .launchIn(viewLifecycleOwner.lifecycleScope)
-    viewModel.isLoading.observe(viewLifecycleOwner, binding.subredditsRefresh::setRefreshing)
+    viewModel.isLoading
+      .onEach { binding.subredditsRefresh.isRefreshing = it }
+      .launchIn(viewLifecycleOwner.lifecycleScope)
     viewModel.refreshedSubreddits.observe(viewLifecycleOwner, ::onSubredditsRefreshed)
     viewModel.addedSubreddit.observe(viewLifecycleOwner, ::onSubredditAdded)
     viewModel.deletedSubreddit.observe(viewLifecycleOwner, ::onSubredditDeleted)
