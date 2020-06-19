@@ -2,9 +2,9 @@ package com.aouerfelli.subwatcher.util
 
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.aouerfelli.subwatcher.R
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.aouerfelli.subwatcher.R
 
 enum class SnackbarLength(val flag: Int) {
   INDEFINITE(Snackbar.LENGTH_INDEFINITE),

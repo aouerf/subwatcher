@@ -29,6 +29,10 @@ apply(plugin = com.aouerfelli.subwatcher.GradlePlugins.GradleVersions.id)
 allprojects {
   apply(plugin = com.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
 
+  configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    version.set(com.aouerfelli.subwatcher.GradlePlugins.Ktlint.version)
+  }
+
   repositories {
     google()
     jcenter()

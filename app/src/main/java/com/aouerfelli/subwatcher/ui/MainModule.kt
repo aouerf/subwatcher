@@ -1,8 +1,8 @@
 package com.aouerfelli.subwatcher.ui
 
+import com.aouerfelli.subwatcher.ui.main.MainFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import com.aouerfelli.subwatcher.ui.main.MainFragment
 
 @Module
 abstract class MainModule {

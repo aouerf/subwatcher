@@ -6,10 +6,12 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{kt, kts, xml, sq}]
+[*.{kt,kts,xml,sq}]
 indent_style = space
 indent_size = 2
 ij_continuation_indent_size = 4
 
-[*.{kt, kts}]
-disabled_rules = import-ordering
+[*.{kt,kts}]
+# noinspection EditorConfigKeyCorrectness
+# Use IDE import layout for ktlint
+kotlin_imports_layout = idea

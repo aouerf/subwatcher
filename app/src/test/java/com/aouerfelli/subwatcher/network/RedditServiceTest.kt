@@ -126,7 +126,8 @@ class RedditServiceTest {
     private const val subredditName = "subreddit"
 
     private const val subredditIconImageUrl = "https://icon_img.png"
-    private val aboutSubredditRaw = """
+    private val aboutSubredditRaw =
+      """
       {
         "kind": "t5",
         "data": {
@@ -142,7 +143,8 @@ class RedditServiceTest {
     )
 
     private const val newPostsCreatedUtc = 123456789L
-    private val newPostsRaw = """
+    private val newPostsRaw =
+      """
       {
         "kind": "Listing",
         "data": {
