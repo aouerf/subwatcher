@@ -1,6 +1,5 @@
 package com.aouerfelli.subwatcher.ui.main
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +26,6 @@ class SubredditListAdapter(
         return oldItem.name == newItem.name
       }
 
-      @SuppressLint("DiffUtilEquals")
       override fun areContentsTheSame(oldItem: Subreddit, newItem: Subreddit): Boolean {
         return oldItem == newItem
       }

@@ -96,7 +96,7 @@ class SubredditEntityQueriesTest {
   }
 
   companion object {
-    private val subreddit = Subreddit.Impl(
+    private val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = SubredditIconUrl("https://icon_img.png"),
       lastPosted = SubredditLastPosted(123456789)

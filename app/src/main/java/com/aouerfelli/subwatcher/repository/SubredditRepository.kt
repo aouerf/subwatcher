@@ -40,7 +40,7 @@ class SubredditRepository @Inject constructor(
 
   private fun AboutSubreddit.mapSubreddit(): Subreddit {
     return with(data) {
-      Subreddit.Impl(
+      Subreddit(
         name = SubredditName(displayName),
         iconUrl = iconImageUrl?.ifEmpty { null }?.let(::SubredditIconUrl),
         lastPosted = null
@@ -70,7 +70,7 @@ class SubredditRepository @Inject constructor(
   }
 
   private fun copyLastPosted(subreddit: Subreddit, lastPosted: SubredditLastPosted?): Subreddit {
-    return (subreddit as Subreddit.Impl).copy(lastPosted = lastPosted)
+    return subreddit.copy(lastPosted = lastPosted)
   }
 
   private suspend fun insertSubreddit(subreddit: Subreddit): Result<Subreddit> {

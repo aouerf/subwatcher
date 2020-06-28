@@ -42,7 +42,7 @@ class SubredditRepositoryTest {
 
   @Test
   fun `check for no subreddit posts`() = coroutineTestRule.dispatcher.runBlockingTest {
-    val subreddit = Subreddit.Impl(
+    val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
       lastPosted = null
@@ -56,7 +56,7 @@ class SubredditRepositoryTest {
 
   @Test
   fun `check for new subreddit posts`() = coroutineTestRule.dispatcher.runBlockingTest {
-    val subreddit = Subreddit.Impl(
+    val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
       lastPosted = null
@@ -71,7 +71,7 @@ class SubredditRepositoryTest {
   @Test
   fun `check for no new subreddit posts`() = coroutineTestRule.dispatcher.runBlockingTest {
     val createdUtc = 123456789L
-    val subreddit = Subreddit.Impl(
+    val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
       lastPosted = SubredditLastPosted(createdUtc)
@@ -86,7 +86,7 @@ class SubredditRepositoryTest {
   @Test
   fun `check for newer subreddit posts`() = coroutineTestRule.dispatcher.runBlockingTest {
     val epochSeconds = 123456789L
-    val subreddit = Subreddit.Impl(
+    val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
       lastPosted = SubredditLastPosted(epochSeconds)
@@ -101,7 +101,7 @@ class SubredditRepositoryTest {
   @Test
   fun `check for all new subreddit posts`() = coroutineTestRule.dispatcher.runBlockingTest {
     val epochSeconds = 123456789L
-    val subreddit = Subreddit.Impl(
+    val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
       lastPosted = SubredditLastPosted(epochSeconds)

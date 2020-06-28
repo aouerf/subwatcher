@@ -6,8 +6,8 @@ import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 
 private val customTabsIntentBuilder = CustomTabsIntent.Builder()
-  .addDefaultShareMenuItem()
-  .enableUrlBarHiding()
+  .setDefaultShareMenuItemEnabled(true)
+  .setUrlBarHidingEnabled(true)
   .setShowTitle(true)
 
 fun Uri.launch(context: Context, startNewTask: Boolean = false) {
