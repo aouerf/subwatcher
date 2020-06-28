@@ -12,11 +12,11 @@ plugins {
 }
 
 android {
-  compileSdkVersion(29)
+  compileSdkVersion(30)
   defaultConfig {
     applicationId = "com.aouerfelli.subwatcher"
     minSdkVersion(21)
-    targetSdkVersion(29)
+    targetSdkVersion(30)
     versionCode = 5
     versionName = "1.0.4"
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
