@@ -71,17 +71,14 @@ suspend fun Context.notifyNewSubredditPosts(
     val (unreadPostsAmount, totalPostsAmount) = newPostsAmount
 
     val contentTitle = getString(R.string.notify_new_subreddit_posts_title, subreddit.name.name)
-    val contentTextRes = if (unreadPostsAmount < totalPostsAmount) {
-      if (unreadPostsAmount == 1u) {
-        R.string.notify_new_subreddit_posts_text_singular
-      } else {
-        R.string.notify_new_subreddit_posts_text
-      }
+
+    val count = unreadPostsAmount.toInt()
+    val contentText = if (unreadPostsAmount < totalPostsAmount) {
+      resources.getQuantityString(R.plurals.notify_new_subreddit_posts_text, count, count)
     } else {
-      R.string.notify_new_subreddit_posts_text_max
+      getString(R.string.notify_new_subreddit_posts_text_max, count)
     }
-    // If there is only one new post then the argument is ignored
-    val contentText = getString(contentTextRes, unreadPostsAmount.toInt())
+
     val largeIcon = subreddit.iconUrl?.asUri()?.let { uri ->
       when (val result = imageLoader.execute(GetRequest.Builder(this).data(uri).build())) {
         is SuccessResult -> result.drawable
