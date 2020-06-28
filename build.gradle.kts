@@ -8,6 +8,7 @@ buildscript {
     google()
     jcenter()
     gradlePluginPortal()
+    maven("https://dl.bintray.com/kotlin/kotlin-eap")
   }
 
   dependencies {
@@ -37,6 +38,7 @@ allprojects {
     google()
     jcenter()
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://dl.bintray.com/kotlin/kotlin-eap")
   }
 }
 

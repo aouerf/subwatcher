@@ -2,7 +2,7 @@ package com.aouerfelli.subwatcher
 
 internal object Versions {
 
-  const val kotlin = "1.3.72"
+  const val kotlin = "1.4-M2"
 
   const val androidGradlePlugin = "4.2.0-alpha02"
   const val ktlintGradle = "9.2.1"
@@ -32,7 +32,7 @@ internal object Versions {
   const val insetter = "0.3.0"
   const val coil = "0.11.0"
 
-  const val coroutines = "1.3.7"
+  const val coroutines = "1.3.7-1.4-M2"
   const val dagger = "2.28.1"
   const val assistedInject = "0.5.2"
   const val okHttp = "4.7.2"
