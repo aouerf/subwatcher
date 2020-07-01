@@ -4,7 +4,7 @@ internal object Versions {
 
   const val kotlin = "1.4-M2"
 
-  const val androidGradlePlugin = "4.2.0-alpha02"
+  const val androidGradlePlugin = "4.2.0-alpha03"
   const val ktlintGradle = "9.2.1"
   const val ktlint = "0.37.2"
   const val gradleVersions = "0.28.0"
