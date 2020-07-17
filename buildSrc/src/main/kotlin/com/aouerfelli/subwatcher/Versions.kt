@@ -10,7 +10,7 @@ internal object Versions {
 
   const val sqlDelight = "1.4.0"
 
-  const val androidDesugarJdkLibs = "1.0.4"
+  const val androidDesugarJdkLibs = "1.0.9"
 
   object AndroidX {
     const val appcompat = "1.3.0-alpha01"
