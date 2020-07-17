@@ -10,7 +10,6 @@ object GradlePlugins {
   object Ktlint {
     const val dependency = "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradle}"
     const val id = "org.jlleitschuh.gradle.ktlint"
-    const val version = Versions.ktlint
   }
 
   object GradleVersions {
