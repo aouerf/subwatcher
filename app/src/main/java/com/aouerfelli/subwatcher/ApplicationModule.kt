@@ -6,7 +6,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import coil.ImageLoaderBuilder
+import coil.ImageLoader
 import com.aouerfelli.subwatcher.broadcast.BroadcastReceiversModule
 import com.aouerfelli.subwatcher.network.NetworkDetails
 import com.aouerfelli.subwatcher.network.RedditService
@@ -82,6 +82,6 @@ interface ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideImageLoader(context: Context) = ImageLoaderBuilder(context).build()
+    fun provideImageLoader(context: Context) = ImageLoader.Builder(context).build()
   }
 }

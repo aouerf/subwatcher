@@ -6,17 +6,19 @@ import androidx.work.WorkManager
 import com.aouerfelli.subwatcher.util.DebugLogcatTree
 import com.aouerfelli.subwatcher.util.registerNotificationChannels
 import com.aouerfelli.subwatcher.work.NewPostsWorker
+import dagger.Lazy
 import dagger.android.support.DaggerApplication
 import timber.log.Timber
 import javax.inject.Inject
 
 class SubwatcherApplication : DaggerApplication(), Configuration.Provider {
 
-  // Configuration must be injected before WorkManager for on-demand initialization
   @Inject
   lateinit var workManagerConfig: Configuration
+
+  // WorkManager needs to be injected lazily to allow on-demand initialization to work properly
   @Inject
-  lateinit var workManager: WorkManager
+  lateinit var workManager: Lazy<WorkManager>
 
   override fun applicationInjector() = DaggerAppComponent.factory().create(this)
 
@@ -33,7 +35,7 @@ class SubwatcherApplication : DaggerApplication(), Configuration.Provider {
   }
 
   private fun enqueueWork() {
-    NewPostsWorker.enqueue(workManager)
+    NewPostsWorker.enqueue(workManager.get())
   }
 
   private fun setupStrictMode() {

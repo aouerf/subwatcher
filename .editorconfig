@@ -10,8 +10,3 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 ij_continuation_indent_size = 4
-
-[*.{kt,kts}]
-# noinspection EditorConfigKeyCorrectness
-# Use IDE import layout for ktlint
-kotlin_imports_layout = idea

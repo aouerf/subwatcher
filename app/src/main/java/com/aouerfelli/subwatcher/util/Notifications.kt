@@ -10,7 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.graphics.drawable.toBitmap
 import coil.ImageLoader
 import coil.request.ErrorResult
-import coil.request.GetRequest
+import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.Subreddit
@@ -80,7 +80,7 @@ suspend fun Context.notifyNewSubredditPosts(
     }
 
     val largeIcon = subreddit.iconUrl?.asUri()?.let { uri ->
-      when (val result = imageLoader.execute(GetRequest.Builder(this).data(uri).build())) {
+      when (val result = imageLoader.execute(ImageRequest.Builder(this).data(uri).build())) {
         is SuccessResult -> result.drawable
         is ErrorResult -> null
       }

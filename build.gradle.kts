@@ -8,7 +8,6 @@ buildscript {
     google()
     jcenter()
     gradlePluginPortal()
-    maven("https://dl.bintray.com/kotlin/kotlin-eap")
   }
 
   dependencies {
@@ -30,11 +29,15 @@ apply(plugin = com.aouerfelli.subwatcher.GradlePlugins.GradleVersions.id)
 allprojects {
   apply(plugin = com.aouerfelli.subwatcher.GradlePlugins.Ktlint.id)
 
+  configure<org.jlleitschuh.gradle.ktlint.KtlintExtension> {
+    // Update version manually to fix some false positives
+    version.set("0.40.0")
+  }
+
   repositories {
     google()
     jcenter()
     maven("https://oss.sonatype.org/content/repositories/snapshots")
-    maven("https://dl.bintray.com/kotlin/kotlin-eap")
   }
 }
 

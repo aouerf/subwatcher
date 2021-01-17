@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 
 private val customTabsIntentBuilder = CustomTabsIntent.Builder()
-  .setDefaultShareMenuItemEnabled(true)
+  .setShareState(CustomTabsIntent.SHARE_STATE_ON)
   .setUrlBarHidingEnabled(true)
   .setShowTitle(true)
 

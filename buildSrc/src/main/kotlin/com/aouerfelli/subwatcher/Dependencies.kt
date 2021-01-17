@@ -4,7 +4,7 @@ object Dependencies {
 
   const val material = "com.google.android.material:material:${Versions.material}"
 
-  const val insetter = "dev.chrisbanes:insetter-ktx:${Versions.insetter}"
+  const val insetter = "dev.chrisbanes.insetter:insetter:${Versions.insetter}"
 
   const val coil = "io.coil-kt:coil-base:${Versions.coil}"
 

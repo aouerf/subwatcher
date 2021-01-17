@@ -14,6 +14,7 @@ open class EventStream<T : Any> protected constructor(
   private val handler: Pair<SavedStateHandle, SavedStateHandler<T>>? = null
 ) {
 
+  // TODO: SharedFlow
   private val channel = ConflatedBroadcastChannel<T?>()
   val flow = channel.asFlow()
 

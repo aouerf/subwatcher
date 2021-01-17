@@ -27,7 +27,7 @@
 
     <provider
         android:name="androidx.work.impl.WorkManagerInitializer"
-        android:authorities="androidx.work.impl.WorkManagerInitializer"
+        android:authorities="${applicationId}.workmanager-init"
         tools:node="remove" />
 
     <receiver android:name=".broadcast.ViewSubredditBroadcastReceiver" />

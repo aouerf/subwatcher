@@ -51,7 +51,7 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
+  ): View {
     return AddSubredditDialogFragmentBinding.inflate(inflater, container, false)
       .also { binding = it }
       .root

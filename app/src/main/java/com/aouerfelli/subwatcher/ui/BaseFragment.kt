@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import dagger.android.support.DaggerFragment
-import dev.chrisbanes.insetter.setEdgeToEdgeSystemUiFlags
 import kotlin.reflect.KClass
 
 abstract class BaseFragment<B : ViewBinding, M : ViewModel>(
@@ -57,10 +57,9 @@ abstract class BaseFragment<B : ViewBinding, M : ViewModel>(
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    val binding = binding!!
-    binding.root.setEdgeToEdgeSystemUiFlags()
-    onBindingCreated(binding, savedInstanceState)
+    // TODO: Move to activity
+    WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
+    onBindingCreated(binding!!, savedInstanceState)
   }
 
   override fun onDestroyView() {
