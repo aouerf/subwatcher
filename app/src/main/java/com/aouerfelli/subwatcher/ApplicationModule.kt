@@ -1,5 +1,6 @@
 package com.aouerfelli.subwatcher
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -7,10 +8,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import coil.ImageLoader
-import com.aouerfelli.subwatcher.broadcast.BroadcastReceiversModule
+import com.aouerfelli.subwatcher.database.DatabaseModule
 import com.aouerfelli.subwatcher.network.NetworkDetails
+import com.aouerfelli.subwatcher.network.NetworkModule
 import com.aouerfelli.subwatcher.network.RedditService
-import com.aouerfelli.subwatcher.ui.MainModule
 import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
 import com.aouerfelli.subwatcher.work.WorkersModule
@@ -19,21 +20,23 @@ import com.squareup.sqldelight.db.SqlDriver
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import javax.inject.Singleton
 
-@Module(
-  includes = [
-    MainModule::class,
-    WorkersModule::class,
-    BroadcastReceiversModule::class
-  ]
-)
+@Module(includes = [
+  WorkersModule::class,
+  NetworkModule::class,
+  DatabaseModule::class
+])
+@InstallIn(SingletonComponent::class)
 interface ApplicationModule {
 
+  // Can also be provided through @ApplicationContext, but this is more convenient
   @get:Binds
-  val SubwatcherApplication.bindContext: Context
+  val Application.bindContext: Context
 
   companion object {
 

@@ -11,7 +11,7 @@ This is not intended to be a replacement for a full-blown Reddit client, but rat
 ## Libraries
 
 * [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) for managing code asynchronously
-* [Dagger](https://github.com/google/dagger) for dependency injection
+* [Dagger](https://github.com/google/dagger) ([Hilt](https://github.com/google/dagger/tree/master/java/dagger/hilt)) for dependency injection
 * [Retrofit](https://github.com/square/retrofit) for handling HTTP requests
 * [Moshi](https://github.com/square/moshi) for serializing and deserializing JSON
 * [SQLDelight](https://github.com/cashapp/sqldelight) for (SQLite) database management

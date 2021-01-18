@@ -9,6 +9,7 @@ plugins {
   kotlin(com.aouerfelli.subwatcher.Kotlin.android)
   kotlin(com.aouerfelli.subwatcher.Kotlin.kapt)
   id(com.aouerfelli.subwatcher.GradlePlugins.SqlDelight.id)
+  id(com.aouerfelli.subwatcher.GradlePlugins.DaggerHilt.id)
 }
 
 android {
@@ -52,6 +53,9 @@ android {
       "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
     )
   }
+  kapt {
+    correctErrorTypes = true
+  }
   buildFeatures {
     viewBinding = true
   }
@@ -89,8 +93,8 @@ dependencies {
 
   implementation(Dependencies.Dagger.runtime)
   kapt(Dependencies.Dagger.compiler)
-  implementation(Dependencies.Dagger.androidRuntime)
-  kapt(Dependencies.Dagger.androidCompiler)
+  implementation(Dependencies.Dagger.hiltRuntime)
+  kapt(Dependencies.Dagger.hiltCompiler)
 
   implementation(platform(Dependencies.OkHttp.bom))
   implementation(Dependencies.OkHttp.client)

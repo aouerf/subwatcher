@@ -20,6 +20,7 @@ buildscript {
     )
     classpath(com.aouerfelli.subwatcher.GradlePlugins.Ktlint.dependency)
     classpath(com.aouerfelli.subwatcher.GradlePlugins.SqlDelight.dependency)
+    classpath(com.aouerfelli.subwatcher.GradlePlugins.DaggerHilt.dependency)
     classpath(com.aouerfelli.subwatcher.GradlePlugins.GradleVersions.dependency)
   }
 }

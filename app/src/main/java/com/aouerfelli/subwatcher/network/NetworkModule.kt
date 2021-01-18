@@ -4,11 +4,11 @@ import com.squareup.moshi.Moshi
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.migration.DisableInstallInCheck
 import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -25,6 +25,7 @@ data class NetworkDetails(
 )
 
 @Module
+@DisableInstallInCheck
 object NetworkModule {
 
   @Retention(AnnotationRetention.BINARY)
@@ -43,11 +44,7 @@ object NetworkModule {
   @Singleton
   fun provideOkHttpClient(@NetworkModule.InternalApi cache: Cache?): OkHttpClient {
     val logTree = Timber.tagged("OkHttp")
-    val logger = object : HttpLoggingInterceptor.Logger {
-      override fun log(message: String) {
-        logTree.debug { message }
-      }
-    }
+    val logger = HttpLoggingInterceptor.Logger { message -> logTree.debug { message } }
     val loggingInterceptor = HttpLoggingInterceptor(logger).apply {
       level = HttpLoggingInterceptor.Level.BASIC
     }
@@ -68,9 +65,7 @@ object NetworkModule {
     moshi: Moshi,
     networkDetails: NetworkDetails
   ): RedditService {
-    val callFactory = object : Call.Factory {
-      override fun newCall(request: Request) = okHttpClient.get().newCall(request)
-    }
+    val callFactory = Call.Factory { request -> okHttpClient.get().newCall(request) }
     val retrofit = Retrofit.Builder()
       .callFactory(callFactory)
       .baseUrl(networkDetails.baseUrl)

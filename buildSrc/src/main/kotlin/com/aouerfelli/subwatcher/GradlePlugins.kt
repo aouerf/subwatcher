@@ -21,4 +21,9 @@ object GradlePlugins {
     const val dependency = "com.squareup.sqldelight:gradle-plugin:${Versions.sqlDelight}"
     const val id = "com.squareup.sqldelight"
   }
+
+  object DaggerHilt {
+    const val dependency = "com.google.dagger:hilt-android-gradle-plugin:${Versions.dagger}-alpha"
+    const val id = "dagger.hilt.android.plugin"
+  }
 }

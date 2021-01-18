@@ -1,6 +1,7 @@
 package com.aouerfelli.subwatcher.broadcast
 
 import android.app.Activity
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -9,12 +10,13 @@ import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.repository.asUrl
 import com.aouerfelli.subwatcher.util.extensions.goAsync
 import com.aouerfelli.subwatcher.util.extensions.launch
-import dagger.android.DaggerBroadcastReceiver
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 import timber.log.warn
 import javax.inject.Inject
 
-class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
+@AndroidEntryPoint
+class ViewSubredditBroadcastReceiver : BroadcastReceiver() {
 
   companion object {
     fun createIntent(context: Context, subredditName: SubredditName): Intent {
@@ -32,7 +34,6 @@ class ViewSubredditBroadcastReceiver : DaggerBroadcastReceiver() {
   lateinit var processLifecycleScope: LifecycleCoroutineScope
 
   override fun onReceive(context: Context, intent: Intent) {
-    super.onReceive(context, intent)
     goAsync(processLifecycleScope) {
       val subredditName = intent.action?.let(::SubredditName)
       if (subredditName == null) {

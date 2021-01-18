@@ -2,7 +2,7 @@ package com.aouerfelli.subwatcher.ui.main
 
 import android.os.Bundle
 import androidx.core.view.isGone
-import androidx.lifecycle.SavedStateHandle
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import coil.ImageLoader
@@ -13,7 +13,7 @@ import com.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import com.aouerfelli.subwatcher.repository.Result
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.asUrl
-import com.aouerfelli.subwatcher.ui.BaseFragment
+import com.aouerfelli.subwatcher.ui.ViewBindingFragment
 import com.aouerfelli.subwatcher.util.EventSnackbar
 import com.aouerfelli.subwatcher.util.SnackbarLength
 import com.aouerfelli.subwatcher.util.extensions.launch
@@ -22,6 +22,7 @@ import com.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import com.aouerfelli.subwatcher.util.makeSnackbar
 import com.aouerfelli.subwatcher.util.observe
 import com.aouerfelli.subwatcher.util.toAndroidString
+import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applySystemWindowInsetsToMargin
 import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
 import kotlinx.coroutines.flow.launchIn
@@ -30,25 +31,20 @@ import timber.log.Timber
 import timber.log.warn
 import javax.inject.Inject
 
-class MainFragment : BaseFragment<MainFragmentBinding, MainViewModel>(
-  MainFragmentBinding::inflate,
-  MainViewModel::class
-) {
+@AndroidEntryPoint
+class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBinding::inflate) {
 
   companion object {
     const val ADD_SUBREDDIT_REQUEST_KEY = "add_subreddit"
   }
 
-  @Inject
-  lateinit var viewModelFactory: MainViewModel.Factory
+  private val viewModel: MainViewModel by viewModels()
 
   @Inject
   lateinit var imageLoader: ImageLoader
   private lateinit var subredditListAdapter: SubredditListAdapter
 
   private val eventSnackbar = EventSnackbar()
-
-  override fun createViewModel(handle: SavedStateHandle) = viewModelFactory.create(handle)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

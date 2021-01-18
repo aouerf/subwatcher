@@ -10,24 +10,19 @@ import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.util.MutableEventStream
 import com.aouerfelli.subwatcher.util.asImmutable
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainViewModel @AssistedInject constructor(
+@HiltViewModel
+class MainViewModel @Inject constructor(
   private val repository: SubredditRepository,
   private val processLifecycleScope: LifecycleCoroutineScope,
-  @Assisted private val handle: SavedStateHandle
+  private val handle: SavedStateHandle
 ) : ViewModel() {
-
-  @AssistedFactory
-  interface Factory {
-    fun create(handle: SavedStateHandle): MainViewModel
-  }
 
   val subredditList = repository.getSubredditsFlow()
 

@@ -49,8 +49,8 @@ object Dependencies {
   object Dagger {
     const val runtime = "com.google.dagger:dagger:${Versions.dagger}"
     const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
-    const val androidRuntime = "com.google.dagger:dagger-android-support:${Versions.dagger}"
-    const val androidCompiler = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
+    const val hiltRuntime = "com.google.dagger:hilt-android:${Versions.dagger}-alpha"
+    const val hiltCompiler = "com.google.dagger:hilt-android-compiler:${Versions.dagger}-alpha"
   }
 
   object OkHttp {
