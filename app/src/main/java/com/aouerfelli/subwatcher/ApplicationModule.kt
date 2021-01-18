@@ -26,11 +26,13 @@ import kotlinx.coroutines.Dispatchers
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import javax.inject.Singleton
 
-@Module(includes = [
-  WorkersModule::class,
-  NetworkModule::class,
-  DatabaseModule::class
-])
+@Module(
+  includes = [
+    WorkersModule::class,
+    NetworkModule::class,
+    DatabaseModule::class
+  ]
+)
 @InstallIn(SingletonComponent::class)
 interface ApplicationModule {
 
