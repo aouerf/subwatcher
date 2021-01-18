@@ -91,8 +91,6 @@ dependencies {
   kapt(Dependencies.Dagger.compiler)
   implementation(Dependencies.Dagger.androidRuntime)
   kapt(Dependencies.Dagger.androidCompiler)
-  compileOnly(Dependencies.Dagger.AssistedInject.runtime)
-  kapt(Dependencies.Dagger.AssistedInject.compiler)
 
   implementation(platform(Dependencies.OkHttp.bom))
   implementation(Dependencies.OkHttp.client)

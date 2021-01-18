@@ -1,6 +1,5 @@
 package com.aouerfelli.subwatcher.work
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
@@ -13,8 +12,9 @@ import coil.ImageLoader
 import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.util.extensions.mapAsync
 import com.aouerfelli.subwatcher.util.notifyNewSubredditPosts
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import timber.log.Timber
 import timber.log.debug
 import java.time.Duration
@@ -29,7 +29,6 @@ class NewPostsWorker @AssistedInject constructor(
   companion object {
     private const val WORK_NAME = "new_posts"
 
-    @SuppressLint("NewApi") // Core library desugaring handles java.time backport
     fun enqueue(workManager: WorkManager) {
       val repeatInterval = Duration.ofHours(1)
       val constraints = Constraints.Builder()
@@ -46,8 +45,8 @@ class NewPostsWorker @AssistedInject constructor(
     }
   }
 
-  @AssistedInject.Factory
-  interface Factory : WorkerAssistedInjectFactory
+  @AssistedFactory
+  interface Factory : WorkerAssistedInjectFactory<NewPostsWorker>
 
   override suspend fun doWork(): Result {
     Timber.debug { "$WORK_NAME worker running" }

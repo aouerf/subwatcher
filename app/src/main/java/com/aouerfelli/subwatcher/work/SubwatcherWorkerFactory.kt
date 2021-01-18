@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class SubwatcherWorkerFactory @Inject constructor(
-  private val providers: Map<Class<out ListenableWorker>, @JvmSuppressWildcards Provider<WorkerAssistedInjectFactory>>
+  private val providers: Map<Class<out ListenableWorker>, @JvmSuppressWildcards Provider<WorkerAssistedInjectFactory<*>>>
 ) : WorkerFactory() {
 
   override fun createWorker(

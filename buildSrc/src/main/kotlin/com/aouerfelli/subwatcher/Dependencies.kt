@@ -51,13 +51,6 @@ object Dependencies {
     const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
     const val androidRuntime = "com.google.dagger:dagger-android-support:${Versions.dagger}"
     const val androidCompiler = "com.google.dagger:dagger-android-processor:${Versions.dagger}"
-
-    object AssistedInject {
-      const val runtime =
-        "com.squareup.inject:assisted-inject-annotations-dagger2:${Versions.assistedInject}"
-      const val compiler =
-        "com.squareup.inject:assisted-inject-processor-dagger2:${Versions.assistedInject}"
-    }
   }
 
   object OkHttp {

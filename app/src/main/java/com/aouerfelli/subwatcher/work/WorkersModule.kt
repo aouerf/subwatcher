@@ -13,7 +13,7 @@ abstract class WorkersModule {
   @Binds
   @IntoMap
   @WorkerKey(NewPostsWorker::class)
-  abstract fun bindNewPostsWorker(factory: NewPostsWorker.Factory): WorkerAssistedInjectFactory
+  abstract fun bindNewPostsWorker(factory: NewPostsWorker.Factory): WorkerAssistedInjectFactory<*>
 }
 
 @MapKey

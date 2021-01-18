@@ -10,8 +10,9 @@ import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.util.MutableEventStream
 import com.aouerfelli.subwatcher.util.asImmutable
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,7 @@ class MainViewModel @AssistedInject constructor(
   @Assisted private val handle: SavedStateHandle
 ) : ViewModel() {
 
-  @AssistedInject.Factory
+  @AssistedFactory
   interface Factory {
     fun create(handle: SavedStateHandle): MainViewModel
   }
