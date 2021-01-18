@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
@@ -30,8 +29,6 @@ abstract class ViewBindingFragment<B : ViewBinding>(
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    // TODO: Move to activity
-    WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
     onBindingCreated(binding!!, savedInstanceState)
   }
 
