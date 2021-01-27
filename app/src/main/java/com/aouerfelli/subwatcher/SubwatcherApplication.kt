@@ -2,6 +2,7 @@ package com.aouerfelli.subwatcher
 
 import android.app.Application
 import android.os.StrictMode
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.aouerfelli.subwatcher.util.DebugLogcatTree
@@ -16,13 +17,17 @@ import javax.inject.Inject
 class SubwatcherApplication : Application(), Configuration.Provider {
 
   @Inject
-  lateinit var workManagerConfig: Configuration
+  lateinit var workerFactory: HiltWorkerFactory
 
   // WorkManager needs to be injected lazily to allow on-demand initialization to work properly
   @Inject
   lateinit var workManager: Lazy<WorkManager>
 
-  override fun getWorkManagerConfiguration() = workManagerConfig
+  override fun getWorkManagerConfiguration(): Configuration {
+    return Configuration.Builder()
+      .setWorkerFactory(workerFactory)
+      .build()
+  }
 
   override fun onCreate() {
     super.onCreate()

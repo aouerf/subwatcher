@@ -1,11 +1,9 @@
 package com.aouerfelli.subwatcher
 
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.work.Configuration
 import androidx.work.WorkManager
 import coil.ImageLoader
 import com.aouerfelli.subwatcher.database.DatabaseModule
@@ -13,14 +11,12 @@ import com.aouerfelli.subwatcher.network.NetworkDetails
 import com.aouerfelli.subwatcher.network.NetworkModule
 import com.aouerfelli.subwatcher.network.RedditService
 import com.aouerfelli.subwatcher.util.CoroutineDispatchers
-import com.aouerfelli.subwatcher.work.SubwatcherWorkerFactory
-import com.aouerfelli.subwatcher.work.WorkersModule
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import com.squareup.sqldelight.db.SqlDriver
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -28,17 +24,12 @@ import javax.inject.Singleton
 
 @Module(
   includes = [
-    WorkersModule::class,
     NetworkModule::class,
     DatabaseModule::class
   ]
 )
 @InstallIn(SingletonComponent::class)
 interface ApplicationModule {
-
-  // Can also be provided through @ApplicationContext, but this is more convenient
-  @get:Binds
-  val Application.bindContext: Context
 
   companion object {
 
@@ -53,7 +44,7 @@ interface ApplicationModule {
     }
 
     @Provides
-    fun provideNetworkDetails(context: Context): NetworkDetails {
+    fun provideNetworkDetails(@ApplicationContext context: Context): NetworkDetails {
       return NetworkDetails(
         baseUrl = RedditService.baseUrl.toHttpUrl(),
         cacheDir = context.cacheDir
@@ -61,7 +52,7 @@ interface ApplicationModule {
     }
 
     @Provides
-    fun provideSqlDriver(context: Context): SqlDriver {
+    fun provideSqlDriver(@ApplicationContext context: Context): SqlDriver {
       return AndroidSqliteDriver(
         schema = Database.Schema,
         context = context,
@@ -75,18 +66,13 @@ interface ApplicationModule {
     }
 
     @Provides
-    @Singleton
-    fun provideWorkManager(context: Context) = WorkManager.getInstance(context)
+    fun provideWorkManager(@ApplicationContext context: Context) = WorkManager.getInstance(context)
 
     @Provides
-    fun provideWorkConfiguration(workerFactory: SubwatcherWorkerFactory): Configuration {
-      return Configuration.Builder()
-        .setWorkerFactory(workerFactory)
+    @Singleton
+    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
+      return ImageLoader.Builder(context)
         .build()
     }
-
-    @Provides
-    @Singleton
-    fun provideImageLoader(context: Context) = ImageLoader.Builder(context).build()
   }
 }

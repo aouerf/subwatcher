@@ -1,6 +1,7 @@
 package com.aouerfelli.subwatcher.work
 
 import android.content.Context
+import androidx.hilt.work.HiltWorker
 import androidx.work.Constraints
 import androidx.work.CoroutineWorker
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -13,12 +14,12 @@ import com.aouerfelli.subwatcher.repository.SubredditRepository
 import com.aouerfelli.subwatcher.util.extensions.mapAsync
 import com.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import timber.log.Timber
 import timber.log.debug
 import java.time.Duration
 
+@HiltWorker
 class NewPostsWorker @AssistedInject constructor(
   @Assisted appContext: Context,
   @Assisted workerParams: WorkerParameters,
@@ -44,9 +45,6 @@ class NewPostsWorker @AssistedInject constructor(
       )
     }
   }
-
-  @AssistedFactory
-  interface Factory : WorkerAssistedInjectFactory<NewPostsWorker>
 
   override suspend fun doWork(): Result {
     Timber.debug { "$WORK_NAME worker running" }

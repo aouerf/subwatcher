@@ -93,8 +93,10 @@ dependencies {
 
   implementation(Dependencies.Dagger.runtime)
   kapt(Dependencies.Dagger.compiler)
-  implementation(Dependencies.Dagger.hiltRuntime)
-  kapt(Dependencies.Dagger.hiltCompiler)
+  implementation(Dependencies.Dagger.Hilt.runtime)
+  kapt(Dependencies.Dagger.Hilt.compiler)
+  implementation(Dependencies.AndroidX.Hilt.work)
+  kapt(Dependencies.AndroidX.Hilt.compiler)
 
   implementation(platform(Dependencies.OkHttp.bom))
   implementation(Dependencies.OkHttp.client)
