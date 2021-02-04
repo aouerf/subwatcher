@@ -6,7 +6,6 @@ import com.aouerfelli.subwatcher.Kotlin
 buildscript {
   repositories {
     google()
-    jcenter()
     gradlePluginPortal()
   }
 
@@ -37,7 +36,7 @@ allprojects {
 
   repositories {
     google()
-    jcenter()
+    mavenCentral()
     maven("https://oss.sonatype.org/content/repositories/snapshots")
   }
 }
