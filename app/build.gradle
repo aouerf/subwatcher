@@ -42,11 +42,12 @@ android {
   }
 
   kotlinOptions {
+    allWarningsAsErrors = true
     jvmTarget = "1.8"
+    useIR = true
     freeCompilerArgs += [
         "-progressive",
-        "-XXLanguage:+NewInference",
-        "-XXLanguage:+InlineClasses",
+        "-Xinline-classes",
         "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
         "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
         "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
