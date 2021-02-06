@@ -1,0 +1,119 @@
+import com.aouerfelli.subwatcher.Dependencies
+import com.aouerfelli.subwatcher.GradlePlugins
+
+apply plugin: GradlePlugins.Android.id
+apply plugin: GradlePlugins.Kotlin.androidId
+apply plugin: GradlePlugins.Kotlin.kaptId
+apply plugin: GradlePlugins.SqlDelight.id
+apply plugin: GradlePlugins.DaggerHilt.id
+
+android {
+  compileSdkVersion 30
+
+  defaultConfig {
+    applicationId "com.aouerfelli.subwatcher"
+    minSdkVersion 21
+    targetSdkVersion 30
+    versionCode 5
+    versionName "1.0.4"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      shrinkResources true
+      proguardFiles "proguard-rules.pro"
+    }
+  }
+
+  lintOptions {
+    checkReleaseBuilds false
+    textReport true
+    htmlReport false
+    xmlReport false
+    explainIssues false
+  }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+    coreLibraryDesugaringEnabled true
+  }
+
+  kotlinOptions {
+    jvmTarget = "1.8"
+    freeCompilerArgs += [
+        "-progressive",
+        "-XXLanguage:+NewInference",
+        "-XXLanguage:+InlineClasses",
+        "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
+        "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
+    ]
+  }
+
+  kapt {
+    correctErrorTypes true
+  }
+
+  buildFeatures {
+    viewBinding true
+  }
+}
+
+dependencies {
+  coreLibraryDesugaring Dependencies.androidDesugarJdkLibs
+
+  implementation Dependencies.Kotlin.stdlibJdk8
+  implementation platform(Dependencies.KotlinX.Coroutines.bom)
+  implementation Dependencies.KotlinX.Coroutines.android
+
+  implementation Dependencies.AndroidX.appcompat
+  implementation Dependencies.AndroidX.activity
+  implementation Dependencies.AndroidX.fragment
+  implementation Dependencies.AndroidX.core
+  implementation Dependencies.AndroidX.constraintLayout
+  implementation Dependencies.AndroidX.coordinatorLayout
+  implementation Dependencies.AndroidX.recyclerView
+  implementation Dependencies.AndroidX.swipeRefreshLayout
+  implementation Dependencies.AndroidX.browser
+
+  implementation Dependencies.material
+  implementation Dependencies.insetter
+
+  implementation Dependencies.AndroidX.Lifecycle.viewModel
+  implementation Dependencies.AndroidX.Lifecycle.viewModelSavedState
+  implementation Dependencies.AndroidX.Lifecycle.process
+
+  implementation Dependencies.AndroidX.work
+
+  implementation Dependencies.coil
+
+  implementation Dependencies.Dagger.runtime
+  kapt Dependencies.Dagger.compiler
+  implementation Dependencies.Dagger.Hilt.runtime
+  kapt Dependencies.Dagger.Hilt.compiler
+  implementation Dependencies.AndroidX.Hilt.work
+  kapt Dependencies.AndroidX.Hilt.compiler
+
+  implementation platform(Dependencies.OkHttp.bom)
+  implementation Dependencies.OkHttp.client
+  implementation Dependencies.OkHttp.loggingInterceptor
+  implementation Dependencies.Retrofit.client
+  implementation Dependencies.Retrofit.moshiConverter
+  implementation Dependencies.Moshi.runtime
+  kapt Dependencies.Moshi.compiler
+
+  implementation Dependencies.SqlDelight.android
+  implementation Dependencies.SqlDelight.coroutines
+
+  implementation Dependencies.timber
+
+  testImplementation Dependencies.Test.jUnit
+  testImplementation Dependencies.KotlinX.Coroutines.test
+  testImplementation Dependencies.Test.mockK
+  testImplementation Dependencies.OkHttp.mockWebServer
+  testImplementation Dependencies.SqlDelight.jvm
+  kaptTest Dependencies.Dagger.compiler
+}

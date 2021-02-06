@@ -2,6 +2,12 @@ package com.aouerfelli.subwatcher
 
 object GradlePlugins {
 
+  object Kotlin {
+    const val dependency = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+    const val androidId = "org.jetbrains.kotlin.android"
+    const val kaptId = "org.jetbrains.kotlin.kapt"
+  }
+
   object Android {
     const val dependency = "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
     const val id = "com.android.application"

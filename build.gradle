@@ -1,0 +1,34 @@
+import com.aouerfelli.subwatcher.GradlePlugins
+
+buildscript {
+  repositories {
+    google()
+    gradlePluginPortal()
+  }
+
+  dependencies {
+    classpath(GradlePlugins.Android.dependency)
+    classpath(GradlePlugins.Kotlin.dependency)
+    classpath(GradlePlugins.Ktlint.dependency)
+    classpath(GradlePlugins.SqlDelight.dependency)
+    classpath(GradlePlugins.DaggerHilt.dependency)
+    classpath(GradlePlugins.GradleVersions.dependency)
+  }
+}
+
+apply plugin: GradlePlugins.GradleVersions.id
+
+allprojects {
+  apply plugin: GradlePlugins.Ktlint.id
+
+  ktlint {
+    // Update version manually to fix some false positives
+    version = "0.40.0"
+  }
+
+  repositories {
+    google()
+    mavenCentral()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+  }
+}

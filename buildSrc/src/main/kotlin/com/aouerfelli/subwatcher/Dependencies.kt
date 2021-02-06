@@ -13,6 +13,10 @@ object Dependencies {
   const val androidDesugarJdkLibs =
     "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
 
+  object Kotlin {
+    const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
+  }
+
   object KotlinX {
     object Coroutines {
       const val bom = "org.jetbrains.kotlinx:kotlinx-coroutines-bom:${Versions.coroutines}"
