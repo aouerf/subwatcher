@@ -29,6 +29,7 @@ sealed class Result<out T : Any> {
   }
 
   override fun toString(): String {
+    // TODO: More exhaustive pattern matching (don't rely on reflection class name lookup)
     return when (this) {
       Success.Empty -> "Success"
       is Success -> "Success($data)"

@@ -1,3 +1,4 @@
 rootProject.name = "subwatcher"
 
 include ":app"
+include ":data"

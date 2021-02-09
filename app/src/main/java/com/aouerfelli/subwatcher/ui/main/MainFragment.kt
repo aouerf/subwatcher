@@ -1,6 +1,7 @@
 package com.aouerfelli.subwatcher.ui.main
 
 import android.os.Bundle
+import androidx.core.net.toUri
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -58,7 +59,7 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
 
   override fun onBindingCreated(binding: MainFragmentBinding, savedInstanceState: Bundle?) {
     subredditListAdapter = SubredditListAdapter(imageLoader) { subreddit, viewContext ->
-      subreddit.name.asUrl().launch(viewContext)
+      subreddit.name.asUrl().toUri().launch(viewContext)
       viewModel.updateLastPosted(subreddit)
     }
     subredditListAdapter.stateRestorationPolicy = Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -141,7 +142,7 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
         R.string.action_view.toAndroidString(),
         length = SnackbarLength.LONG
       ) {
-        context?.let(subreddit.name.asUrl()::launch)
+        context?.let(subreddit.name.asUrl().toUri()::launch)
       }?.setAnchorView(binding?.addSubredditButton)
       eventSnackbar.set(snackbar, viewModel.addedSubreddit::clear)
     }

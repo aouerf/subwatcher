@@ -1,10 +1,10 @@
 package com.aouerfelli.subwatcher.network
 
 import com.squareup.moshi.JsonDataException
+import okio.IOException
 import retrofit2.HttpException
 import retrofit2.http.GET
 import retrofit2.http.Path
-import java.io.IOException
 
 interface RedditService {
 

@@ -7,13 +7,11 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver.Companion.IN_MEMORY
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
 import kotlinx.coroutines.CoroutineDispatcher
 import okhttp3.mockwebserver.MockWebServer
 import javax.inject.Singleton
 
 @Module
-@DisableInstallInCheck
 object TestModule {
 
   @Provides

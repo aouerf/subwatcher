@@ -1,6 +1,5 @@
 package com.aouerfelli.subwatcher.repository
 
-import android.database.sqlite.SQLiteConstraintException
 import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.SubredditEntityQueries
 import com.aouerfelli.subwatcher.network.AboutSubreddit
@@ -78,7 +77,7 @@ class SubredditRepository @Inject constructor(
       try {
         db.insert(subreddit)
         Result.success(subreddit)
-      } catch (e: SQLiteConstraintException) {
+      } catch (e: Exception) { // TODO: SQLiteConstraintException (on Android)
         Result.databaseFailure()
       }
     }
@@ -99,18 +98,19 @@ class SubredditRepository @Inject constructor(
   }
 
   suspend fun addSubreddit(subreddit: Subreddit): Result<Subreddit> {
-    // Attempt to update lastPosted if not already set
-    val subredditToAdd = if (subreddit.lastPosted == null) {
-      val lastPosted = getLastPosted(subreddit.name)
-      if (lastPosted != null) {
-        copyLastPosted(subreddit, lastPosted)
-      } else {
-        subreddit
+    suspend fun subredditToAdd(): Subreddit {
+      // Attempt to update lastPosted if not already set
+      if (subreddit.lastPosted == null) {
+        val lastPosted = getLastPosted(subreddit.name)
+        if (lastPosted != null) {
+          return copyLastPosted(subreddit, lastPosted)
+        }
       }
-    } else {
-      subreddit
+
+      return subreddit
     }
-    return insertSubreddit(subredditToAdd)
+
+    return insertSubreddit(subredditToAdd())
   }
 
   suspend fun deleteSubreddit(subreddit: Subreddit): Result<Subreddit> {
