@@ -17,3 +17,9 @@ This is not intended to be a replacement for a full-blown Reddit client, but rat
 * [SQLDelight](https://github.com/cashapp/sqldelight) for (SQLite) database management
 * [WorkManager](https://developer.android.com/jetpack/androidx/releases/work) for running background jobs
 * [Coil](https://github.com/coil-kt/coil) for image loading
+
+## Architecture
+
+The app is separated into two modules:
+* [app](app) is an Android app module that contains the UI layer and anything platform-specific (such as notifications and background task management).
+* [data](data) is a JVM library module that contains both the domain and data (network and database) layers.

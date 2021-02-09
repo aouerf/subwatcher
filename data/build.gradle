@@ -1,0 +1,47 @@
+import com.aouerfelli.subwatcher.Dependencies
+
+plugins {
+  id "org.jetbrains.kotlin.jvm"
+  id "org.jetbrains.kotlin.kapt"
+  id "com.squareup.sqldelight"
+}
+
+// TODO: Append `database` to package name
+sqldelight {
+  Database {
+    packageName = "com.aouerfelli.subwatcher"
+  }
+}
+
+ktlint {
+  filter {
+    exclude { element -> element.file.path.contains("build/generated/sqldelight") }
+  }
+}
+
+dependencies {
+  implementation platform(Dependencies.KotlinX.Coroutines.bom)
+  implementation Dependencies.KotlinX.Coroutines.core
+
+  implementation Dependencies.Dagger.runtime
+  kapt Dependencies.Dagger.compiler
+
+  implementation platform(Dependencies.OkHttp.bom)
+  implementation Dependencies.OkHttp.client
+  implementation Dependencies.OkHttp.loggingInterceptor
+  implementation Dependencies.Retrofit.client
+  implementation Dependencies.Retrofit.moshiConverter
+  api Dependencies.Moshi.runtime // TODO: `implementation`
+  kapt Dependencies.Moshi.compiler
+
+  implementation Dependencies.SqlDelight.coroutines
+
+  implementation Dependencies.Timber.jvm
+
+  testImplementation Dependencies.Test.jUnit
+  testImplementation Dependencies.KotlinX.Coroutines.test
+  testImplementation Dependencies.Test.mockK
+  testImplementation Dependencies.OkHttp.mockWebServer
+  testImplementation Dependencies.SqlDelight.jvm
+  kaptTest Dependencies.Dagger.compiler
+}

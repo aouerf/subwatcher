@@ -15,7 +15,6 @@ import coil.request.SuccessResult
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.broadcast.ViewSubredditBroadcastReceiver
-import com.aouerfelli.subwatcher.repository.asUri
 
 private enum class NotificationId {
   NEW_POSTS
@@ -79,7 +78,7 @@ suspend fun Context.notifyNewSubredditPosts(
       getString(R.string.notify_new_subreddit_posts_text_max, count)
     }
 
-    val largeIcon = subreddit.iconUrl?.asUri()?.let { uri ->
+    val largeIcon = subreddit.iconUrl?.url?.let { uri ->
       when (val result = imageLoader.execute(ImageRequest.Builder(this).data(uri).build())) {
         is SuccessResult -> result.drawable
         is ErrorResult -> null

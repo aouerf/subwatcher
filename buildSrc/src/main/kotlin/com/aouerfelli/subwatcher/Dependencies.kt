@@ -8,18 +8,13 @@ object Dependencies {
 
   const val coil = "io.coil-kt:coil-base:${Versions.coil}"
 
-  const val timber = "com.jakewharton.timber:timber-android:${Versions.timber}"
-
   const val androidDesugarJdkLibs =
     "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
-
-  object Kotlin {
-    const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
-  }
 
   object KotlinX {
     object Coroutines {
       const val bom = "org.jetbrains.kotlinx:kotlinx-coroutines-bom:${Versions.coroutines}"
+      const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core"
       const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android"
       const val test = "org.jetbrains.kotlinx:kotlinx-coroutines-test"
     }
@@ -87,6 +82,11 @@ object Dependencies {
     const val jvm = "com.squareup.sqldelight:sqlite-driver:${Versions.sqlDelight}"
     const val coroutines =
       "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqlDelight}"
+  }
+
+  object Timber {
+    const val jvm = "com.jakewharton.timber:timber-jdk:${Versions.timber}"
+    const val android = "com.jakewharton.timber:timber-android:${Versions.timber}"
   }
 
   object Test {

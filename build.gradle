@@ -1,4 +1,4 @@
-import com.aouerfelli.subwatcher.GradlePlugins
+import com.aouerfelli.subwatcher.Versions
 
 buildscript {
   repositories {
@@ -7,19 +7,19 @@ buildscript {
   }
 
   dependencies {
-    classpath(GradlePlugins.Android.dependency)
-    classpath(GradlePlugins.Kotlin.dependency)
-    classpath(GradlePlugins.Ktlint.dependency)
-    classpath(GradlePlugins.SqlDelight.dependency)
-    classpath(GradlePlugins.DaggerHilt.dependency)
-    classpath(GradlePlugins.GradleVersions.dependency)
+    classpath "com.android.tools.build:gradle:${Versions.androidGradlePlugin}"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
+    classpath "org.jlleitschuh.gradle:ktlint-gradle:${Versions.ktlintGradle}"
+    classpath "com.squareup.sqldelight:gradle-plugin:${Versions.sqlDelight}"
+    classpath "com.google.dagger:hilt-android-gradle-plugin:${Versions.dagger}-alpha"
+    classpath "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersions}"
   }
 }
 
-apply plugin: GradlePlugins.GradleVersions.id
+apply plugin: "com.github.ben-manes.versions"
 
 allprojects {
-  apply plugin: GradlePlugins.Ktlint.id
+  apply plugin: "org.jlleitschuh.gradle.ktlint"
 
   ktlint {
     // Update version manually to fix some false positives
@@ -30,5 +30,31 @@ allprojects {
     google()
     mavenCentral()
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+  }
+
+  // TODO: Also do this globally for Android
+  tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+  }
+
+  tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile).configureEach {
+    kotlinOptions {
+      jvmTarget = "1.8"
+    }
+  }
+
+  tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+      allWarningsAsErrors = true
+      useIR = true
+      freeCompilerArgs += [
+          "-progressive",
+          "-Xinline-classes",
+          "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
+          "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+          "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
+      ]
+    }
   }
 }

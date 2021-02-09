@@ -1,11 +1,11 @@
 import com.aouerfelli.subwatcher.Dependencies
-import com.aouerfelli.subwatcher.GradlePlugins
 
-apply plugin: GradlePlugins.Android.id
-apply plugin: GradlePlugins.Kotlin.androidId
-apply plugin: GradlePlugins.Kotlin.kaptId
-apply plugin: GradlePlugins.SqlDelight.id
-apply plugin: GradlePlugins.DaggerHilt.id
+plugins {
+  id "com.android.application"
+  id "org.jetbrains.kotlin.android"
+  id "org.jetbrains.kotlin.kapt"
+  id "dagger.hilt.android.plugin"
+}
 
 android {
   compileSdkVersion 30
@@ -41,19 +41,6 @@ android {
     coreLibraryDesugaringEnabled true
   }
 
-  kotlinOptions {
-    allWarningsAsErrors = true
-    jvmTarget = "1.8"
-    useIR = true
-    freeCompilerArgs += [
-        "-progressive",
-        "-Xinline-classes",
-        "-Xuse-experimental=kotlin.ExperimentalUnsignedTypes",
-        "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
-        "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
-    ]
-  }
-
   kapt {
     correctErrorTypes true
   }
@@ -64,9 +51,10 @@ android {
 }
 
 dependencies {
+  implementation (project(":data"))
+
   coreLibraryDesugaring Dependencies.androidDesugarJdkLibs
 
-  implementation Dependencies.Kotlin.stdlibJdk8
   implementation platform(Dependencies.KotlinX.Coroutines.bom)
   implementation Dependencies.KotlinX.Coroutines.android
 
@@ -98,23 +86,7 @@ dependencies {
   implementation Dependencies.AndroidX.Hilt.work
   kapt Dependencies.AndroidX.Hilt.compiler
 
-  implementation platform(Dependencies.OkHttp.bom)
-  implementation Dependencies.OkHttp.client
-  implementation Dependencies.OkHttp.loggingInterceptor
-  implementation Dependencies.Retrofit.client
-  implementation Dependencies.Retrofit.moshiConverter
-  implementation Dependencies.Moshi.runtime
-  kapt Dependencies.Moshi.compiler
-
   implementation Dependencies.SqlDelight.android
-  implementation Dependencies.SqlDelight.coroutines
 
-  implementation Dependencies.timber
-
-  testImplementation Dependencies.Test.jUnit
-  testImplementation Dependencies.KotlinX.Coroutines.test
-  testImplementation Dependencies.Test.mockK
-  testImplementation Dependencies.OkHttp.mockWebServer
-  testImplementation Dependencies.SqlDelight.jvm
-  kaptTest Dependencies.Dagger.compiler
+  implementation Dependencies.Timber.android
 }

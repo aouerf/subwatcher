@@ -9,11 +9,9 @@ import com.squareup.sqldelight.ColumnAdapter
 import com.squareup.sqldelight.db.SqlDriver
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
 import javax.inject.Singleton
 
 @Module
-@DisableInstallInCheck
 object DatabaseModule {
 
   @Provides

@@ -4,7 +4,6 @@ import com.squareup.moshi.Moshi
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.migration.DisableInstallInCheck
 import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.HttpUrl
@@ -20,12 +19,12 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 
 data class NetworkDetails(
+  // TODO: Remove OkHttp dependency
   val baseUrl: HttpUrl,
   val cacheDir: File? = null
 )
 
 @Module
-@DisableInstallInCheck
 object NetworkModule {
 
   @Retention(AnnotationRetention.BINARY)
@@ -33,16 +32,16 @@ object NetworkModule {
   private annotation class InternalApi
 
   @Provides
-  @NetworkModule.InternalApi
+  @InternalApi
   fun provideCache(networkDetails: NetworkDetails): Cache? {
     val cacheSize = 10L * 1024 * 1024 // 10 MiB
     return networkDetails.cacheDir?.let { Cache(it, cacheSize) }
   }
 
   @Provides
-  @NetworkModule.InternalApi
+  @InternalApi
   @Singleton
-  fun provideOkHttpClient(@NetworkModule.InternalApi cache: Cache?): OkHttpClient {
+  fun provideOkHttpClient(@InternalApi cache: Cache?): OkHttpClient {
     val logTree = Timber.tagged("OkHttp")
     val logger = HttpLoggingInterceptor.Logger { message -> logTree.debug { message } }
     val loggingInterceptor = HttpLoggingInterceptor(logger).apply {
@@ -61,7 +60,7 @@ object NetworkModule {
   @Provides
   @Singleton
   fun provideRedditService(
-    @NetworkModule.InternalApi okHttpClient: Lazy<OkHttpClient>,
+    @InternalApi okHttpClient: Lazy<OkHttpClient>,
     moshi: Moshi,
     networkDetails: NetworkDetails
   ): RedditService {

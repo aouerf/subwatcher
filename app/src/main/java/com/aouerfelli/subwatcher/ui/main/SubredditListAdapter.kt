@@ -3,6 +3,7 @@ package com.aouerfelli.subwatcher.ui.main
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +12,6 @@ import coil.transform.CircleCropTransformation
 import com.aouerfelli.subwatcher.R
 import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.databinding.SubredditItemBinding
-import com.aouerfelli.subwatcher.repository.asUri
 import com.aouerfelli.subwatcher.util.extensions.layoutInflater
 import com.aouerfelli.subwatcher.util.extensions.load
 
@@ -49,7 +49,7 @@ class SubredditListAdapter(
         field = value
         value ?: return
         itemBinding.name.text = value.name.name
-        itemBinding.icon.load(value.iconUrl?.asUri(), imageLoader) {
+        itemBinding.icon.load(value.iconUrl?.url?.toUri(), imageLoader) {
           crossfade(true)
           transformations(CircleCropTransformation())
           fallback(R.drawable.ic_reddit_mark)

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository
@@ -41,7 +42,7 @@ class ViewSubredditBroadcastReceiver : BroadcastReceiver() {
         return@goAsync
       }
 
-      subredditName.asUrl().launch(context, startNewTask = context !is Activity)
+      subredditName.asUrl().toUri().launch(context, startNewTask = context !is Activity)
 
       val subreddit = repository.getSubreddit(subredditName)
       if (subreddit == null) {
