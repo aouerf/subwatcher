@@ -44,7 +44,6 @@ android {
   kotlinOptions {
     allWarningsAsErrors = true
     jvmTarget = "1.8"
-    useIR = true
     freeCompilerArgs += [
         "-progressive",
         "-Xinline-classes",

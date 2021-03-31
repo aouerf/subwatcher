@@ -2,7 +2,11 @@ package com.aouerfelli.subwatcher
 
 internal object Versions {
 
-  const val kotlin = "1.4.32"
+  /* TODO: 1.5.0-M2 blocked by:
+      https://github.com/google/dagger/issues/2511
+      https://github.com/square/moshi/issues/1324
+   */
+  const val kotlin = "1.5.0-M1"
 
   const val androidGradlePlugin = "7.0.0-alpha12"
   const val ktlintGradle = "10.0.0"
