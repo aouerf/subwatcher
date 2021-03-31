@@ -36,6 +36,7 @@ object Dependencies {
     const val browser = "androidx.browser:browser:${Versions.AndroidX.browser}"
 
     object Lifecycle {
+      const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.lifecycle}"
       const val viewModel =
         "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.lifecycle}"
       const val viewModelSavedState =
