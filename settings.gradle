@@ -1,3 +1,5 @@
 rootProject.name = "subwatcher"
 
+enableFeaturePreview("VERSION_CATALOGS")
+
 include ":app"

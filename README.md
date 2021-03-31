@@ -10,6 +10,9 @@ This is not intended to be a replacement for a full-blown Reddit client, but rat
 
 ## Libraries
 
+This project uses Gradle's [version catalog](https://docs.gradle.org/nightly/userguide/platforms.html#sub:version-catalog) feature.
+The dependencies are declared in a [catalog file](gradle/libs.versions.toml).
+
 * [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) for managing code asynchronously
 * [Dagger](https://github.com/google/dagger) ([Hilt](https://github.com/google/dagger/tree/master/java/dagger/hilt)) for dependency injection
 * [Retrofit](https://github.com/square/retrofit) for handling HTTP requests
