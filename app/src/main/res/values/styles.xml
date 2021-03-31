@@ -2,17 +2,16 @@
 <resources>
 
   <style name="ThemeOverlay.Subwatcher.BottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
-    <item name="bottomSheetStyle">@style/Widget.Subwatcher.BottomSheet</item>
+    <item name="bottomSheetStyle">@style/Widget.Subwatcher.BottomSheet.Modal</item>
+    <!-- TODO: Figure out why nav bar is dim -->
   </style>
 
-  <style name="Widget.Subwatcher.BottomSheet" parent="Widget.MaterialComponents.BottomSheet">
+  <style name="Widget.Subwatcher.BottomSheet.Modal" parent="Widget.MaterialComponents.BottomSheet.Modal">
     <item name="shapeAppearanceOverlay">@style/ShapeAppearanceOverlay.Subwatcher.BottomSheet</item>
   </style>
 
-  <style name="ShapeAppearanceOverlay.Subwatcher.BottomSheet" parent="">
+  <style name="ShapeAppearanceOverlay.Subwatcher.BottomSheet" parent="ShapeAppearanceOverlay.MaterialComponents.BottomSheet">
     <item name="cornerSize">8dp</item>
-    <item name="cornerSizeBottomLeft">0dp</item>
-    <item name="cornerSizeBottomRight">0dp</item>
   </style>
 
 </resources>

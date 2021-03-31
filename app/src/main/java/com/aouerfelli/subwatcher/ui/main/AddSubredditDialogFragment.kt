@@ -1,7 +1,6 @@
 package com.aouerfelli.subwatcher.ui.main
 
 import android.app.Dialog
-import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.KeyEvent
@@ -20,8 +19,6 @@ import com.aouerfelli.subwatcher.repository.isValid
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dev.chrisbanes.insetter.applySystemWindowInsetsToMargin
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
 
 class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
@@ -60,14 +57,6 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     // This is only called after onCreateView(), which is where binding gets assigned.
     val binding = binding!!
-
-    binding.root.applySystemWindowInsetsToPadding(
-      bottom = true
-    )
-    binding.root.applySystemWindowInsetsToMargin(
-      left = true,
-      right = true
-    )
 
     binding.addButton.setOnClickListener {
       val subredditName = binding.subredditField.editText?.text?.toString()
@@ -112,21 +101,6 @@ class AddSubredditDialogFragment : BottomSheetDialogFragment() {
 
   private fun validateSubredditName(name: String?): Boolean {
     return !name.isNullOrEmpty() && SubredditName(name.toString()).isValid
-  }
-
-  override fun onStart() {
-    super.onStart()
-    // Disable fitsSystemWindow on the dialog container to allow the dialog to be drawn under the
-    // system bars.
-    // The inner container also has fitsSystemWindow disabled to prevent the text selection toolbar
-    // from adding padding to the view.
-    // Do this only on API versions where light navigation bars are supported.
-    if (Build.VERSION.SDK_INT >= 27) {
-      (view?.parent?.parent as? View)?.apply {
-        fitsSystemWindows = false
-        (parent as? View)?.fitsSystemWindows = false
-      }
-    }
   }
 
   override fun onResume() {

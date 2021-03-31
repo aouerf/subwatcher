@@ -13,10 +13,6 @@ object Dependencies {
   const val androidDesugarJdkLibs =
     "com.android.tools:desugar_jdk_libs:${Versions.androidDesugarJdkLibs}"
 
-  object Kotlin {
-    const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
-  }
-
   object KotlinX {
     object Coroutines {
       const val bom = "org.jetbrains.kotlinx:kotlinx-coroutines-bom:${Versions.coroutines}"
@@ -60,8 +56,8 @@ object Dependencies {
     const val compiler = "com.google.dagger:dagger-compiler:${Versions.dagger}"
 
     object Hilt {
-      const val runtime = "com.google.dagger:hilt-android:${Versions.dagger}-alpha"
-      const val compiler = "com.google.dagger:hilt-android-compiler:${Versions.dagger}-alpha"
+      const val runtime = "com.google.dagger:hilt-android:${Versions.daggerHilt}"
+      const val compiler = "com.google.dagger:hilt-android-compiler:${Versions.daggerHilt}"
     }
   }
 

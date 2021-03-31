@@ -23,8 +23,7 @@ import com.aouerfelli.subwatcher.util.makeSnackbar
 import com.aouerfelli.subwatcher.util.observe
 import com.aouerfelli.subwatcher.util.toAndroidString
 import dagger.hilt.android.AndroidEntryPoint
-import dev.chrisbanes.insetter.applySystemWindowInsetsToMargin
-import dev.chrisbanes.insetter.applySystemWindowInsetsToPadding
+import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
@@ -68,12 +67,11 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
       val item = subredditListAdapter.currentList[position]
       viewModel.delete(item)
     }
-    binding.subredditList.applySystemWindowInsetsToPadding(
-      left = true,
-      top = true,
-      right = true,
-      bottom = true
-    )
+    binding.subredditList.applyInsetter {
+      type(navigationBars = true, statusBars = true) {
+        padding()
+      }
+    }
 
     binding.subredditsRefresh.setThemeColorScheme()
     binding.subredditsRefresh.setOnRefreshListener {
@@ -92,12 +90,11 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
         false
       }
     }
-    binding.addSubredditButton.applySystemWindowInsetsToMargin(
-      left = true,
-      top = true,
-      right = true,
-      bottom = true
-    )
+    binding.addSubredditButton.applyInsetter {
+      type(tappableElement = true) {
+        margin()
+      }
+    }
 
     viewModel.subredditList
       .onEach { list ->

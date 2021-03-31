@@ -21,11 +21,6 @@ apply plugin: GradlePlugins.GradleVersions.id
 allprojects {
   apply plugin: GradlePlugins.Ktlint.id
 
-  ktlint {
-    // Update version manually to fix some false positives
-    version = "0.40.0"
-  }
-
   repositories {
     google()
     mavenCentral()

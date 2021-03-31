@@ -29,7 +29,7 @@ object GradlePlugins {
   }
 
   object DaggerHilt {
-    const val dependency = "com.google.dagger:hilt-android-gradle-plugin:${Versions.dagger}-alpha"
+    const val dependency = "com.google.dagger:hilt-android-gradle-plugin:${Versions.daggerHilt}"
     const val id = "dagger.hilt.android.plugin"
   }
 }
