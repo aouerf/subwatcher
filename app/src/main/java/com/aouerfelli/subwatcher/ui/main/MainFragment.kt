@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import coil.ImageLoader
 import com.aouerfelli.subwatcher.BuildConfig
 import com.aouerfelli.subwatcher.R
-import com.aouerfelli.subwatcher.Subreddit
+import com.aouerfelli.subwatcher.database.Subreddit
 import com.aouerfelli.subwatcher.databinding.MainFragmentBinding
 import com.aouerfelli.subwatcher.repository.Result
 import com.aouerfelli.subwatcher.repository.SubredditName

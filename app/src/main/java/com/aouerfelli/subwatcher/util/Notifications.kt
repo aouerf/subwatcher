@@ -13,8 +13,8 @@ import coil.request.ErrorResult
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.aouerfelli.subwatcher.R
-import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.broadcast.ViewSubredditBroadcastReceiver
+import com.aouerfelli.subwatcher.database.Subreddit
 import com.aouerfelli.subwatcher.repository.asUri
 
 private enum class NotificationId {

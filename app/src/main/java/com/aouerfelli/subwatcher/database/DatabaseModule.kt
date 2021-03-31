@@ -1,7 +1,5 @@
 package com.aouerfelli.subwatcher.database
 
-import com.aouerfelli.subwatcher.Database
-import com.aouerfelli.subwatcher.Subreddit
 import com.aouerfelli.subwatcher.repository.SubredditIconUrl
 import com.aouerfelli.subwatcher.repository.SubredditLastPosted
 import com.aouerfelli.subwatcher.repository.SubredditName
@@ -38,5 +36,5 @@ object DatabaseModule {
   }
 
   @Provides
-  fun provideSubredditQueries(database: Database) = database.subredditEntityQueries
+  fun provideSubredditQueries(database: Database) = database.subredditQueries
 }

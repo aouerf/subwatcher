@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.aouerfelli.subwatcher.Subreddit
+import com.aouerfelli.subwatcher.database.Subreddit
 import com.aouerfelli.subwatcher.repository.Result
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository

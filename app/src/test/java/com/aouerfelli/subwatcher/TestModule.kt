@@ -1,5 +1,6 @@
 package com.aouerfelli.subwatcher
 
+import com.aouerfelli.subwatcher.database.Database
 import com.aouerfelli.subwatcher.network.NetworkDetails
 import com.aouerfelli.subwatcher.util.CoroutineDispatchers
 import com.squareup.sqldelight.db.SqlDriver

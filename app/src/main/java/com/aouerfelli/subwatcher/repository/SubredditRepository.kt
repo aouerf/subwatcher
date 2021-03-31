@@ -1,8 +1,8 @@
 package com.aouerfelli.subwatcher.repository
 
 import android.database.sqlite.SQLiteConstraintException
-import com.aouerfelli.subwatcher.Subreddit
-import com.aouerfelli.subwatcher.SubredditEntityQueries
+import com.aouerfelli.subwatcher.database.Subreddit
+import com.aouerfelli.subwatcher.database.SubredditQueries
 import com.aouerfelli.subwatcher.network.AboutSubreddit
 import com.aouerfelli.subwatcher.network.RedditService
 import com.aouerfelli.subwatcher.network.Response
@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class SubredditRepository @Inject constructor(
   private val api: RedditService,
-  private val db: SubredditEntityQueries,
+  private val db: SubredditQueries,
   private val coroutineDispatchers: CoroutineDispatchers
 ) {
 

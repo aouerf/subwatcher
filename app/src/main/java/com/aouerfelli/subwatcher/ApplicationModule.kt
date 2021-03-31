@@ -6,6 +6,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkManager
 import coil.ImageLoader
+import com.aouerfelli.subwatcher.database.Database
 import com.aouerfelli.subwatcher.database.DatabaseModule
 import com.aouerfelli.subwatcher.network.NetworkDetails
 import com.aouerfelli.subwatcher.network.NetworkModule

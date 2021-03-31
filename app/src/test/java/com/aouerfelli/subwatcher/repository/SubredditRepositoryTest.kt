@@ -1,7 +1,7 @@
 package com.aouerfelli.subwatcher.repository
 
-import com.aouerfelli.subwatcher.Subreddit
-import com.aouerfelli.subwatcher.SubredditEntityQueries
+import com.aouerfelli.subwatcher.database.Subreddit
+import com.aouerfelli.subwatcher.database.SubredditQueries
 import com.aouerfelli.subwatcher.network.Post
 import com.aouerfelli.subwatcher.network.PostData
 import com.aouerfelli.subwatcher.network.Posts
@@ -23,7 +23,7 @@ class SubredditRepositoryTest {
   val coroutineTestRule = CoroutineTestRule()
 
   private val api = mockk<RedditService>()
-  private val db = mockk<SubredditEntityQueries>()
+  private val db = mockk<SubredditQueries>()
 
   private lateinit var repository: SubredditRepository
 

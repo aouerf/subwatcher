@@ -62,6 +62,12 @@ android {
   }
 }
 
+sqldelight {
+  Database {
+    packageName = 'com.aouerfelli.subwatcher.database'
+  }
+}
+
 dependencies {
   coreLibraryDesugaring Dependencies.androidDesugarJdkLibs
 

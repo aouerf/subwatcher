@@ -1,8 +1,6 @@
 package com.aouerfelli.subwatcher.database
 
 import com.aouerfelli.subwatcher.DaggerTestComponent
-import com.aouerfelli.subwatcher.Subreddit
-import com.aouerfelli.subwatcher.SubredditEntityQueries
 import com.aouerfelli.subwatcher.repository.SubredditIconUrl
 import com.aouerfelli.subwatcher.repository.SubredditLastPosted
 import com.aouerfelli.subwatcher.repository.SubredditName
@@ -22,7 +20,7 @@ class SubredditEntityQueriesTest {
   val coroutineTestRule = CoroutineTestRule()
 
   @Inject
-  lateinit var subredditEntityQueries: SubredditEntityQueries
+  lateinit var subredditEntityQueries: SubredditQueries
 
   @Before
   fun startUp() {

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
 import coil.transform.CircleCropTransformation
 import com.aouerfelli.subwatcher.R
-import com.aouerfelli.subwatcher.Subreddit
+import com.aouerfelli.subwatcher.database.Subreddit
 import com.aouerfelli.subwatcher.databinding.SubredditItemBinding
 import com.aouerfelli.subwatcher.repository.asUri
 import com.aouerfelli.subwatcher.util.extensions.layoutInflater
