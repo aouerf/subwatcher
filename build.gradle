@@ -5,11 +5,6 @@ buildscript {
   }
 
   dependencies {
-
-    /* TODO: Kotlin 1.5.0-M2 blocked by:
-        https://github.com/google/dagger/issues/2511
-        https://github.com/square/moshi/issues/1324
-     */
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${libs.versions.kotlin.get()}"
     classpath "com.android.tools.build:gradle:${libs.versions.androidGradlePlugin.get()}"
     classpath "com.squareup.sqldelight:gradle-plugin:${libs.versions.sqldelight.get()}"
@@ -23,6 +18,10 @@ apply plugin: "com.github.ben-manes.versions"
 
 allprojects {
   apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+  ktlint {
+    version = "0.41.0"
+  }
 
   repositories {
     google()
