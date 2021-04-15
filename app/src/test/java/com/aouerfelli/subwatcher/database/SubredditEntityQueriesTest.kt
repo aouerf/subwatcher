@@ -56,7 +56,7 @@ class SubredditEntityQueriesTest {
   @Test
   fun `insert duplicate key constraint failure`() {
     val subredditCopy = subreddit.copy(
-      name = SubredditName(subreddit.name.name.toUpperCase()),
+      name = SubredditName(subreddit.name.name.uppercase()),
       iconUrl = null,
       lastPosted = null
     )
