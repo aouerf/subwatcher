@@ -12,7 +12,6 @@ import com.aouerfelli.subwatcher.util.extensions.goAsync
 import com.aouerfelli.subwatcher.util.extensions.launch
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
-import timber.log.warn
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -37,7 +36,7 @@ class ViewSubredditBroadcastReceiver : BroadcastReceiver() {
     goAsync(processLifecycleScope) {
       val subredditName = intent.action?.let(::SubredditName)
       if (subredditName == null) {
-        Timber.warn { "No subreddit name was provided." }
+        Timber.w("No subreddit name was provided.")
         return@goAsync
       }
 
@@ -45,7 +44,7 @@ class ViewSubredditBroadcastReceiver : BroadcastReceiver() {
 
       val subreddit = repository.getSubreddit(subredditName)
       if (subreddit == null) {
-        Timber.warn { "Subreddit ${subredditName.name} is not in database." }
+        Timber.w("Subreddit ${subredditName.name} is not in database.")
         return@goAsync
       }
       repository.updateLastPosted(subreddit)

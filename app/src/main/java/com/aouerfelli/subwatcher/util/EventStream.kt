@@ -4,11 +4,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+@OptIn(ObsoleteCoroutinesApi::class)
 open class EventStream<T : Any> protected constructor(
   value: T? = null,
   private val handler: Pair<SavedStateHandle, SavedStateHandler<T>>? = null
@@ -16,12 +18,13 @@ open class EventStream<T : Any> protected constructor(
 
   // TODO: SharedFlow
   private val channel = ConflatedBroadcastChannel<T?>()
+  @Suppress("DEPRECATION")
   val flow = channel.asFlow()
 
   open var value: T?
     get() = channel.value
     protected set(value) {
-      channel.offer(value)
+      channel.trySend(value)
       handler?.let { (handle, key) -> handle[key] = value }
     }
 

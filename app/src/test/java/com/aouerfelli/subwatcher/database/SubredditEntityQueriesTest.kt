@@ -5,6 +5,7 @@ import com.aouerfelli.subwatcher.repository.SubredditIconUrl
 import com.aouerfelli.subwatcher.repository.SubredditLastPosted
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.util.CoroutineTestRule
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
@@ -14,6 +15,7 @@ import org.junit.Test
 import org.junit.jupiter.api.AfterEach
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class SubredditEntityQueriesTest {
 
   @get:Rule

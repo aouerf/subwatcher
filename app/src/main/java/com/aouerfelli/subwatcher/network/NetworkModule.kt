@@ -14,7 +14,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
-import timber.log.debug
 import java.io.File
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -43,8 +42,7 @@ object NetworkModule {
   @NetworkModule.InternalApi
   @Singleton
   fun provideOkHttpClient(@NetworkModule.InternalApi cache: Cache?): OkHttpClient {
-    val logTree = Timber.tagged("OkHttp")
-    val logger = HttpLoggingInterceptor.Logger { message -> logTree.debug { message } }
+    val logger = HttpLoggingInterceptor.Logger { message -> Timber.tag("OkHttp").d(message) }
     val loggingInterceptor = HttpLoggingInterceptor(logger).apply {
       level = HttpLoggingInterceptor.Level.BASIC
     }

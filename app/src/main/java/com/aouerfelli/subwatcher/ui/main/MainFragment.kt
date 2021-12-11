@@ -27,7 +27,6 @@ import dev.chrisbanes.insetter.applyInsetter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
-import timber.log.warn
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -125,7 +124,7 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
     when (result) {
       is Result.Success.Empty -> Unit
       is Result.Error -> onError(result, viewModel.refreshedSubreddits::clear)
-      else -> Timber.warn { "Refreshed subreddits result $result is not handled." }
+      else -> Timber.w("Refreshed subreddits result $result is not handled.")
     }
   }
 
@@ -157,7 +156,7 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
       is Result.Success -> onSuccess(result.data)
       is Result.Failure -> onFailure(result)
       is Result.Error -> onError(result, viewModel.addedSubreddit::clear)
-      else -> Timber.warn { "Add subreddit result $result is not handled." }
+      else -> Timber.w("Add subreddit result $result is not handled.")
     }
   }
 
@@ -175,7 +174,7 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
 
     when (result) {
       is Result.Success -> onSuccess(result.data)
-      else -> Timber.warn { "Delete subreddit result $result is not handled." }
+      else -> Timber.w("Delete subreddit result $result is not handled.")
     }
   }
 }

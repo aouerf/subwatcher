@@ -16,7 +16,6 @@ import com.aouerfelli.subwatcher.util.notifyNewSubredditPosts
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import timber.log.Timber
-import timber.log.debug
 import java.time.Duration
 
 @HiltWorker
@@ -47,7 +46,7 @@ class NewPostsWorker @AssistedInject constructor(
   }
 
   override suspend fun doWork(): Result {
-    Timber.debug { "$WORK_NAME worker running" }
+    Timber.d("$WORK_NAME worker running")
 
     val subreddits = repository.getSubreddits()
     val details = subreddits.mapAsync { subreddit ->

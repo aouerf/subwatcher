@@ -3,7 +3,9 @@ package com.aouerfelli.subwatcher.network
 import com.aouerfelli.subwatcher.DaggerTestComponent
 import com.aouerfelli.subwatcher.util.CoroutineTestRule
 import com.squareup.moshi.Moshi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -14,6 +16,7 @@ import org.junit.Test
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class RedditServiceTest {
 
   @get:Rule
@@ -48,10 +51,8 @@ class RedditServiceTest {
     assertEquals(newPosts, adapter.fromJson(newPostsRaw))
   }
 
-  // FIXME: Using `runBlocking(coroutineTestRule.dispatcher)` instead of `coroutineTestRule.dispatcher.runBlockingTest` because of Retrofit
-
   @Test
-  fun `about subreddit response 200`() = runBlocking(coroutineTestRule.dispatcher) {
+  fun `about subreddit response 200`() = runTest {
     val mockResponse = MockResponse().setResponseCode(200).setBody(aboutSubredditRaw)
     server.enqueue(mockResponse)
     val response = redditService.fetch { getAboutSubreddit(subredditName) }
