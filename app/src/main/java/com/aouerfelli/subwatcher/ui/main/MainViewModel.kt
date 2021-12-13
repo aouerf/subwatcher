@@ -1,42 +1,40 @@
 package com.aouerfelli.subwatcher.ui.main
 
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aouerfelli.subwatcher.database.Subreddit
 import com.aouerfelli.subwatcher.repository.Result
 import com.aouerfelli.subwatcher.repository.SubredditName
 import com.aouerfelli.subwatcher.repository.SubredditRepository
-import com.aouerfelli.subwatcher.util.MutableEventStream
-import com.aouerfelli.subwatcher.util.asImmutable
+import com.aouerfelli.subwatcher.util.MutableNotifyStateFlow
+import com.aouerfelli.subwatcher.util.asEventStateFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
   private val repository: SubredditRepository,
-  private val processLifecycleScope: LifecycleCoroutineScope,
-  private val handle: SavedStateHandle
+  private val processLifecycleScope: LifecycleCoroutineScope
 ) : ViewModel() {
 
   val subredditList = repository.getSubredditsFlow()
 
   private val _isLoading = MutableStateFlow(false)
-  val isLoading: StateFlow<Boolean> get() = _isLoading
+  val isLoading = _isLoading.asStateFlow()
 
-  private val _addedSubreddit = MutableEventStream<Pair<SubredditName, Result<Subreddit>>>()
-  val addedSubreddit get() = _addedSubreddit.asImmutable()
+  private val _addedSubreddit = MutableNotifyStateFlow<Pair<SubredditName, Result<Subreddit>>>()
+  val addedSubreddit = _addedSubreddit.asEventStateFlow()
 
-  private val _deletedSubreddit = MutableEventStream<Result<Subreddit>>()
-  val deletedSubreddit get() = _deletedSubreddit.asImmutable()
+  private val _deletedSubreddit = MutableNotifyStateFlow<Result<Subreddit>>()
+  val deletedSubreddit = _deletedSubreddit.asEventStateFlow()
 
-  private val _refreshedSubreddits = MutableEventStream<Result<Nothing>>()
-  val refreshedSubreddits get() = _refreshedSubreddits.asImmutable()
+  private val _refreshedSubreddits = MutableNotifyStateFlow<Result<Nothing>>()
+  val refreshedSubreddits = _refreshedSubreddits.asEventStateFlow()
 
   private inline fun load(crossinline load: suspend () -> Unit) {
     _isLoading.value = true

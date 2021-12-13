@@ -3,7 +3,6 @@ package com.aouerfelli.subwatcher.ui.main
 import android.os.Bundle
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import coil.ImageLoader
 import com.aouerfelli.subwatcher.BuildConfig
@@ -17,15 +16,13 @@ import com.aouerfelli.subwatcher.ui.ViewBindingFragment
 import com.aouerfelli.subwatcher.util.EventSnackbar
 import com.aouerfelli.subwatcher.util.SnackbarLength
 import com.aouerfelli.subwatcher.util.extensions.launch
+import com.aouerfelli.subwatcher.util.extensions.observe
 import com.aouerfelli.subwatcher.util.extensions.onSwipe
 import com.aouerfelli.subwatcher.util.extensions.setThemeColorScheme
 import com.aouerfelli.subwatcher.util.makeSnackbar
-import com.aouerfelli.subwatcher.util.observe
 import com.aouerfelli.subwatcher.util.toAndroidString
 import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.insetter.applyInsetter
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -95,16 +92,12 @@ class MainFragment : ViewBindingFragment<MainFragmentBinding>(MainFragmentBindin
       }
     }
 
-    viewModel.subredditList
-      .onEach { list ->
-        binding.emptyStateContainer.isGone = list.isNotEmpty()
-        subredditListAdapter.submitList(list)
-        binding.subredditsRefresh.isEnabled = list.isNotEmpty()
-      }
-      .launchIn(viewLifecycleOwner.lifecycleScope)
-    viewModel.isLoading
-      .onEach { binding.subredditsRefresh.isRefreshing = it }
-      .launchIn(viewLifecycleOwner.lifecycleScope)
+    viewModel.subredditList.observe(viewLifecycleOwner) { list ->
+      binding.emptyStateContainer.isGone = list.isNotEmpty()
+      subredditListAdapter.submitList(list)
+      binding.subredditsRefresh.isEnabled = list.isNotEmpty()
+    }
+    viewModel.isLoading.observe(viewLifecycleOwner, binding.subredditsRefresh::setRefreshing)
     viewModel.refreshedSubreddits.observe(viewLifecycleOwner, ::onSubredditsRefreshed)
     viewModel.addedSubreddit.observe(viewLifecycleOwner, ::onSubredditAdded)
     viewModel.deletedSubreddit.observe(viewLifecycleOwner, ::onSubredditDeleted)
