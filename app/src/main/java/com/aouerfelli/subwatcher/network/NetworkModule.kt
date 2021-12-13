@@ -1,17 +1,19 @@
 package com.aouerfelli.subwatcher.network
 
-import com.squareup.moshi.Moshi
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.migration.DisableInstallInCheck
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.Call
 import okhttp3.HttpUrl
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
 import java.io.File
@@ -54,20 +56,24 @@ object NetworkModule {
 
   @Provides
   @Singleton
-  fun provideMoshi(): Moshi = Moshi.Builder().build()
+  fun provideJson(): Json = Json {
+    ignoreUnknownKeys = true
+  }
 
+  @OptIn(ExperimentalSerializationApi::class)
   @Provides
   @Singleton
   fun provideRedditService(
     @NetworkModule.InternalApi okHttpClient: Lazy<OkHttpClient>,
-    moshi: Moshi,
+    json: Json,
     networkDetails: NetworkDetails
   ): RedditService {
     val callFactory = Call.Factory { request -> okHttpClient.get().newCall(request) }
+    val jsonConverterFactory = json.asConverterFactory("application/json".toMediaType())
     val retrofit = Retrofit.Builder()
       .callFactory(callFactory)
       .baseUrl(networkDetails.baseUrl)
-      .addConverterFactory(MoshiConverterFactory.create(moshi))
+      .addConverterFactory(jsonConverterFactory)
       .build()
 
     return retrofit.create()

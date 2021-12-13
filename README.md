@@ -13,10 +13,10 @@ This is not intended to be a replacement for a full-blown Reddit client, but rat
 This project uses Gradle's [version catalog](https://docs.gradle.org/nightly/userguide/platforms.html#sub:version-catalog) feature.
 The dependencies are declared in a [catalog file](gradle/libs.versions.toml).
 
-* [Kotlin Coroutines](https://github.com/Kotlin/kotlinx.coroutines) for managing code asynchronously
+* [Kotlin coroutines](https://github.com/Kotlin/kotlinx.coroutines) for managing code asynchronously
 * [Dagger](https://github.com/google/dagger) ([Hilt](https://github.com/google/dagger/tree/master/java/dagger/hilt)) for dependency injection
 * [Retrofit](https://github.com/square/retrofit) for handling HTTP requests
-* [Moshi](https://github.com/square/moshi) for serializing and deserializing JSON
+* [Kotlin serialization](https://github.com/Kotlin/kotlinx.serialization) for serializing and deserializing JSON
 * [SQLDelight](https://github.com/cashapp/sqldelight) for (SQLite) database management
 * [WorkManager](https://developer.android.com/jetpack/androidx/releases/work) for running background jobs
 * [Coil](https://github.com/coil-kt/coil) for image loading

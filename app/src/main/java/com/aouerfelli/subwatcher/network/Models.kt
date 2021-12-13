@@ -1,37 +1,38 @@
 package com.aouerfelli.subwatcher.network
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 // TODO: Unwrap
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AboutSubreddit(
-  @Json(name = "data") val data: AboutSubredditData
+  @SerialName("data") val data: AboutSubredditData
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AboutSubredditData(
-  @Json(name = "display_name") val displayName: String,
-  @Json(name = "icon_img") val iconImageUrl: String?
+  @SerialName("display_name") val displayName: String,
+  @SerialName("icon_img") val iconImageUrl: String?
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Posts(
-  @Json(name = "data") val data: PostsData
+  @SerialName("data") val data: PostsData
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class PostsData(
-  @Json(name = "children") val children: List<Post>
+  @SerialName("children") val children: List<Post>
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Post(
-  @Json(name = "data") val data: PostData
+  @SerialName("data") val data: PostData
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class PostData(
-  @Json(name = "created_utc") val createdUtc: Long
+  // Has to be double because of https://github.com/Kotlin/kotlinx.serialization/issues/1653
+  @SerialName("created_utc") val createdUtc: Double
 )

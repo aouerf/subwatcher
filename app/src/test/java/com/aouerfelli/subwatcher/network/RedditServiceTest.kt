@@ -2,10 +2,10 @@ package com.aouerfelli.subwatcher.network
 
 import com.aouerfelli.subwatcher.DaggerTestComponent
 import com.aouerfelli.subwatcher.util.CoroutineTestRule
-import com.squareup.moshi.Moshi
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
@@ -26,7 +26,7 @@ class RedditServiceTest {
   lateinit var redditService: RedditService
 
   @Inject
-  lateinit var moshi: Moshi
+  lateinit var json: Json
 
   private val server = MockWebServer()
 
@@ -41,14 +41,14 @@ class RedditServiceTest {
 
   @Test
   fun `about subreddit serialization`() {
-    val adapter = moshi.adapter(AboutSubreddit::class.java)
-    assertEquals(aboutSubreddit, adapter.fromJson(aboutSubredditRaw))
+    val decoded = json.decodeFromString<AboutSubreddit>(aboutSubredditRaw)
+    assertEquals(aboutSubreddit, decoded)
   }
 
   @Test
   fun `new posts serialization`() {
-    val adapter = moshi.adapter(Posts::class.java)
-    assertEquals(newPosts, adapter.fromJson(newPostsRaw))
+    val decoded = json.decodeFromString<Posts>(newPostsRaw)
+    assertEquals(newPosts, decoded)
   }
 
   @Test
@@ -63,7 +63,7 @@ class RedditServiceTest {
   }
 
   @Test
-  fun `about subreddit malformed response body`() = runBlocking(coroutineTestRule.dispatcher) {
+  fun `about subreddit malformed response body`() = runTest {
     val mockResponseBody = aboutSubredditRaw.replace("display_name", "name")
     val mockResponse = MockResponse().setResponseCode(200).setBody(mockResponseBody)
     server.enqueue(mockResponse)
@@ -72,7 +72,7 @@ class RedditServiceTest {
   }
 
   @Test
-  fun `new posts response 200`() = runBlocking(coroutineTestRule.dispatcher) {
+  fun `new posts response 200`() = runTest {
     val mockResponse = MockResponse().setResponseCode(200).setBody(newPostsRaw)
     server.enqueue(mockResponse)
     val response = redditService.fetch { getNewPosts(subredditName) }
@@ -83,7 +83,7 @@ class RedditServiceTest {
   }
 
   @Test
-  fun `new posts malformed response body`() = runBlocking(coroutineTestRule.dispatcher) {
+  fun `new posts malformed response body`() = runTest {
     val mockResponseBody = newPostsRaw.replace("children", "child")
     val mockResponse = MockResponse().setResponseCode(200).setBody(mockResponseBody)
     server.enqueue(mockResponse)
@@ -92,7 +92,7 @@ class RedditServiceTest {
   }
 
   @Test
-  fun `response 503`() = runBlocking(coroutineTestRule.dispatcher) {
+  fun `response 503`() = runTest {
     val mockResponse = MockResponse().setResponseCode(503)
     server.enqueue(mockResponse)
     // Endpoint doesn't matter
@@ -103,7 +103,7 @@ class RedditServiceTest {
   }
 
   @Test
-  fun `response 404`() = runBlocking(coroutineTestRule.dispatcher) {
+  fun `response 404`() = runTest {
     val mockResponse = MockResponse().setResponseCode(404).setBody(
       """
       {
@@ -143,7 +143,7 @@ class RedditServiceTest {
       AboutSubredditData(subredditName, subredditIconImageUrl)
     )
 
-    private const val newPostsCreatedUtc = 123456789L
+    private const val newPostsCreatedUtc = 123456789.0
     private val newPostsRaw =
       """
       {
@@ -155,7 +155,7 @@ class RedditServiceTest {
               "kind": "t3",
               "data": {
                 "subreddit": "$subredditName",
-                "created_utc": $newPostsCreatedUtc.0,
+                "created_utc": $newPostsCreatedUtc,
                 "media": null
               }
             }

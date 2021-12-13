@@ -1,10 +1,10 @@
 plugins {
   id "com.android.application"
-  id "org.jetbrains.kotlin.android"
-  id "org.jetbrains.kotlin.kapt"
   id "com.squareup.sqldelight"
   id "dagger.hilt.android.plugin"
-  id "com.google.devtools.ksp" version "1.6.10-RC-1.0.1"
+  id "org.jetbrains.kotlin.android"
+  id "org.jetbrains.kotlin.kapt"
+  id "org.jetbrains.kotlin.plugin.serialization"
 }
 
 android {
@@ -72,6 +72,8 @@ dependencies {
 
   implementation libs.coroutines.android
 
+  implementation libs.serialization
+
   implementation libs.insetter
   implementation libs.coil
 
@@ -81,8 +83,6 @@ dependencies {
   implementation libs.okhttp.client
   implementation libs.okhttp.loggingInterceptor
   implementation libs.bundles.retrofit
-  implementation libs.moshi.runtime
-  ksp libs.moshi.compiler
 
   implementation libs.sqldelight.android
   implementation libs.sqldelight.coroutines

@@ -175,7 +175,7 @@ class SubredditRepository @Inject constructor(
     } else {
       // Checks for the number of posts newer than the last known one
       newPosts
-        .count { (post) -> SubredditLastPosted(post.createdUtc) > subredditLastPosted }
+        .count { (post) -> SubredditLastPosted(post.createdUtc.toLong()) > subredditLastPosted }
         .toUInt()
     }
     return unreadPostsAmount to newPosts.size.toUInt()
@@ -188,7 +188,7 @@ class SubredditRepository @Inject constructor(
     }
 
     val newestPost = newPostsResponse.body.data.children.firstOrNull()
-    return newestPost?.data?.createdUtc?.let(::SubredditLastPosted)
+    return newestPost?.data?.createdUtc?.toLong()?.let(::SubredditLastPosted)
   }
 
   suspend fun updateLastPosted(subreddit: Subreddit) {

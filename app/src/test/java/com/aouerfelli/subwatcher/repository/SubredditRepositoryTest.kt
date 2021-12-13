@@ -63,7 +63,7 @@ class SubredditRepositoryTest {
       iconUrl = null,
       lastPosted = null
     )
-    val response = Posts(PostsData(List(10) { Post(PostData(it.toLong())) }))
+    val response = Posts(PostsData(List(10) { Post(PostData(it.toDouble())) }))
     coEvery { api.getNewPosts(subreddit.name.name) } returns response
     val result = repository.checkForNewerPosts(subreddit)
     assertEquals(response.data.children.size.toUInt(), result?.first)
@@ -72,11 +72,11 @@ class SubredditRepositoryTest {
 
   @Test
   fun `check for no new subreddit posts`() = runTest {
-    val createdUtc = 123456789L
+    val createdUtc = 123456789.0
     val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
-      lastPosted = SubredditLastPosted(createdUtc)
+      lastPosted = SubredditLastPosted(createdUtc.toLong())
     )
     val response = Posts(PostsData(listOf(Post(PostData(createdUtc)))))
     coEvery { api.getNewPosts(subreddit.name.name) } returns response
@@ -87,11 +87,11 @@ class SubredditRepositoryTest {
 
   @Test
   fun `check for newer subreddit posts`() = runTest {
-    val epochSeconds = 123456789L
+    val epochSeconds = 123456789.0
     val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
-      lastPosted = SubredditLastPosted(epochSeconds)
+      lastPosted = SubredditLastPosted(epochSeconds.toLong())
     )
     val response = Posts(PostsData(List(5) { Post(PostData(it * epochSeconds)) }))
     coEvery { api.getNewPosts(subreddit.name.name) } returns response
@@ -102,11 +102,11 @@ class SubredditRepositoryTest {
 
   @Test
   fun `check for all new subreddit posts`() = runTest {
-    val epochSeconds = 123456789L
+    val epochSeconds = 123456789.0
     val subreddit = Subreddit(
       name = SubredditName("subreddit"),
       iconUrl = null,
-      lastPosted = SubredditLastPosted(epochSeconds)
+      lastPosted = SubredditLastPosted(epochSeconds.toLong())
     )
     val response = Posts(PostsData(List(5) { Post(PostData(epochSeconds + it + 1)) }))
     coEvery { api.getNewPosts(subreddit.name.name) } returns response

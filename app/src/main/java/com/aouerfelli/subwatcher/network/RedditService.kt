@@ -1,6 +1,6 @@
 package com.aouerfelli.subwatcher.network
 
-import com.squareup.moshi.JsonDataException
+import kotlinx.serialization.SerializationException
 import retrofit2.HttpException
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -29,7 +29,7 @@ suspend fun <T : Any> RedditService.fetch(request: suspend RedditService.() -> T
       // in Response.Failure.Fetch.serverErrorRange -> Response.Failure.Fetch(code)
       else -> Response.Failure.Fetch(code)
     }
-  } catch (e: JsonDataException) {
+  } catch (e: SerializationException) {
     Response.Failure.Parse
   } catch (e: IOException) {
     Response.Error
